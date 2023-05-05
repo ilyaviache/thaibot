@@ -1,0 +1,76 @@
+---
+- hosts: dev
+  vars:
+    project_path: /home/deploy/app
+  tasks:
+    - name: Set some variable
+      set_fact:
+        release_path: "{{ project_path }}/releases/{{ lookup('pipe','date +%Y%m%d%H%M%S') }}"
+        current_path: "{{ project_path }}/current"
+    
+    - name: Retrieve current release folder
+      command: readlink -f current
+      register: current_release_path
+      ignore_errors: yes
+      args:
+        chdir: "{{ project_path }}"
+
+    - name: Create new folder
+      file:
+        dest={{ release_path }}
+        mode=0755
+        recurse=yes
+        state=directory
+
+    - name: Clone the repository
+      git:
+        repo: git@github.com:ilyaviache/nft-gallery-backend.git
+        key_file: /home/deploy/.ssh/id_rsa
+        accept_hostkey: yes
+        force: yes
+        dest: "{{ release_path }}"
+
+    # - name: Update npm
+    #   npm:
+    #     path={{ release_path }}
+
+    # - name: Run build
+    #   command: bash -lc "cd {{ release_path }} && /usr/bin/npm run build"
+    
+    # - name: Run build:dll
+    #   command: bash -lc "cd {{ release_path }} && /usr/bin/npm run build:dll"
+
+    - name: Update symlink
+      file:
+        src={{ release_path }}
+        dest={{ current_path }}
+        state=link
+
+    # - name: Delete old pm2 process
+    #   command: pm2 delete storeapp
+    #   ignore_errors: yes
+
+    # - name: Start pm2
+    #   command: pm2 start {{ current_path }}/server/index.js --name storeapp
+
+    # - name: Build container
+    #   become: false
+    #   shell:
+    #     cmd: "docker compose build --no-cache"
+    #     chdir: /home/deploy/app/current
+    
+    # - name: Run container
+    #   become: false
+    #   shell:
+    #     cmd: "docker compose up -d --force-recreate"
+    #     chdir: /home/deploy/app/current
+
+    - name: Run container
+      become: False
+      shell:
+        cmd: "docker compose up -d --build"
+        chdir: "{{ release_path }}"
+    
+    - name: Delete old dir
+      shell: rm -rf {{ current_release_path.stdout }}/
+      when: current_release_path.stdout != current_path
