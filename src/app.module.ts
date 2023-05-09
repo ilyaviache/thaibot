@@ -33,6 +33,13 @@ import { TelegrafModule } from 'nestjs-telegraf';
 
     TelegrafModule.forRoot({
       token: '6012861302:AAH9tAVDdOI_5pMT2JRelnCg5aLHbd8sX90',
+      launchOptions: {
+        webhook: {
+          domain: '2a24-180-183-77-42.ngrok-free.app',
+          hookPath: '/webhook',
+          port: 3001,
+        },
+      },
     }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({

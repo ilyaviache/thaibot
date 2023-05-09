@@ -28,4 +28,12 @@ export class BotService {
   async hearsHi(ctx: Context) {
     await ctx.reply('Hey there');
   }
+
+  @Hears('/./')
+  async hearsHook(ctx: Context) {
+    const chatId = ctx.chat.id;
+    console.log(ctx.message);
+    // get the text message sent by user
+    console.log(`Received message from chat ID ${chatId}`);
+  }
 }

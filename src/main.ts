@@ -9,9 +9,11 @@ import type {
   NestConfig,
   SwaggerConfig,
 } from 'src/common/configs/config.interface';
+import { getBotToken } from 'nestjs-telegraf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const bot = app.get(getBotToken());
 
   // Validation
   app.useGlobalPipes(new ValidationPipe());
@@ -23,6 +25,7 @@ async function bootstrap() {
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.use(bot.webhookCallback('/webhook'));
 
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>('nest');
