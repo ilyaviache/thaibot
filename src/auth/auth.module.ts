@@ -1,25 +1,37 @@
-import { JwtStrategy } from './jwt.strategy';
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { OtpService } from './otp/otp.service';
-import { UsersService } from 'src/users/users.service';
-
-// TODO: move to .env
-export const jwtSecret = 'db1e3a04e028eeec1b0c4af5f53fccb8';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
+import { PasswordService } from './password.service';
+import { GqlAuthGuard } from './gql-auth.guard';
+import { AuthService } from './auth.service';
+import { AuthResolver } from './auth.resolver';
+import { JwtStrategy } from './jwt.strategy';
+import { SecurityConfig } from 'src/common/configs/config.interface';
 
 @Module({
   imports: [
-    PassportModule,
-    JwtModule.register({
-      secret: jwtSecret,
-      signOptions: { expiresIn: '30d' },
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        const securityConfig = configService.get<SecurityConfig>('security');
+        return {
+          secret: configService.get<string>('JWT_ACCESS_SECRET'),
+          signOptions: {
+            expiresIn: securityConfig.expiresIn,
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, OtpService, UsersService],
-  exports: [AuthService, OtpService],
+  providers: [
+    AuthService,
+    AuthResolver,
+    JwtStrategy,
+    GqlAuthGuard,
+    PasswordService,
+  ],
+  exports: [GqlAuthGuard],
 })
-export class AuthModule { }
+export class AuthModule {}

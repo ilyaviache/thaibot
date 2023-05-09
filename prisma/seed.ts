@@ -1,24 +1,58 @@
 import { PrismaClient } from '@prisma/client';
-// import { genSalt, hash } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-const USER = {
-  username: 'test2',
-  email: 'test2@email.com'
-}
-
 async function main() {
-  // const salt = await genSalt(12);
-  // const hashedPassword = await hash(USER.password, salt);
-  await prisma.user.create({ data: USER });
+  await prisma.user.deleteMany();
+  await prisma.post.deleteMany();
+
+  console.log('Seeding...');
+
+  const user1 = await prisma.user.create({
+    data: {
+      email: 'lisa@simpson.com',
+      firstname: 'Lisa',
+      lastname: 'Simpson',
+      password: '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', // secret42
+      role: 'USER',
+      posts: {
+        create: {
+          title: 'Join us for Prisma Day 2019 in Berlin',
+          content: 'https://www.prisma.io/day/',
+          published: true,
+        },
+      },
+    },
+  });
+  const user2 = await prisma.user.create({
+    data: {
+      email: 'bart@simpson.com',
+      firstname: 'Bart',
+      lastname: 'Simpson',
+      role: 'ADMIN',
+      password: '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', // secret42
+      posts: {
+        create: [
+          {
+            title: 'Subscribe to GraphQL Weekly for community news',
+            content: 'https://graphqlweekly.com/',
+            published: true,
+          },
+          {
+            title: 'Follow Prisma on Twitter',
+            content: 'https://twitter.com/prisma',
+            published: false,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log({ user1, user2 });
 }
 
 main()
-  .catch((e) => {
-    console.log(e);
-    process.exit(1);
-  })
+  .catch((e) => console.error(e))
   .finally(async () => {
     await prisma.$disconnect();
   });

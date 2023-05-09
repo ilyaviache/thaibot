@@ -1,25 +1,26 @@
-FROM node:alpine AS builder
+FROM node:16 AS builder
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json yarn.lock ./
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install app dependencies
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
-# RUN npx prisma migrate deploy
+FROM node:16
 
-# FROM node:14
+WORKDIR /app
 
-# COPY --from=builder /usr/src/app/node_modules ./node_modules
-# COPY --from=builder /usr/src/app/package*.json ./
-# COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD [ "yarn", "start:prod" ]
+CMD [ "npm", "run", "start:prod" ]

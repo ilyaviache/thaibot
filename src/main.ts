@@ -1,40 +1,51 @@
-import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
-import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
 import { AppModule } from './app.module';
-import { PrismaClientExceptionFilter } from './prisma-client-exception.filter';
+import type {
+  CorsConfig,
+  NestConfig,
+  SwaggerConfig,
+} from 'src/common/configs/config.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // binds ValidationPipe to the entire application
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
+  // Validation
+  app.useGlobalPipes(new ValidationPipe());
 
-  // apply transform to all responses
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  // enable shutdown hook
+  const prismaService: PrismaService = app.get(PrismaService);
+  await prismaService.enableShutdownHooks(app);
 
-  // apply PrismaClientExceptionFilter to entire application, requires HttpAdapterHost because it extends BaseExceptionFilter
+  // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  const config = new DocumentBuilder()
-    .setTitle('NFT Gallery Backend')
-    .setDescription('NFT Gallery Backend')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: 'NFT Gallery Backend',
-  });
+  const configService = app.get(ConfigService);
+  const nestConfig = configService.get<NestConfig>('nest');
+  const corsConfig = configService.get<CorsConfig>('cors');
+  const swaggerConfig = configService.get<SwaggerConfig>('swagger');
 
-  await app.listen(3000);
+  // Swagger Api
+  if (swaggerConfig.enabled) {
+    const options = new DocumentBuilder()
+      .setTitle(swaggerConfig.title || 'Nestjs')
+      .setDescription(swaggerConfig.description || 'The nestjs API description')
+      .setVersion(swaggerConfig.version || '1.0')
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
+
+    SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
+  }
+
+  // Cors
+  if (corsConfig.enabled) {
+    app.enableCors();
+  }
+
+  await app.listen(process.env.PORT || nestConfig.port || 3000);
 }
 bootstrap();

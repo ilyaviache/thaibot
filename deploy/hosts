@@ -1,5 +1,0 @@
-[prod]
-188.166.1.45 ansible_user=deploy
-
-[dev]
-188.166.1.45 ansible_user=deploy
