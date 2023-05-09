@@ -13,6 +13,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { BotModule } from './bot/bot.module';
 
+import { TelegrafModule } from 'nestjs-telegraf';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
@@ -29,6 +31,10 @@ import { BotModule } from './bot/bot.module';
       },
     }),
 
+    TelegrafModule.forRoot({
+      token: '6012861302:AAH9tAVDdOI_5pMT2JRelnCg5aLHbd8sX90',
+    }),
+
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useClass: GqlConfigService,
@@ -42,4 +48,4 @@ import { BotModule } from './bot/bot.module';
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
-export class AppModule {}
+export class AppModule { }
