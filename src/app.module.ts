@@ -14,6 +14,7 @@ import { GqlConfigService } from './gql-config.service';
 import { BotModule } from './bot/bot.module';
 
 import { TelegrafModule } from 'nestjs-telegraf';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TelegrafModule } from 'nestjs-telegraf';
     UsersModule,
     PostsModule,
     BotModule,
+    TelegramModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
