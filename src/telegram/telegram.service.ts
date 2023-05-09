@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions';
+import { NewMessage } from 'telegram/events';
+import { NewMessageEvent } from 'telegram/events/NewMessage';
 import input from 'input';
 
 const sessionString =
@@ -24,15 +26,18 @@ export class TelegramService {
         phoneCode: async () => await input.text('Code ?'),
         onError: (err) => console.log(err),
       });
-      // await client.session.load();
-      // client.start().then(() => {
-      //   console.log('Telegram клиент запущен.');
-      // });
+
       console.log('You should now be connected.');
       console.log(client.session.save()); // Save this string to avoid logging in again
-      const response = await client.sendMessage('me', { message: 'Test' });
-      console.log(response);
-      // console.log(client);
+
+      async function eventPrint(event: NewMessageEvent) {
+        const message = event.message;
+
+        console.log('ID: ', message.senderId);
+        console.log('TEXT:', message.text);
+      }
+      // adds an event handler for new messages
+      client.addEventHandler(eventPrint, new NewMessage({}));
     })();
   }
 }
