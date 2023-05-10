@@ -33,18 +33,14 @@ export class TelegramService {
       async function eventPrint(event: NewMessageEvent) {
         const message = event.message;
         const { chat, text, senderId } = message;
-        const username = 'ilyaviache';
+        const username = 'ilyaviache ';
 
         console.log('ID: ', senderId);
         console.log('TEXT:', text);
         console.log('CHAT:', chat);
 
-        // Получаем InputPeer для пользователя по username
-        const inputPeer = await client.getInputPeerByUsername(username);
-
-        // Отправляем сообщение
-        await client.sendMessage(inputPeer, {
-          message: `Новое сообщение в чате ${chat}: ${text}`,
+        await this.client.sendMessage(senderId, {
+          message: `Новое сообщение в ${chat.id}`,
         });
       }
       // adds an event handler for new messages
