@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { TelegramClient } from 'telegram';
+import { Api, TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions';
 import { NewMessage } from 'telegram/events';
 import { NewMessageEvent } from 'telegram/events/NewMessage';
 import input from 'input';
 
 const sessionString =
-  '1BQANOTEuMTA4LjU2LjE3OQG7SERU2v0Po8CeG3FO4fjekR8nctHWS6P0K+4uwbEWYuwgIGIYqgHWT8qgl7VYhmHXrCWx457YTs/LfBNTfEiYgcAeLFrzjjpo1mmQNoT2j1flbwUqJrXwa8orfuzF8/nVOIh/Pv/3KP/Hxplo7TKnqlNctbRV+wRlYyP/lwSANFwAY9AkWiswaiWDAr8xz6LJT2aEQPJ5Szbyi7bIQRkDeiXNMSRtlQhAPu9GJwpLK+78jJ23kzOUh6fwAFia7NFFwiC2RQTKiv0KYtZy6Exqt9UXqcgpIMJqrhy9kXSYR5A1lj97aRy7/X8QpsHofO1yTpzNLWcUGTpeYL2tKSRk1Q==';
+  '1BQANOTEuMTA4LjU2LjE3OQG7CSgBqsPE1Yube3Ij//v5IL0pVArPgW/LsBPHwm3KugmpJrNhnTvUUbppMQMFOX0HVtwrAMZwniQ70pqDLYua4DUFd9A4RtBO/m82fk2NZ6NWfH/Va89InQa4Mi5vCneypzjULTjYiRXdipd5Nii0J5hKvpddZUEIu8xl00ncClWafDa1lgon4lCnVeRmQ+qlub1mQXAvQ15LlXqsy7WzEhcXHg4Dl5fZV4yPyo7b379I7/Mhd8QaE4nZmvxcGTAKAni7C6VcSm4kaCPzEM3OMFK/yLM1H+G5uinMKD7HhBJjphv5Mq4LLCqx+GrKWygINkktzb5iDvKGxEAhPiESBA==';
 
 @Injectable()
 export class TelegramService {
@@ -30,11 +30,27 @@ export class TelegramService {
       console.log('You should now be connected.');
       console.log(client.session.save()); // Save this string to avoid logging in again
 
+      const result = await client.invoke(
+        new Api.contacts.ResolveUsername({
+          username: 'ilyaviache',
+        })
+      );
+      console.log(result);
+      const userId = result.users[0].id;
+
+      const sendResult = await client.sendMessage(userId, {
+        message: 'test 123',
+      });
+      console.log('sendResult', sendResult);
       async function eventPrint(event: NewMessageEvent) {
         const message = event.message;
 
         console.log('ID: ', message.senderId);
         console.log('TEXT:', message.text);
+
+        // console.log(await client.getMe());
+
+        // await client.sendMessage(userId, { message: 'test' });
       }
       // adds an event handler for new messages
       client.addEventHandler(eventPrint, new NewMessage({}));
