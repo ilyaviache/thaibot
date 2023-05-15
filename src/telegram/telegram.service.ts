@@ -6,7 +6,7 @@ import { NewMessageEvent } from 'telegram/events/NewMessage';
 import input from 'input';
 
 const sessionString =
-  '1BQANOTEuMTA4LjU2LjE3OQG7CSgBqsPE1Yube3Ij//v5IL0pVArPgW/LsBPHwm3KugmpJrNhnTvUUbppMQMFOX0HVtwrAMZwniQ70pqDLYua4DUFd9A4RtBO/m82fk2NZ6NWfH/Va89InQa4Mi5vCneypzjULTjYiRXdipd5Nii0J5hKvpddZUEIu8xl00ncClWafDa1lgon4lCnVeRmQ+qlub1mQXAvQ15LlXqsy7WzEhcXHg4Dl5fZV4yPyo7b379I7/Mhd8QaE4nZmvxcGTAKAni7C6VcSm4kaCPzEM3OMFK/yLM1H+G5uinMKD7HhBJjphv5Mq4LLCqx+GrKWygINkktzb5iDvKGxEAhPiESBA==';
+  '1BQANOTEuMTA4LjU2LjE1NAG7LWX5TQhXJPtI/JR707hcT+RmMvbFlN7//zQzkaozXGKbYY0XMBmnY61O4nNeha5Hx2XyP9iRz6E/rquDTRuuEEAKMADtAQnPrKS9SRjHAt7YxO12yxTWnciU9jrWglZ1wxwx2L1qSsxWlolbNf810euBfVWQH/Tiu6X5CRzvKLxSXExnkIYDoIcv6vEK44oFlHE0Wqyhe/Ay2NiNIVGQZrpK0P7HjBLOU+aPRaRwqI/qOHp4YjqXz7peaPMkywDYdnpV5YW5XiRPwnq77pI9NyrYhQlH+RWTWJNw57Xm4ldLj79MIfVhLrvTa75m9dbYtq87+SkopbIGTBgIm1LZXQ==';
 
 @Injectable()
 export class TelegramService {
@@ -38,19 +38,24 @@ export class TelegramService {
       console.log(result);
       const userId = result.users[0].id;
 
-      const sendResult = await client.sendMessage(userId, {
-        message: 'test 123',
-      });
-      console.log('sendResult', sendResult);
+      // const sendResult = await client.sendMessage(userId, {
+      //   message: 'test 123',
+      // });
+      // console.log('sendResult', sendResult);
       async function eventPrint(event: NewMessageEvent) {
         const message = event.message;
 
-        console.log('ID: ', message.senderId);
-        console.log('TEXT:', message.text);
-
-        // console.log(await client.getMe());
+        // check if message.text contains the word "bike"
+        if (message.text && message.text.includes('байк')) {
+          console.log('ID: ', message.senderId);
+          console.log('TEXT:', message.text);
+        }
 
         // await client.sendMessage(userId, { message: 'test' });
+        await client.forwardMessages(userId, {
+          fromPeer: message.peerId,
+          messages: message.id,
+        });
       }
       // adds an event handler for new messages
       client.addEventHandler(eventPrint, new NewMessage({}));
