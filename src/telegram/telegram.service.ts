@@ -3,6 +3,7 @@ import { Api, TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions';
 import { NewMessage } from 'telegram/events';
 import { NewMessageEvent } from 'telegram/events/NewMessage';
+import bigInt from 'big-integer';
 import input from 'input';
 
 const sessionString =
@@ -46,6 +47,7 @@ export class TelegramService {
         const message = event.message;
 
         const chanellId = message.peerId['channelId'];
+        console.log('chanellId', chanellId);
         // sender & message data
         const senderId = message.senderId;
         const text = message.text;
@@ -76,8 +78,10 @@ export class TelegramService {
           Message: ${text}\n
         `;
 
-        await client.sendMessage(userId, { message: report });
-        await client.forwardMessages(userId, {
+        const to = bigInt('1811574497');
+
+        await client.sendMessage(to, { message: report });
+        await client.forwardMessages(to, {
           fromPeer: message.peerId,
           messages: messageId,
         });
