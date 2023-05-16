@@ -45,16 +45,41 @@ export class TelegramService {
       async function eventPrint(event: NewMessageEvent) {
         const message = event.message;
 
-        // check if message.text contains the word "bike"
-        if (message.text && message.text.includes('байк')) {
-          console.log('ID: ', message.senderId);
-          console.log('TEXT:', message.text);
-        }
+        const chanellId = message.peerId['channelId'];
+        // sender & message data
+        const senderId = message.senderId;
+        const text = message.text;
+        const messageId = message.id;
 
-        // await client.sendMessage(userId, { message: 'test' });
+        const result = await client.invoke(
+          new Api.channels.GetFullChannel({
+            channel: chanellId,
+          })
+        );
+        const channelData = result.chats[0];
+
+        const user = await client.invoke(
+          new Api.users.GetFullUser({
+            id: senderId,
+          })
+        );
+
+        const channelName = channelData['title'];
+        const channelUsername = channelData['username'];
+
+        console.log('user', user.users);
+        const senderUsername = user.users[0]['username'];
+
+        const report = `
+          Username: @${senderUsername}\n
+          Channel: ${channelName} @${channelUsername}\n
+          Message: ${text}\n
+        `;
+
+        await client.sendMessage(userId, { message: report });
         await client.forwardMessages(userId, {
           fromPeer: message.peerId,
-          messages: message.id,
+          messages: messageId,
         });
       }
       // adds an event handler for new messages
