@@ -78,7 +78,7 @@ export class TelegramService {
           Message: ${text}\n
         `;
 
-        const to = bigInt('1811574497');
+        const to = 'test_booooottaaaaaaa';
 
         await client.sendMessage(to, { message: report });
         await client.forwardMessages(to, {
