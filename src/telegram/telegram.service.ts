@@ -54,7 +54,8 @@ export class TelegramService {
 
       console.log('You should now be connected.');
       console.log(client.session.save()); // Save this string to avoid logging in again
-      await this.bot.telegram.sendMessage('39731028', 'Урааа, работает!');
+      // await this.bot.telegram.sendMessage('39731028', 'Урааа, работает!');
+
       // const result = await client.invoke(
       //   new Api.contacts.ResolveUsername({
       //     username: 'ilyaviache',
