@@ -3,38 +3,44 @@ import { Api, TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions';
 import { NewMessage } from 'telegram/events';
 import { NewMessageEvent } from 'telegram/events/NewMessage';
+import { ConfigService } from '@nestjs/config';
+import { Telegraf } from 'telegraf';
+import { InjectBot } from 'nestjs-telegraf';
 import bigInt from 'big-integer';
 import input from 'input';
 
-const sessionString =
-  '1BQANOTEuMTA4LjU2LjE1NAG7LWX5TQhXJPtI/JR707hcT+RmMvbFlN7//zQzkaozXGKbYY0XMBmnY61O4nNeha5Hx2XyP9iRz6E/rquDTRuuEEAKMADtAQnPrKS9SRjHAt7YxO12yxTWnciU9jrWglZ1wxwx2L1qSsxWlolbNf810euBfVWQH/Tiu6X5CRzvKLxSXExnkIYDoIcv6vEK44oFlHE0Wqyhe/Ay2NiNIVGQZrpK0P7HjBLOU+aPRaRwqI/qOHp4YjqXz7peaPMkywDYdnpV5YW5XiRPwnq77pI9NyrYhQlH+RWTWJNw57Xm4ldLj79MIfVhLrvTa75m9dbYtq87+SkopbIGTBgIm1LZXQ==';
+function checkWordsInText(text, words) {
+  const lowercaseText = text.toLowerCase();
+
+  for (const word of words) {
+    const lowercaseWord = word.toLowerCase();
+
+    // Ищем слово в тексте
+    if (lowercaseText.includes(lowercaseWord)) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 @Injectable()
 export class TelegramService {
   private client: TelegramClient;
 
-  constructor() {
-    function checkWordsInText(text, words) {
-      // Преобразуем строку текста в нижний регистр для сравнения без учета регистра
-      const lowercaseText = text.toLowerCase();
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectBot() private bot: Telegraf
+  ) {
+    const apiId = +configService.get<number>('TELEGRAM_API_ID');
+    const apiHash = configService.get<string>('TELEGRAM_API_HASH');
+    const stringSession = new StringSession(
+      configService.get<string>('TELEGRAM_SESSION_KEY')
+    );
 
-      // Проверяем наличие каждого слова в тексте
-      for (const word of words) {
-        // Преобразуем слово в нижний регистр для сравнения без учета регистра
-        const lowercaseWord = word.toLowerCase();
+    // 45007781
+    // 39731028
 
-        // Ищем слово в тексте
-        if (lowercaseText.includes(lowercaseWord)) {
-          return true; // Если найдено хотя бы одно слово, возвращаем true
-        }
-      }
-
-      return false; // Если ни одно слово не найдено, возвращаем false
-    }
-
-    const apiId = 26775843;
-    const apiHash = '35f1cfd51cde86ffe6a656ecf6cffb06';
-    const stringSession = new StringSession(sessionString); // fill this later with the value from session.save()
     (async () => {
       console.log('Loading interactive example...');
       const client = new TelegramClient(stringSession, apiId, apiHash, {
@@ -48,7 +54,7 @@ export class TelegramService {
 
       console.log('You should now be connected.');
       console.log(client.session.save()); // Save this string to avoid logging in again
-
+      await this.bot.telegram.sendMessage('39731028', 'Урааа, работает!');
       // const result = await client.invoke(
       //   new Api.contacts.ResolveUsername({
       //     username: 'ilyaviache',

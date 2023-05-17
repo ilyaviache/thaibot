@@ -11,7 +11,7 @@ export class BotService {
 
   @Start()
   async startCommand(ctx: Context) {
-    await ctx.reply('Привет лох!');
+    await ctx.reply('Привет лох! Вот твой ChatID: ' + ctx.chat.id);
   }
 
   @Help()

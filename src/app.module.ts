@@ -1,6 +1,6 @@
 import { GraphQLModule } from '@nestjs/graphql';
 import { Logger, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -32,15 +32,11 @@ import { TelegramModule } from './telegram/telegram.module';
       },
     }),
 
-    TelegrafModule.forRoot({
-      token: '6012861302:AAH9tAVDdOI_5pMT2JRelnCg5aLHbd8sX90',
-      launchOptions: {
-        webhook: {
-          domain: '2a24-180-183-77-42.ngrok-free.app',
-          hookPath: '/webhook',
-          port: 3001,
-        },
-      },
+    TelegrafModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+      }),
+      inject: [ConfigService],
     }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
