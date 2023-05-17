@@ -120,12 +120,13 @@ export class TelegramService {
         `;
 
           const to = 'test_booooottaaaaaaa';
-
-          await client.sendMessage(to, { message: report });
-          await client.forwardMessages(to, {
-            fromPeer: message.peerId,
-            messages: messageId,
-          });
+          if (to !== `${channelUsername}`) {
+            await client.sendMessage(to, { message: report });
+            await client.forwardMessages(to, {
+              fromPeer: message.peerId,
+              messages: messageId,
+            });
+          }
         }
       }
 
