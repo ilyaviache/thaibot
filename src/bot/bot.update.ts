@@ -1,13 +1,5 @@
-import { UseFilters, UseInterceptors } from '@nestjs/common';
-import {
-  InjectBot,
-  Ctx,
-  Start,
-  Update,
-  Action,
-  Command,
-  Hears,
-} from 'nestjs-telegraf';
+import { UseFilters } from '@nestjs/common';
+import { InjectBot, Ctx, Start, Update, Action } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { ESTATE_SCENE } from './bot.constants';
 import { BotFilter } from './bot.filter';
@@ -37,4 +29,31 @@ export class BotUpdate {
   async onEstate(@Ctx() context: Context) {
     await context.scene.enter(ESTATE_SCENE);
   }
+
+  //   @Action(COMMANDS.USDT_TO_EUR)
+  //   async onUsdtToEur(@Ctx() context: Context) {
+  //     await context.scene.enter(MARKET_SCENE);
+  //   }
+
+  //   @Action(COMMANDS.EUR_TO_USDT)
+  //   async onEurToUsdt(@Ctx() context: Context) {
+  //     await context.scene.enter(EUR_TO_USDT_AMOUNT_SCENE);
+  //   }
+
+  //   @Action(COMMANDS.ESTATE)
+  //   async onEstate(@Ctx() context: Context) {
+  //     await context.scene.enter(ESTATE_SCENE);
+  //   }
+
+  //   @Hears(new RegExp(/\/approve\s(.*)/))
+  //   async onApprove(@Ctx() context: Context) {
+  //     if (context.match && context.match[1]) {
+  //       const orderId = context.match[1];
+  //       const updateOrderDto = {
+  //         status: OrderStatus.IN_CHECK,
+  //       };
+  //       await this.orderService.update(orderId, updateOrderDto);
+  //     }
+  //     return;
+  //   }
 }
