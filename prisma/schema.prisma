@@ -41,14 +41,16 @@ enum Role {
 }
 
 model Works {
-  id                    String   @id @default(cuid())
-  chat_id               String
-  listen_chat_usernames String[]
-  listen_words          String[]
-  updated_at            DateTime @default(now())
-  created_at            DateTime @default(now())
+  id                  String   @id @default(cuid())
+  chatId              String
+  listenChatUsernames String[]
+  listenWords         String[]
+  muteChatUsernames   Json[]   @db.Json
+  muteWords           Json[]   @db.Json
+  updatedAt           DateTime @default(now())
+  createdAt           DateTime @default(now())
 
-  @@index([chat_id])
-  @@index([listen_chat_usernames])
-  @@index([listen_words])
+  @@index([chatId])
+  @@index([listenChatUsernames])
+  @@index([listenWords])
 }

@@ -27,11 +27,13 @@ Table Post {
 
 Table Works {
   id String [pk]
-  chat_id String [not null]
-  listen_chat_usernames String[] [not null]
-  listen_words String[] [not null]
-  updated_at DateTime [default: `now()`, not null]
-  created_at DateTime [default: `now()`, not null]
+  chatId String [not null]
+  listenChatUsernames String[] [not null]
+  listenWords String[] [not null]
+  muteChatUsernames Json[] [not null]
+  muteWords Json[] [not null]
+  updatedAt DateTime [default: `now()`, not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Enum Role {

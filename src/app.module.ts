@@ -15,6 +15,7 @@ import { BotModule } from './bot/bot.module';
 
 import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
+import { WorksModule } from './works/works.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TelegramModule } from './telegram/telegram.module';
     PostsModule,
     BotModule,
     TelegramModule,
+    WorksModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
