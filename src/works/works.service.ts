@@ -18,7 +18,7 @@ export class WorksService {
 
   async findByChatId(chatId: string): Promise<Works | null> {
     return this.prisma.works.findFirst({
-      where: { chatId },
+      where: { chat_id: chatId },
     });
   }
 

@@ -28,8 +28,31 @@ CREATE TABLE "Post" (
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Works" (
+    "id" TEXT NOT NULL,
+    "chatId" TEXT NOT NULL,
+    "listenChatUsernames" TEXT[],
+    "listenWords" TEXT[],
+    "muteChatUsernames" JSON[],
+    "muteWords" JSON[],
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Works_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "Works_chatId_idx" ON "Works"("chatId");
+
+-- CreateIndex
+CREATE INDEX "Works_listenChatUsernames_idx" ON "Works"("listenChatUsernames");
+
+-- CreateIndex
+CREATE INDEX "Works_listenWords_idx" ON "Works"("listenWords");
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
