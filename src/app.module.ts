@@ -17,6 +17,8 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
 import { WorksModule } from './works/works.module';
 
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
@@ -44,7 +46,7 @@ import { WorksModule } from './works/works.module';
       driver: ApolloDriver,
       useClass: GqlConfigService,
     }),
-
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     PostsModule,
