@@ -25,6 +25,15 @@ Table Post {
   authorId String
 }
 
+Table Works {
+  id String [pk]
+  chat_id String [not null]
+  listen_chat_usernames String[] [not null]
+  listen_words String[] [not null]
+  updated_at DateTime [default: `now()`, not null]
+  created_at DateTime [default: `now()`, not null]
+}
+
 Enum Role {
   ADMIN
   USER

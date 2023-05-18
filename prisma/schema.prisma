@@ -39,3 +39,16 @@ enum Role {
   ADMIN
   USER
 }
+
+model Works {
+  id                    String   @id @default(cuid())
+  chat_id               String
+  listen_chat_usernames String[]
+  listen_words          String[]
+  updated_at            DateTime @default(now())
+  created_at            DateTime @default(now())
+
+  @@index([chat_id])
+  @@index([listen_chat_usernames])
+  @@index([listen_words])
+}
