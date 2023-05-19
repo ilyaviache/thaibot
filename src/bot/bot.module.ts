@@ -4,9 +4,10 @@ import { BotController } from './bot.controller';
 import { BotService } from './bot.service';
 import { BotUpdate } from './bot.update';
 import { BotListener } from './bot.listener';
+import { WorksService } from 'src/works/works.service';
 
 @Module({
-  providers: [BotUpdate, BotResolver, BotService, BotListener],
+  providers: [BotUpdate, BotResolver, BotService, BotListener, WorksService],
   controllers: [BotController],
   exports: [BotService, BotListener],
 })

@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Works } from '@prisma/client';
+import { UpsertWorksInput } from './dto/upsert-works.input';
+import { WorkDTO } from './dto/work.dto';
+import { Int } from '@nestjs/graphql';
 
 @Injectable()
 export class WorksService {
@@ -39,5 +42,23 @@ export class WorksService {
     return this.prisma.works.delete({
       where: { id },
     });
+  }
+
+  async deleteAll(): Promise<number | null> {
+    const { count } = await this.prisma.works.deleteMany();
+    return count;
+  }
+
+  async startWork(input: UpsertWorksInput): Promise<Works | null> {
+    const work = await this.findByChatId(input.chatId.toString());
+    if (!work) {
+      return await this.prisma.works.create({
+        data: {
+          chatId: input.chatId.toString(),
+        },
+      });
+    } else {
+      return work;
+    }
   }
 }

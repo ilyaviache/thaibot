@@ -3,18 +3,17 @@ import { ExtraEditMessageText } from 'telegraf/typings/telegram-types';
 import { Markup } from 'telegraf';
 import { COMMANDS } from './bot.constants';
 import { BotService } from './bot.service';
+import { UpsertWorksInput } from '../works/dto/upsert-works.input';
 
-export const createUserDtoFactory = ({
-  id,
-  first_name = '',
-  username = '',
-  language_code = 'en',
-}) => ({
-  chatId: id,
-  firstName: first_name,
-  userName: username,
-  languageCode: language_code,
-});
+export const createWorksDtoFactory = ({ id }) => {
+  return new UpsertWorksInput({
+    chatId: id,
+    listenChatUsernames: [],
+    listenWords: [],
+    muteChatUsernames: [],
+    muteWords: [],
+  });
+};
 
 export const replyOrEdit = async (
   ctx: Context,

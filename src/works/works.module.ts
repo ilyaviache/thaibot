@@ -4,6 +4,7 @@ import { WorksController } from './works.controller';
 
 @Module({
   providers: [WorksService],
-  controllers: [WorksController]
+  controllers: [WorksController],
+  exports: [WorksService],
 })
-export class WorksModule {}
+export class WorksModule { }

@@ -6,6 +6,9 @@ import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
 import { BotService } from './bot.service';
 import { COMMANDS } from './bot.constants';
+import { createWorksDtoFactory } from './bot.utils';
+
+import { WorksService } from 'src/works/works.service';
 
 @Update()
 @UseFilters(BotFilter)
@@ -13,16 +16,22 @@ export class BotUpdate {
   constructor(
     @InjectBot()
     private readonly bot: Telegraf<Context>,
-    private readonly botService: BotService
+    private readonly botService: BotService,
+    private readonly worksService: WorksService
   ) { }
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    // const createUserDto = createUserDtoFactory(ctx.from);
-    // await this.userService.createOrUpdate(createUserDto);
-    // ctx.session.messageId = undefined;
-    // await this.botService.start(ctx);
-    await ctx.reply('Привет лох! Вот твой ChatID: ' + ctx.chat.id);
+    try {
+      const createWorksDto = createWorksDtoFactory(ctx.from);
+      const result = await this.worksService.startWork(createWorksDto);
+      console.log(result);
+      await ctx.reply('Привет! Вот твой ChatID: ' + ctx.chat.id);
+    } catch (e) {
+      console.log(e);
+    }
+
+    return;
   }
 
   @Action(COMMANDS.ESTATE)
