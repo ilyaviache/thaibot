@@ -1,7 +1,7 @@
 import { UseFilters } from '@nestjs/common';
 import { InjectBot, Ctx, Start, Update, Action } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
-import { ESTATE_SCENE } from './bot.constants';
+import { ACCOUNTS_SCENE } from './bot.constants';
 import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
 import { BotService } from './bot.service';
@@ -26,17 +26,16 @@ export class BotUpdate {
       const createWorksDto = createWorksDtoFactory(ctx.from);
       const result = await this.worksService.startWork(createWorksDto);
       console.log(result);
-      await ctx.reply('Привет! Вот твой ChatID: ' + ctx.chat.id);
     } catch (e) {
       console.log(e);
     }
-
+    await this.botService.start(ctx);
     return;
   }
 
-  @Action(COMMANDS.ESTATE)
+  @Action(COMMANDS.ACCOUNTS)
   async onEstate(@Ctx() context: Context) {
-    await context.scene.enter(ESTATE_SCENE);
+    await context.scene.enter(ACCOUNTS_SCENE);
   }
 
   //   @Action(COMMANDS.USDT_TO_EUR)

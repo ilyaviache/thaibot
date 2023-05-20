@@ -1,28 +1,13 @@
 import { Markup } from 'telegraf';
 export const BotName = 'cryptoExchangeBot';
-export const MARKET_SCENE = 'MARKET_SCENE';
-export const WALLET_SCENE = 'WALLET_SCENE';
-export const AMOUNT_SCENE = 'AMOUNT_SCENE';
-export const APPROVE_SCENE = 'APPROVE_SCENE';
-export const ORDER_SCENE = 'ORDER_SCENE';
-export const APPROVE_TRANSACTION_SCENE = 'APPROVE_TRANSACTION_SCENE';
-export const HOW_SCENE = 'HOW_SCENE';
-export const PULL_STATUS_SCENE = 'PULL_STATUS_SCENE';
-export const SUPPORT_SCENE = 'SUPPORT_SCENE';
-export const ORDERS_SCENE = 'ORDERS_SCENE';
-export const CANCEL_ORDER_SCENE = 'CANCEL_ORDER_SCENE';
-export const ESTATE_SCENE = 'ESTATE_SCENE';
-export const URGENT_SCENE = 'URGENT_SCENE';
-export const EUR_TO_USDT_AMOUNT_SCENE = 'EUR_TO_USDT_AMOUNT_SCENE';
-export const EUR_TO_USDT_WALLET_SCENE = 'EUR_TO_USDT__WALLET_SCENE';
-export const EUR_TO_USDT_APPROVE_SCENE = 'EUR_TO_USDT_APPROVE_SCENE';
-export const PULL_FILLED_SCENE = 'PULL_FILLED_SCENE';
+export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
 
 export const BOT_WALLET = 'TGx293hyPSQfExbjbVzbPgcciETJrTZfbF';
 
 export const MIN_AMOUNT = 30;
 export const COMMANDS = {
   START: 'start',
+  ACCOUNTS: 'ACCOUNTS',
   USDT_TO_EUR: 'USDT_TO_EUR',
   EUR_TO_USDT: 'EUR_TO_USDT',
   ESTATE: 'ESTATE',
@@ -42,6 +27,8 @@ export const COMMANDS = {
 };
 
 export const BUTTONS = {
+  ACCOUNTS: Markup.button.callback('Аккаунты', COMMANDS.ACCOUNTS),
+
   BACK: Markup.button.callback('⬅ назад ️', 'BACK'),
   SUPPORT: Markup.button.callback('ℹ️ поддержка', COMMANDS.SUPPORT),
   PULL_STATUS: Markup.button.callback(
