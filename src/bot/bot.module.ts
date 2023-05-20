@@ -4,19 +4,23 @@ import { BotController } from './bot.controller';
 import { BotService } from './bot.service';
 import { BotUpdate } from './bot.update';
 import { BotListener } from './bot.listener';
-import { WorksService } from 'src/works/works.service';
+import { WorksModule } from 'src/works/works.module';
+import { TelegrafModule } from 'nestjs-telegraf';
 
 import { AccountsScene } from './scenes/accounts.scene';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [
-    BotUpdate,
-    BotResolver,
-    BotService,
-    BotListener,
-    WorksService,
-    AccountsScene,
+  imports: [
+    WorksModule,
+    TelegrafModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
+  providers: [BotUpdate, BotResolver, BotService, BotListener, AccountsScene],
   controllers: [BotController],
   exports: [BotService, BotListener],
 })

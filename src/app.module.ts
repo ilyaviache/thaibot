@@ -1,6 +1,6 @@
 import { GraphQLModule } from '@nestjs/graphql';
 import { Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,7 +13,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { BotModule } from './bot/bot.module';
 
-import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramModule } from './telegram/telegram.module';
 import { WorksModule } from './works/works.module';
 
@@ -33,13 +32,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
           }),
         ],
       },
-    }),
-
-    TelegrafModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
-      }),
-      inject: [ConfigService],
     }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({

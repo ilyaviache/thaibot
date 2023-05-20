@@ -1,11 +1,10 @@
 import { UseFilters } from '@nestjs/common';
-import { InjectBot, Ctx, Start, Update, Action, Hears } from 'nestjs-telegraf';
+import { InjectBot, Ctx, Start, Update, Hears } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
-import { ACCOUNTS_SCENE } from './bot.constants';
 import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
 import { BotService } from './bot.service';
-import { COMMANDS } from './bot.constants';
+import { MENU_BUTTONS, ACCOUNTS_SCENE } from './bot.constants';
 import { createWorksDtoFactory } from './bot.utils';
 
 import { WorksService } from 'src/works/works.service';
@@ -33,46 +32,14 @@ export class BotUpdate {
     return;
   }
 
-  // @Action(COMMANDS.ACCOUNTS)
-  // async onEstate(@Ctx() context: Context) {
-  //   await context.scene.enter(ACCOUNTS_SCENE);
-  // }
-
-  @Hears('hi')
-  async hears(@Ctx() ctx: Context) {
-    await ctx.reply('Hey there');
+  @Hears(MENU_BUTTONS.ACCOUNTS.text)
+  async handleAccountsMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(ACCOUNTS_SCENE);
   }
 
-  @Hears('Button 1')
-  private handleButton1(@Ctx() ctx: Context): void {
-    ctx.reply('Button 1 was pressed');
-    // Добавьте здесь логику, которую вы хотите выполнить при нажатии на кнопку 1
+  @Hears(MENU_BUTTONS.BACK_TO_MENU.text)
+  async handleBackToMenu(@Ctx() ctx: Context) {
+    await this.botService.start(ctx);
+    return;
   }
-
-  //   @Action(COMMANDS.USDT_TO_EUR)
-  //   async onUsdtToEur(@Ctx() context: Context) {
-  //     await context.scene.enter(MARKET_SCENE);
-  //   }
-
-  //   @Action(COMMANDS.EUR_TO_USDT)
-  //   async onEurToUsdt(@Ctx() context: Context) {
-  //     await context.scene.enter(EUR_TO_USDT_AMOUNT_SCENE);
-  //   }
-
-  //   @Action(COMMANDS.ESTATE)
-  //   async onEstate(@Ctx() context: Context) {
-  //     await context.scene.enter(ESTATE_SCENE);
-  //   }
-
-  //   @Hears(new RegExp(/\/approve\s(.*)/))
-  //   async onApprove(@Ctx() context: Context) {
-  //     if (context.match && context.match[1]) {
-  //       const orderId = context.match[1];
-  //       const updateOrderDto = {
-  //         status: OrderStatus.IN_CHECK,
-  //       };
-  //       await this.orderService.update(orderId, updateOrderDto);
-  //     }
-  //     return;
-  //   }
 }

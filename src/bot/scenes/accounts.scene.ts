@@ -1,7 +1,6 @@
 import { UseFilters } from '@nestjs/common';
-import { Scene, SceneEnter, Ctx, Action } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Ctx } from 'nestjs-telegraf';
 import { ACCOUNTS_SCENE } from '../bot.constants';
-import { COMMANDS } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { BotService } from '../bot.service';
@@ -13,12 +12,5 @@ export class AccountsScene {
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     await this.botService.accounts(ctx);
-    return;
-  }
-
-  @Action(COMMANDS.BACK)
-  async onBackAction(@Ctx() ctx: Context) {
-    await this.botService.start(ctx);
-    return;
   }
 }

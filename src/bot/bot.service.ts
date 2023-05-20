@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Markup, Telegraf } from 'telegraf';
 import { Context } from './bot.interface';
 import { InjectBot } from 'nestjs-telegraf';
-import { BUTTONS } from './bot.constants';
+import { MENUS } from './bot.constants';
 
 @Injectable()
 export class BotService {
@@ -24,10 +24,7 @@ export class BotService {
   async start(ctx: Context): Promise<any> {
     const replyMarkup = {
       reply_markup: {
-        keyboard: [
-          [{ text: 'Button 1' }, { text: 'Button 2' }],
-          [{ text: 'Button 3' }, { text: 'Button 4' }],
-        ],
+        keyboard: MENUS.MAIN_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -37,12 +34,9 @@ export class BotService {
   }
 
   async accounts(ctx: Context): Promise<any> {
-    const buttons = [BUTTONS.BACK];
-    const keyboard = Markup.keyboard(buttons);
-
     const replyMarkup = {
       reply_markup: {
-        keyboard: [[{ text: 'Назад' }, { text: 'Button 2' }]],
+        keyboard: MENUS.ACCOUNTS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
