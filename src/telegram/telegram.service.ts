@@ -4,10 +4,8 @@ import { StringSession } from 'telegram/sessions';
 import { NewMessage } from 'telegram/events';
 import { NewMessageEvent } from 'telegram/events/NewMessage';
 import { ConfigService } from '@nestjs/config';
-import { Telegraf } from 'telegraf';
-import { InjectBot } from 'nestjs-telegraf';
-import bigInt from 'big-integer';
 import input from 'input';
+import { BotService } from 'src/bot/bot.service';
 
 function checkWordsInText(text, words) {
   const lowercaseText = text.toLowerCase();
@@ -30,7 +28,7 @@ export class TelegramService {
 
   constructor(
     private readonly configService: ConfigService,
-    @InjectBot() private bot: Telegraf
+    private readonly botService: BotService
   ) {
     const apiId = +configService.get<number>('TELEGRAM_API_ID');
     const apiHash = configService.get<string>('TELEGRAM_API_HASH');
@@ -40,6 +38,9 @@ export class TelegramService {
 
     // 45007781
     // 39731028
+
+    const chatListenedUsernames = configService.get('CHAT_LISTENED_USERNAMES');
+    console.log('chatListenedUsernames', chatListenedUsernames);
 
     (async () => {
       console.log('Loading interactive example...');
@@ -118,8 +119,8 @@ export class TelegramService {
           Username: @${senderUsername}\n
           Channel: ${channelName} @${channelUsername}\n
           Message: ${text}\n
-        `;
-
+          `;
+          // TODO: check the message from channel we need to listen
           const to = 'test_booooottaaaaaaa';
           if (to !== `${channelUsername}`) {
             await client.sendMessage(to, { message: report });
