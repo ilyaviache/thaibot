@@ -26,7 +26,10 @@ export class BotService {
 
     for (const work of works) {
       // Check if chatUsername is listed in work.listenChatUsernames
-      if (work.listenChatUsernames.includes(chatUsername)) {
+      if (
+        work.listenChannelUsernames.includes(chatUsername) &&
+        !work.muteChannelUsernames.includes(chatUsername)
+      ) {
         // Check if at least one word from work.listenWords exists in the text
         const wordsFound = work.listenWords.some((word) =>
           text.includes(word.toString())

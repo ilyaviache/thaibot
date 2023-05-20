@@ -8,8 +8,9 @@ import { UpsertWorksInput } from '../works/dto/upsert-works.input';
 export const createWorksDtoFactory = ({ id }) => {
   return new UpsertWorksInput({
     chatId: id,
-    listenChatUsernames: [],
+    listenChannelUsernames: [],
     listenWords: [],
+    muteChannelUsernames: [],
     muteUsernames: [],
     muteWords: [],
   });

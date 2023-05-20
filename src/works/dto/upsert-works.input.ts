@@ -4,10 +4,11 @@ export class UpsertWorksInput {
   id: string;
   @IsNotEmpty()
   chatId: string;
-  listenChatUsernames: string[];
+  listenChannelUsernames: string[];
   listenWords: string[];
-  muteUsernames: any[];
-  muteWords: any[];
+  muteChannelUsernames: string[];
+  muteUsernames: string[];
+  muteWords: string[];
 
   constructor(data: Partial<UpsertWorksInput>) {
     Object.assign(this, data);

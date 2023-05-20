@@ -28,10 +28,11 @@ Table Post {
 Table Works {
   id String [pk]
   chatId String [not null]
-  listenChatUsernames String[] [not null]
+  listenChannelUsernames String[] [not null]
   listenWords String[] [not null]
-  muteUsernames Json[] [not null]
-  muteWords Json[] [not null]
+  muteChannelUsernames Json[] [not null]
+  muteUsernames String[] [not null]
+  muteWords String[] [not null]
   updatedAt DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]
 }
