@@ -8,16 +8,17 @@ import { WorksModule } from 'src/works/works.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 
 import { AccountsScene } from './scenes/accounts.scene';
-import { ConfigService } from '@nestjs/config';
+import { botMiddleware } from './bot.middleware';
 
 @Module({
   imports: [
     WorksModule,
     TelegrafModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+      useFactory: () => ({
+        token: process.env.TELEGRAM_BOT_TOKEN,
+        middlewares: [botMiddleware],
+        include: [BotModule],
       }),
-      inject: [ConfigService],
     }),
   ],
   providers: [BotUpdate, BotResolver, BotService, BotListener, AccountsScene],
