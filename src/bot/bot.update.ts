@@ -1,5 +1,5 @@
 import { UseFilters } from '@nestjs/common';
-import { InjectBot, Ctx, Start, Update, Action } from 'nestjs-telegraf';
+import { InjectBot, Ctx, Start, Update, Action, Hears } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { ACCOUNTS_SCENE } from './bot.constants';
 import { BotFilter } from './bot.filter';
@@ -33,9 +33,20 @@ export class BotUpdate {
     return;
   }
 
-  @Action(COMMANDS.ACCOUNTS)
-  async onEstate(@Ctx() context: Context) {
-    await context.scene.enter(ACCOUNTS_SCENE);
+  // @Action(COMMANDS.ACCOUNTS)
+  // async onEstate(@Ctx() context: Context) {
+  //   await context.scene.enter(ACCOUNTS_SCENE);
+  // }
+
+  @Hears('hi')
+  async hears(@Ctx() ctx: Context) {
+    await ctx.reply('Hey there');
+  }
+
+  @Hears('Button 1')
+  private handleButton1(@Ctx() ctx: Context): void {
+    ctx.reply('Button 1 was pressed');
+    // Добавьте здесь логику, которую вы хотите выполнить при нажатии на кнопку 1
   }
 
   //   @Action(COMMANDS.USDT_TO_EUR)
