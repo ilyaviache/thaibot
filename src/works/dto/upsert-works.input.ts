@@ -6,7 +6,7 @@ export class UpsertWorksInput {
   chatId: string;
   listenChatUsernames: string[];
   listenWords: string[];
-  muteChatUsernames: any[];
+  muteUsernames: any[];
   muteWords: any[];
 
   constructor(data: Partial<UpsertWorksInput>) {

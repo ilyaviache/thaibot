@@ -45,7 +45,7 @@ model Works {
   chatId              String
   listenChatUsernames String[]
   listenWords         String[]
-  muteChatUsernames   Json[]   @db.Json
+  muteUsernames       Json[]   @db.Json
   muteWords           Json[]   @db.Json
   updatedAt           DateTime @default(now())
   createdAt           DateTime @default(now())

@@ -20,8 +20,31 @@ export class BotService {
   // entry point to a main bot logic, all messages will be handled here
   async handleListenedMessage(message: NewMessageDataDTO): Promise<any> {
     const text = message.text;
-    const works = this.worksService.findAll();
-    // TODO: main job here
+    const chatUsername = message.chatUsername;
+    const fromUsername = message.fromUsername;
+    const works = await this.worksService.findAll();
+
+    for (const work of works) {
+      // Check if chatUsername is listed in work.listenChatUsernames
+      if (work.listenChatUsernames.includes(chatUsername)) {
+        // Check if at least one word from work.listenWords exists in the text
+        const wordsFound = work.listenWords.some((word) =>
+          text.includes(word.toString())
+        );
+
+        // Check that none of the words from work.muteWords are included in the text
+        const muteWordsFound = work.muteWords.some((word) =>
+          text.includes(word.toString())
+        );
+
+        // Check if fromUsername is not present in work.muteUsernames
+        const isMutedUser = work.muteUsernames.includes(fromUsername);
+
+        if (wordsFound && !muteWordsFound && !isMutedUser) {
+          this.sendMessage(work.chatId, `Match found for work: ${work.id}`);
+        }
+      }
+    }
   }
 
   async sendBaseMessage(message: any) {
@@ -30,8 +53,10 @@ export class BotService {
     return;
   }
 
-  async sendMessage(message: any) {
+  async sendMessage(chatId: string, text: string) {
     console.log(message);
+    await this.bot.telegram.sendMessage(chatId, text);
+    return;
   }
 
   async start(ctx: Context): Promise<any> {

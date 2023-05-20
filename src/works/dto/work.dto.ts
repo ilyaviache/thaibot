@@ -3,7 +3,7 @@ export class WorkDTO {
   chatId: string;
   listenChatUsernames: string[];
   listenWords: string[];
-  muteChatUsernames: any[];
+  muteUsernames: any[];
   muteWords: any[];
   updatedAt: Date;
   createdAt: Date;

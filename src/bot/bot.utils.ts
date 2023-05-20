@@ -10,7 +10,7 @@ export const createWorksDtoFactory = ({ id }) => {
     chatId: id,
     listenChatUsernames: [],
     listenWords: [],
-    muteChatUsernames: [],
+    muteUsernames: [],
     muteWords: [],
   });
 };

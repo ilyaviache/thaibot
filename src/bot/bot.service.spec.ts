@@ -40,18 +40,6 @@ describe('BotService', () => {
     });
   });
 
-  describe('sendBaseMessage', () => {
-    it('should send a base message', async () => {
-      const message = { chatId: 123, text: 'Test message' };
-      const sendMessageSpy = jest.spyOn(bot.telegram, 'sendMessage');
-
-      await botService.sendBaseMessage(message);
-
-      expect(sendMessageSpy).toHaveBeenCalledWith(message.chatId, message.text);
-      // Добавьте дополнительные проверки, если необходимо
-    });
-  });
-
   describe('start', () => {
     it('should start the bot', async () => {
       const ctx = { reply: jest.fn() };

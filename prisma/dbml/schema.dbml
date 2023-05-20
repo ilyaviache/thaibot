@@ -30,7 +30,7 @@ Table Works {
   chatId String [not null]
   listenChatUsernames String[] [not null]
   listenWords String[] [not null]
-  muteChatUsernames Json[] [not null]
+  muteUsernames Json[] [not null]
   muteWords Json[] [not null]
   updatedAt DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]
