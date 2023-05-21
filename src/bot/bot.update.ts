@@ -24,7 +24,7 @@ export class BotUpdate {
     try {
       const createWorksDto = createWorksDtoFactory(ctx.from);
       const result = await this.worksService.startWork(createWorksDto);
-      console.log(result);
+      ctx.session.work = result;
     } catch (e) {
       console.log(e);
     }

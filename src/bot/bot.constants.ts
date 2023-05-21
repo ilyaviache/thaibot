@@ -20,6 +20,8 @@ export const MENU_BUTTONS = {
   WORDS_ADD: { text: '➕ Добавить новое' },
   WORDS_DELETE_ALL: { text: '🗑 Удалить все' },
   BACK_TO_MENU: { text: 'Вернуться в меню' },
+  OK: { text: '✅' },
+  CANCEL: { text: '⛔️' },
 };
 
 export const BUTTONS = {
