@@ -8,7 +8,9 @@ import { WorksModule } from 'src/works/works.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 
 import { AccountsScene } from './scenes/accounts.scene';
+
 import { botMiddleware } from './bot.middleware';
+import { WordsScene } from './scenes/words.scene';
 
 @Module({
   imports: [
@@ -21,7 +23,15 @@ import { botMiddleware } from './bot.middleware';
       }),
     }),
   ],
-  providers: [BotUpdate, BotResolver, BotService, BotListener, AccountsScene],
+  providers: [
+    BotUpdate,
+    BotResolver,
+    BotService,
+    BotListener,
+
+    AccountsScene,
+    WordsScene,
+  ],
   controllers: [BotController],
   exports: [BotService, BotListener],
 })

@@ -10,7 +10,5 @@ import { BotService } from '../bot.service';
 export class AccountsScene {
   constructor(private readonly botService: BotService) { }
   @SceneEnter()
-  async onSceneEnter(@Ctx() ctx: Context) {
-    await this.botService.accounts(ctx);
-  }
+  async onSceneEnter(@Ctx() ctx: Context) { }
 }

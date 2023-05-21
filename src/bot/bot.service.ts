@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Markup, Telegraf } from 'telegraf';
 import { Context } from './bot.interface';
 import { InjectBot } from 'nestjs-telegraf';
-import { MENUS } from './bot.constants';
+import { MENUS, TEXTS } from './bot.constants';
 import { message } from 'telegram/client';
 import { NewMessage } from 'telegram/events';
 
@@ -67,18 +67,6 @@ export class BotService {
       },
     };
 
-    return ctx.reply('Start bot text', replyMarkup);
-  }
-
-  async accounts(ctx: Context): Promise<any> {
-    const replyMarkup = {
-      reply_markup: {
-        keyboard: MENUS.ACCOUNTS_MENU,
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
-
-    return ctx.reply('Accounts', replyMarkup);
+    return ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
   }
 }
