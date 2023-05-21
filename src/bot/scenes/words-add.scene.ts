@@ -30,13 +30,32 @@ export class WordsAddScene {
 
   @Hears(MENU_BUTTONS.BACK.text)
   async handleDeleteCancel(@Ctx() ctx: Context) {
+    console.log('ctx', ctx);
     await ctx.scene.enter(WORDS_SCENE);
   }
 
-  @Hears()
-  async handleWordAdd(@Ctx() ctx: Context) {
+  @Hears('hi')
+  async handleTest(@Ctx() ctx: Context) {
     console.log('ctx', ctx);
-    const word = ctx.message['text'];
+    // const word = ctx.message['text'];
+    // try {
+    //   const result = await this.worksService.addMuteWord(
+    //     ctx.session.work,
+    //     word
+    //   );
+    //   console.log('result', result);
+    //   ctx.session.work = result;
+    // } catch (e) {
+    //   console.log(e);
+    //   return;
+    // }
+    await ctx.reply('hi11');
+    return;
+  }
+
+  @Hears(RegExp('.'))
+  async handleWordAdd(@Ctx() ctx: Context) {
+    const word = ctx.update['message']['text'];
     try {
       const result = await this.worksService.addMuteWord(
         ctx.session.work,
