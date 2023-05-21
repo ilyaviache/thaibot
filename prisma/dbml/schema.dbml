@@ -31,7 +31,7 @@ Table Works {
   listenChannelUsernames String[] [not null]
   listenWords String[] [not null]
   muteChannelUsernames Json[] [not null]
-  muteUsernames String[] [not null]
+  muteUsernames Json[] [not null]
   muteWords String[] [not null]
   updatedAt DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]

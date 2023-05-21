@@ -46,7 +46,7 @@ model Works {
   listenChannelUsernames String[]
   listenWords            String[]
   muteChannelUsernames   Json[]   @db.Json
-  muteUsernames          String[]
+  muteUsernames          Json[]   @db.Json
   muteWords              String[]
   updatedAt              DateTime @default(now())
   createdAt              DateTime @default(now())

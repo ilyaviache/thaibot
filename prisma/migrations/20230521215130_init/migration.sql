@@ -32,10 +32,11 @@ CREATE TABLE "Post" (
 CREATE TABLE "Works" (
     "id" TEXT NOT NULL,
     "chatId" TEXT NOT NULL,
-    "listenChatUsernames" TEXT[],
+    "listenChannelUsernames" TEXT[],
     "listenWords" TEXT[],
-    "muteChatUsernames" JSON[],
-    "muteWords" JSON[],
+    "muteChannelUsernames" JSON[],
+    "muteUsernames" JSON[],
+    "muteWords" TEXT[],
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -49,7 +50,7 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE INDEX "Works_chatId_idx" ON "Works"("chatId");
 
 -- CreateIndex
-CREATE INDEX "Works_listenChatUsernames_idx" ON "Works"("listenChatUsernames");
+CREATE INDEX "Works_listenChannelUsernames_idx" ON "Works"("listenChannelUsernames");
 
 -- CreateIndex
 CREATE INDEX "Works_listenWords_idx" ON "Works"("listenWords");
