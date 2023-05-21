@@ -1,6 +1,12 @@
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears } from 'nestjs-telegraf';
-import { WORDS_SCENE, MENUS, TEXTS, MENU_BUTTONS } from '../bot.constants';
+import {
+  WORDS_SCENE,
+  WORDS_ADD_SCENE,
+  MENUS,
+  TEXTS,
+  MENU_BUTTONS,
+} from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { BotService } from '../bot.service';
@@ -34,6 +40,28 @@ export class WordsScene {
     };
 
     await ctx.reply(TEXTS.WORDS.MAIN, replyMarkup);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.WORDS_ADD.text)
+  async handleWordsAdd(@Ctx() ctx: Context) {
+    await await ctx.scene.enter(WORDS_ADD_SCENE);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.WORDS_LIST.text)
+  async handleWordsList(@Ctx() ctx: Context) {
+    const words = ctx.session.work.muteWords;
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK_TO_MENU]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+    console.log('words', words);
+    console.log('ctx.session.work', ctx.session.work);
+    await ctx.reply(words.join('\n'), replyMarkup);
     return;
   }
 

@@ -35,6 +35,7 @@ export class BotUpdate {
   @Hears(MENU_BUTTONS.WORDS.text)
   async handleAccountsMenu(@Ctx() ctx: Context) {
     await ctx.scene.enter(WORDS_SCENE);
+    return;
   }
 
   @Hears(MENU_BUTTONS.BACK_TO_MENU.text)

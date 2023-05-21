@@ -11,6 +11,7 @@ import { AccountsScene } from './scenes/accounts.scene';
 
 import { botMiddleware } from './bot.middleware';
 import { WordsScene } from './scenes/words.scene';
+import { WordsAddScene } from './scenes/words-add.scene';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { WordsScene } from './scenes/words.scene';
 
     AccountsScene,
     WordsScene,
+    WordsAddScene,
   ],
   controllers: [BotController],
   exports: [BotService, BotListener],

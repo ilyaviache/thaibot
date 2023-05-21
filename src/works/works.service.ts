@@ -61,4 +61,9 @@ export class WorksService {
       return work;
     }
   }
+
+  async addMuteWord(work: Works, word: string): Promise<Works | null> {
+    work.muteWords.push(word);
+    return await this.update(work.id, work);
+  }
 }
