@@ -69,4 +69,9 @@ export class WorksService {
     work.muteWords.splice(index, 1);
     return await this.update(work.id, work);
   }
+
+  async removeAllMuteWords(work: Works): Promise<Works | null> {
+    work.muteWords = [];
+    return await this.update(work.id, work);
+  }
 }

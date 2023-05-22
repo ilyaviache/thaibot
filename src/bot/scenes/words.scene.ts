@@ -30,7 +30,7 @@ export class WordsScene {
   }
 
   @Hears(MENU_BUTTONS.WORDS_DELETE_ALL.text)
-  async handleBackToMenu(@Ctx() ctx: Context) {
+  async handleWordsDelete(@Ctx() ctx: Context) {
     const replyMarkup = {
       reply_markup: {
         keyboard: [[MENU_BUTTONS.OK, MENU_BUTTONS.CANCEL]],
@@ -39,7 +39,7 @@ export class WordsScene {
       },
     };
 
-    await ctx.reply(TEXTS.WORDS.MAIN, replyMarkup);
+    await ctx.reply(TEXTS.WORDS.DELETE, replyMarkup);
     return;
   }
 
@@ -75,6 +75,20 @@ export class WordsScene {
     } catch (e) {
       console.log(e);
     }
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.OK.text)
+  async handleOk(@Ctx() ctx: Context) {
+    const result = await this.worksService.removeAllMuteWords(ctx.session.work);
+    ctx.session.work = result;
+    await this.onSceneEnter(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.CANCEL.text)
+  async handleCancel(@Ctx() ctx: Context) {
+    await this.onSceneEnter(ctx);
     return;
   }
 
