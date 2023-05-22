@@ -23,7 +23,7 @@ export const MENU_BUTTONS = {
   BACK_TO_MENU: { text: 'Вернуться в меню' },
   OK: { text: '✅' },
   CANCEL: { text: '⛔️' },
-  BACK: { text: '⬅ Назад' },
+  BACK: { text: '⬅ Назад', callback_data: 'BACK' },
 };
 
 export const BUTTONS = {

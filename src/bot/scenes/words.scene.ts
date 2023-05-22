@@ -10,6 +10,7 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { BotService } from '../bot.service';
+import { Markup } from 'telegraf';
 
 @Scene(WORDS_SCENE)
 @UseFilters(BotFilter)
@@ -52,16 +53,30 @@ export class WordsScene {
   @Hears(MENU_BUTTONS.WORDS_LIST.text)
   async handleWordsList(@Ctx() ctx: Context) {
     const words = ctx.session.work.muteWords;
-    const replyMarkup = {
-      reply_markup: {
-        keyboard: [[MENU_BUTTONS.BACK_TO_MENU]],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
     console.log('words', words);
-    console.log('ctx.session.work', ctx.session.work);
-    await ctx.reply(words.join('\n'), replyMarkup);
+    const inlineKeyboard = [];
+
+    words.forEach((word, i) => {
+      inlineKeyboard.push([
+        { text: `↩️ ${word}`, callback_data: `delete_word_${i}` },
+      ]);
+    });
+
+    inlineKeyboard.push([MENU_BUTTONS.BACK]);
+    try {
+      // };
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard: inlineKeyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+
+      await ctx.reply('ASdasd', replyMarkup);
+    } catch (e) {
+      console.log(e);
+    }
     return;
   }
 
