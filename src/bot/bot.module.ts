@@ -7,9 +7,9 @@ import { BotListener } from './bot.listener';
 import { WorksModule } from 'src/works/works.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 
-import { AccountsScene } from './scenes/accounts.scene';
-
 import { botMiddleware } from './bot.middleware';
+import { AccountsScene } from './scenes/accounts.scene';
+import { AccountsAddScene } from './scenes/accounts-add.scene';
 import { WordsScene } from './scenes/words.scene';
 import { WordsAddScene } from './scenes/words-add.scene';
 import { ChannelsScene } from './scenes/channels.scene';
@@ -33,6 +33,7 @@ import { ChannelsAddScene } from './scenes/channels-add.scene';
     BotListener,
 
     AccountsScene,
+    AccountsAddScene,
     WordsScene,
     WordsAddScene,
     ChannelsScene,

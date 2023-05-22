@@ -89,4 +89,19 @@ export class WorksService {
     work.muteChannelUsernames = [];
     return await this.update(work.id, work);
   }
+
+  async addMuteAccount(work: Works, account: any): Promise<Works | null> {
+    work.muteUsernames.push(account);
+    return await this.update(work.id, work);
+  }
+
+  async removeMuteAccount(work: Works, index: number): Promise<Works | null> {
+    work.muteUsernames.splice(index, 1);
+    return await this.update(work.id, work);
+  }
+
+  async removeAllMuteAccounts(work: Works): Promise<Works | null> {
+    work.muteUsernames = [];
+    return await this.update(work.id, work);
+  }
 }

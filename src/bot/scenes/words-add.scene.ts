@@ -1,5 +1,5 @@
 import { UseFilters } from '@nestjs/common';
-import { Scene, SceneEnter, Ctx, Hears } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Ctx, Hears, Next } from 'nestjs-telegraf';
 import {
   WORDS_SCENE,
   WORDS_ADD_SCENE,
@@ -9,6 +9,7 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
+import { nextTick } from 'process';
 
 @Scene(WORDS_ADD_SCENE)
 @UseFilters(BotFilter)
@@ -30,24 +31,32 @@ export class WordsAddScene {
 
   @Hears(MENU_BUTTONS.BACK.text)
   async handleDeleteCancel(@Ctx() ctx: Context) {
-    console.log('ctx', ctx);
     await ctx.scene.enter(WORDS_SCENE);
   }
 
   @Hears(RegExp('.'))
-  async handleWordAdd(@Ctx() ctx: Context) {
-    const word = ctx.update['message']['text'];
-    try {
-      const result = await this.worksService.addMuteWord(
-        ctx.session.work,
-        word
-      );
-      console.log('result', result);
-      ctx.session.work = result;
-    } catch (e) {
-      console.log(e);
-      return;
+  async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+    console.log('ctx.scene.curren 0', ctx.scene.current);
+    if (ctx.scene.current.id === WORDS_ADD_SCENE) {
+      const word = ctx.update['message']['text'];
+      if (word === MENU_BUTTONS.BACK.text || word === '/start') {
+        return next();
+      }
+      try {
+        const result = await this.worksService.addMuteWord(
+          ctx.session.work,
+          word
+        );
+
+        ctx.session.work = result;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      return next();
     }
+
+    await this.onSceneEnter(ctx);
     return;
   }
 }

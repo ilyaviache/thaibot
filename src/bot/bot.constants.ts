@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
-import { backCallback } from './bot.utils';
 
 export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
+export const ACCOUNTS_ADD_SCENE = 'ACCOUNTS_ADD_SCENE';
 export const WORDS_SCENE = 'WORDS_SCENE';
 export const WORDS_ADD_SCENE = 'WORDS_ADD_SCENE';
 export const CHANNELS_SCENE = 'CHANNELS_SCENE';
@@ -18,7 +18,11 @@ export const MENU_BUTTONS = {
   ACCOUNTS: { text: 'Аккаунты' },
   WORDS: { text: '➖ Минус-слова' },
   PAYMENT: { text: 'Оплата' },
-  CHATS: { text: 'Чаты' },
+  CHANNELS: { text: 'Чаты' },
+
+  ACCOUNTS_LIST: { text: '📋 Список игнорируемых аккаунтов' },
+  ACCOUNTS_ADD: { text: '➕ Добавить новый' },
+  ACCOUNTS_DELETE_ALL: { text: '🗑 Удалить все' },
 
   WORDS_LIST: { text: '📋 Список моих минус-слов' },
   WORDS_ADD: { text: '➕ Добавить новое' },
@@ -27,6 +31,7 @@ export const MENU_BUTTONS = {
   CHANNELS_LIST: { text: '📋 Список игнорируемых чатов' },
   CHANNELS_ADD: { text: '➕ Добавить игнорируемый чат' },
   CHANNELS_DELETE_ALL: { text: '🗑 Удалить все' },
+
   BACK_TO_MENU: { text: 'Вернуться в меню' },
   OK: { text: '✅' },
   CANCEL: { text: '⛔️' },
@@ -43,6 +48,12 @@ export const BUTTONS = {
 export const TEXTS = {
   MAIN: {
     WELCOME: 'Приветственное сообщение',
+  },
+  ACCOUNTS: {
+    LIST: `Список игнорируемых аккаунтов. Вы можете удалить любой из них, нажав на кнопку "↩️"`,
+    MAIN: `В данном меню вы можете управлять аккаунтами, сообщения из которых должны игнорироваться`,
+    ADD: `Добавьте игнорируемые аккаунты. Отправте сообщение содержащие ID без знака @`,
+    DELETE: `Вы уверены, что хотите удалить все игнорируемые аккаунты?`,
   },
   WORDS: {
     LIST: `Вот список ваших минус-слов. Вы можете удалить их, нажав на кнопку "↩️"`,
@@ -61,8 +72,13 @@ export const TEXTS = {
 
 export const MENUS = {
   MAIN_MENU: [
-    [MENU_BUTTONS.CHATS, MENU_BUTTONS.WORDS],
+    [MENU_BUTTONS.CHANNELS, MENU_BUTTONS.WORDS],
     [MENU_BUTTONS.ACCOUNTS, MENU_BUTTONS.PAYMENT],
+  ],
+  ACCOUNTS_MENU: [
+    [MENU_BUTTONS.ACCOUNTS_LIST],
+    [MENU_BUTTONS.ACCOUNTS_ADD, MENU_BUTTONS.ACCOUNTS_DELETE_ALL],
+    [MENU_BUTTONS.BACK_TO_MENU],
   ],
   WORDS_MENU: [
     [MENU_BUTTONS.WORDS_LIST],

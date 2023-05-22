@@ -1,8 +1,8 @@
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears, Next } from 'nestjs-telegraf';
 import {
-  CHANNELS_SCENE,
-  CHANNELS_ADD_SCENE,
+  ACCOUNTS_SCENE,
+  ACCOUNTS_ADD_SCENE,
   TEXTS,
   MENU_BUTTONS,
 } from '../bot.constants';
@@ -10,9 +10,9 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 
-@Scene(CHANNELS_ADD_SCENE)
+@Scene(ACCOUNTS_ADD_SCENE)
 @UseFilters(BotFilter)
-export class ChannelsAddScene {
+export class AccountsAddScene {
   constructor(private readonly worksService: WorksService) { }
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
@@ -28,21 +28,21 @@ export class ChannelsAddScene {
     return;
   }
 
-  @Hears('channel_' + MENU_BUTTONS.BACK.text)
+  @Hears(MENU_BUTTONS.BACK.text)
   async handleDeleteCancel(@Ctx() ctx: Context) {
-    await ctx.scene.enter(CHANNELS_SCENE);
+    await ctx.scene.enter(ACCOUNTS_SCENE);
   }
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    console.log('ctx.scene.curren 1', ctx);
-    if (ctx.scene.current.id === CHANNELS_ADD_SCENE) {
+    console.log('ctx.scene.curren 2', ctx.scene.current);
+    if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE) {
       const username = ctx.update['message']['text'];
       if (username === MENU_BUTTONS.BACK.text || username === '/start') {
         return next();
       }
       try {
-        const result = await this.worksService.addMuteChannel(
+        const result = await this.worksService.addMuteAccount(
           ctx.session.work,
           username
         );
