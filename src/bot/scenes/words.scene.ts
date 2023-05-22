@@ -1,5 +1,5 @@
 import { UseFilters } from '@nestjs/common';
-import { Scene, SceneEnter, Ctx, Hears } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Ctx, Hears, Action } from 'nestjs-telegraf';
 import {
   WORDS_SCENE,
   WORDS_ADD_SCENE,
@@ -9,13 +9,12 @@ import {
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
-import { BotService } from '../bot.service';
-import { Markup } from 'telegraf';
+import { WorksService } from 'src/works/works.service';
 
 @Scene(WORDS_SCENE)
 @UseFilters(BotFilter)
 export class WordsScene {
-  constructor(private readonly botService: BotService) { }
+  constructor(private readonly worksService: WorksService) { }
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
@@ -53,7 +52,6 @@ export class WordsScene {
   @Hears(MENU_BUTTONS.WORDS_LIST.text)
   async handleWordsList(@Ctx() ctx: Context) {
     const words = ctx.session.work.muteWords;
-    console.log('words', words);
     const inlineKeyboard = [];
 
     words.forEach((word, i) => {
@@ -73,14 +71,27 @@ export class WordsScene {
         },
       };
 
-      await ctx.reply('ASdasd', replyMarkup);
+      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }
     return;
   }
 
-  @Hears(MENU_BUTTONS.CANCEL.text)
+  @Action(/delete_word_\d+/)
+  async handleDeleteWord(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const wordIndex = Number(callbackData.split('_')[2]);
+
+    const result = await this.worksService.removeMuteWord(
+      ctx.session.work,
+      wordIndex
+    );
+    ctx.session.work = result;
+    await this.handleWordsList(ctx);
+  }
+
+  @Action(MENU_BUTTONS.BACK.callback_data)
   async handleDeleteCancel(@Ctx() ctx: Context) {
     await this.onSceneEnter(ctx);
     return;

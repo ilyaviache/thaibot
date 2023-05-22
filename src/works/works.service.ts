@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Works } from '@prisma/client';
 import { UpsertWorksInput } from './dto/upsert-works.input';
-import { WorkDTO } from './dto/work.dto';
-import { Int } from '@nestjs/graphql';
 
 @Injectable()
 export class WorksService {
@@ -64,6 +62,11 @@ export class WorksService {
 
   async addMuteWord(work: Works, word: string): Promise<Works | null> {
     work.muteWords.push(word);
+    return await this.update(work.id, work);
+  }
+
+  async removeMuteWord(work: Works, index: number): Promise<Works | null> {
+    work.muteWords.splice(index, 1);
     return await this.update(work.id, work);
   }
 }
