@@ -74,4 +74,19 @@ export class WorksService {
     work.muteWords = [];
     return await this.update(work.id, work);
   }
+
+  async addMuteChannel(work: Works, channel: any): Promise<Works | null> {
+    work.muteChannelUsernames.push(channel);
+    return await this.update(work.id, work);
+  }
+
+  async removeMuteChannel(work: Works, index: number): Promise<Works | null> {
+    work.muteChannelUsernames.splice(index, 1);
+    return await this.update(work.id, work);
+  }
+
+  async removeAllMuteChannels(work: Works): Promise<Works | null> {
+    work.muteChannelUsernames = [];
+    return await this.update(work.id, work);
+  }
 }
