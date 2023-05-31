@@ -43,6 +43,7 @@ enum Role {
 model Works {
   id                     String   @id @default(cuid())
   chatId                 String
+  selectedChatsId        Int?
   listenChannelUsernames String[]
   listenWords            String[]
   muteChannelUsernames   Json[]   @db.Json

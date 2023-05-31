@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Works } from '@prisma/client';
 import { UpsertWorksInput } from './dto/upsert-works.input';
+import { AREAS } from 'src/bot/bot.constants';
 
 @Injectable()
 export class WorksService {
@@ -58,6 +59,13 @@ export class WorksService {
     } else {
       return work;
     }
+  }
+
+  async setArea(work: Works, areaIndex: number): Promise<Works | null> {
+    const area = AREAS[areaIndex];
+    work.selectedChatsId = area.id;
+    work.listenChannelUsernames = area.usernames;
+    return await this.update(work.id, work);
   }
 
   async addListenWord(work: Works, word: string): Promise<Works | null> {

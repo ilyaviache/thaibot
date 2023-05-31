@@ -10,6 +10,7 @@ import {
   WORDS_SCENE,
   CHANNELS_SCENE,
   ACCOUNTS_SCENE,
+  AREA_SCENE,
 } from './bot.constants';
 import { createWorksDtoFactory } from './bot.utils';
 
@@ -37,6 +38,12 @@ export class BotUpdate {
       console.log(e);
     }
     await this.botService.start(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.AREA.text)
+  async handleAreaMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(AREA_SCENE);
     return;
   }
 

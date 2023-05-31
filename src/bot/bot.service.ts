@@ -14,7 +14,7 @@ export class BotService {
     @InjectBot()
     private readonly bot: Telegraf<Context>,
     private readonly worksService: WorksService
-  ) { }
+  ) {}
 
   // entry point to a main bot logic, all messages will be handled here
   async handleListenedMessage(message: NewMessageDataDTO): Promise<any> {

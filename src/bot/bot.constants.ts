@@ -1,6 +1,28 @@
 import { Markup } from 'telegraf';
 
+export const AREAS = [
+  {
+    id: 1,
+    alias: 'all',
+    name: 'Все чаты',
+    usernames: ['test', 'test2', 'test3'],
+  },
+  {
+    id: 2,
+    alias: 'phangan',
+    name: 'Панган',
+    usernames: ['test'],
+  },
+  {
+    id: 3,
+    alias: 'samui',
+    name: 'Самуи',
+    usernames: ['test2', 'test3'],
+  },
+];
+
 export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
+export const AREA_SCENE = 'AREA_SCENE';
 export const ACCOUNTS_ADD_SCENE = 'ACCOUNTS_ADD_SCENE';
 export const WORDS_SCENE = 'WORDS_SCENE';
 export const WORDS_ADD_SCENE = 'WORDS_ADD_SCENE';
@@ -18,6 +40,7 @@ export const COMMANDS = {
 
 export const MENU_BUTTONS = {
   ACCOUNTS: { text: 'Аккаунты' },
+  AREA: { text: 'Регион работы' },
   WORKS: { text: 'Ключевые слова' },
   WORDS: { text: '➖ Минус-слова' },
   PAYMENT: { text: 'Оплата' },
@@ -54,7 +77,10 @@ export const BUTTONS = {
 
 export const TEXTS = {
   MAIN: {
-    WELCOME: 'Приветственное сообщение',
+    WELCOME: 'Приветственное сообщение. Выбранный чат + кнопка выбор чатов',
+  },
+  AREA: {
+    LIST: 'Выберите регион работы',
   },
   ACCOUNTS: {
     LIST: `Список игнорируемых аккаунтов. Вы можете удалить любой из них, нажав на кнопку "↩️"`,
@@ -85,9 +111,9 @@ export const TEXTS = {
 
 export const MENUS = {
   MAIN_MENU: [
-    [MENU_BUTTONS.CHANNELS, MENU_BUTTONS.WORKS],
+    [MENU_BUTTONS.AREA, MENU_BUTTONS.WORKS],
     [MENU_BUTTONS.ACCOUNTS, MENU_BUTTONS.WORDS],
-    [MENU_BUTTONS.PAYMENT],
+    [MENU_BUTTONS.CHANNELS, MENU_BUTTONS.PAYMENT],
   ],
   ACCOUNTS_MENU: [
     [MENU_BUTTONS.ACCOUNTS_LIST],
