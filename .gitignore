@@ -6,4 +6,3 @@ coverage/
 .DS_Store
 
 prisma/migrations/dev/
-.env
