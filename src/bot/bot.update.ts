@@ -23,7 +23,9 @@ export class BotUpdate {
     private readonly bot: Telegraf<Context>,
     private readonly botService: BotService,
     private readonly worksService: WorksService
-  ) { }
+  ) {}
+
+  // TODO: сейчас если пользователь восстановил сессию и не нажал комманду start обьект work пустой. Критический баг
 
   @Start()
   async onStart(@Ctx() ctx: Context) {

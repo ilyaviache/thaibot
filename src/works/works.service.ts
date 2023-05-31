@@ -5,7 +5,7 @@ import { UpsertWorksInput } from './dto/upsert-works.input';
 
 @Injectable()
 export class WorksService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<Works[]> {
     return this.prisma.works.findMany();

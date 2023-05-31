@@ -80,7 +80,9 @@ export class WorksScene {
 
   @Hears(MENU_BUTTONS.OK.text)
   async handleOk(@Ctx() ctx: Context) {
-    const result = await this.worksService.removeAllMuteWords(ctx.session.work);
+    const result = await this.worksService.removeAllListenWords(
+      ctx.session.work
+    );
     ctx.session.work = result;
     await this.onSceneEnter(ctx);
     return;
