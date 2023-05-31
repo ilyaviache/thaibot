@@ -7,6 +7,7 @@ import { NewMessageDataDTO } from 'src/bot/dto/new-message-data.dto';
 import { ConfigService } from '@nestjs/config';
 import input from 'input';
 import { BotService } from 'src/bot/bot.service';
+import { AREAS } from 'src/bot/bot.constants';
 
 @Injectable()
 export class TelegramService {
@@ -40,9 +41,11 @@ export class TelegramService {
         const message = event.message;
         const text = message.text;
 
-        const chanellId = message.peerId['channelId'];
+        const chanellId = message?.peerId['channelId'];
         const senderId = message.senderId;
         const messageId = message.id;
+
+        if (!chanellId) return;
 
         const result = await client.invoke(
           new Api.channels.GetFullChannel({
@@ -50,6 +53,8 @@ export class TelegramService {
           })
         );
         const channelData = result.chats[0];
+
+        if (!AREAS[0].usernames.includes(channelData['username'])) return;
 
         const user = await client.invoke(
           new Api.users.GetFullUser({
