@@ -25,4 +25,4 @@ services:
 
 volumes:
   postgres:
-    name: db-data
+    name: thaibot-db-prod

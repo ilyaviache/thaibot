@@ -5,7 +5,13 @@ export const AREAS = [
     id: 1,
     alias: 'all',
     name: 'Все чаты',
-    usernames: ['test', 'test2', 'test3'],
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
   },
   {
     id: 2,
