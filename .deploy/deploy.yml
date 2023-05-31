@@ -1,0 +1,27 @@
+- name: SERVER
+  hosts: remote_host
+  remote_user: deploy
+  gather_facts: false
+  vars:
+    project_name: "thaibot"
+    do_token: "PUT YOUR DIGITAL OCEAN API KEY HERE ==> https://cloud.digitalocean.com/settings/api/tokens"
+    repository: "git@github.com:ilyaviache/thaibot.git"
+
+  tasks:
+    - name: NODE | Clone/Pull repo
+      git:
+        repo: "{{repository}}"
+        dest: /home/deploy/ci
+      register: git_finished
+
+    - name: Install dependencies
+      command: npm ci
+      args:
+        chdir: /home/deploy/ci/thaibot
+      become: false
+
+    - name: Restart pm2
+      command: pm2 restart all
+      args:
+        chdir: /path/to/remote/directory/
+      become: true

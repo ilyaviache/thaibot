@@ -13,7 +13,7 @@ import { WorksService } from 'src/works/works.service';
 @Scene(ACCOUNTS_ADD_SCENE)
 @UseFilters(BotFilter)
 export class AccountsAddScene {
-  constructor(private readonly worksService: WorksService) { }
+  constructor(private readonly worksService: WorksService) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
@@ -35,7 +35,6 @@ export class AccountsAddScene {
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    console.log('ctx.scene.curren 2', ctx.scene.current);
     if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE) {
       const username = ctx.update['message']['text'];
       if (username === MENU_BUTTONS.BACK.text || username === '/start') {

@@ -14,7 +14,7 @@ import { WorksService } from 'src/works/works.service';
 @Scene(CHANNELS_SCENE)
 @UseFilters(BotFilter)
 export class ChannelsScene {
-  constructor(private readonly worksService: WorksService) { }
+  constructor(private readonly worksService: WorksService) {}
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {

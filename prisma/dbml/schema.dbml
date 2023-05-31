@@ -28,6 +28,7 @@ Table Post {
 Table Works {
   id String [pk]
   chatId String [not null]
+  selectedChatsId Int
   listenChannelUsernames String[] [not null]
   listenWords String[] [not null]
   muteChannelUsernames Json[] [not null]

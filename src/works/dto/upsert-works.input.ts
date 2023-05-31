@@ -4,6 +4,7 @@ export class UpsertWorksInput {
   id: string;
   @IsNotEmpty()
   chatId: string;
+  selectedChatsId: number;
   listenChannelUsernames: string[];
   listenWords: string[];
   muteChannelUsernames: string[];

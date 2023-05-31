@@ -1,0 +1,124 @@
+- name: DO
+  hosts: localhost
+  vars:
+    project_name: "PUT A NAME FOR YOUR PROJECT HERE"
+    do_token: "PUT YOUR DIGITAL OCEAN API KEY HERE ==> https://cloud.digitalocean.com/settings/api/tokens"
+    repository: "PUT YOUR REPOSITORY URL HERE"
+
+  tasks:
+    - name: LOCAL | Generate SSH key
+      shell: ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{project_name}} -q -N ""
+      args:
+        creates: ~/.ssh/{{project_name}}
+
+    - name: DO | Create DigitalOcean SSH Key
+      digital_ocean:
+        state: present
+        command: ssh
+        name: home
+        ssh_pub_key: "{{ lookup('file', '~/.ssh/{{project_name}}.pub') }}"
+        api_token: "{{do_token}}"
+      register: digital_ocean_key
+
+    - name: DO | Create DigitalOcean Droplet
+      digital_ocean:
+        state: present
+        command: droplet
+        name: "{{project_name}}"
+        api_token: "{{do_token}}"
+        size_id: 512mb
+        region_id: ams2
+        image_id: centos-7-2-x64
+        ssh_key_ids: "{{ digital_ocean_key.ssh_key.id }}"
+        wait_timeout: 500
+        unique_name: yes
+      when: digital_ocean_key.ssh_key is defined
+      register: digital_ocean_droplet
+
+    - name: ANSIBLE | Add new host to our inventory.
+      add_host:
+        name: "{{ digital_ocean_droplet.droplet.ip_address }}"
+        groups: do
+      when: digital_ocean_droplet.droplet is defined
+
+- name: SERVER
+  hosts: do
+  remote_user: root
+  gather_facts: false
+  vars:
+    node_version: 6
+
+  tasks:
+    - name: SERVER | Wait for port 22 to become available.
+      local_action: "wait_for port=22 host={{ inventory_hostname }}"
+
+    - name: SERVER | Download the nvm(node version manager) install script
+      get_url: url=https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh dest=/tmp/install.sh
+
+    - name: SERVER | Install dependencies
+      yum: name={{ item }} state=present
+      with_items:
+        - git
+        - curl
+
+    - name: SERVER | Execute the nvm install script
+      shell: bash install.sh chdir=/tmp executable=/bin/bash
+
+    - name: SERVER | Register the NVM_DIR
+      shell: echo $NVM_DIR
+      register: nvm_dir
+
+    - name: SERVER | Install the specified node version using the nvm command and set it as default
+      shell: . {{ nvm_dir.stdout }}/nvm.sh && nvm install {{ node_version }} && nvm run {{node_version}} --version && nvm alias default {{node_version}}
+             creates=~/.nvm/versions/node/v{{ node_version }}
+
+    - name: SERVER | Installing NGINX repo rpm
+      yum:
+        name: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+
+    - name: NGINX | Installing NGINX
+      yum:
+        name: nginx
+        state: latest
+
+    - name: NGINX | Configure site
+      template: src={{project_name}}.j2 dest=/etc/nginx/conf.d/default.conf
+
+    - name: NGINX | Starting NGINX
+      service:
+        name: nginx
+        state: started
+
+    - name: NODE | Clone/Pull repo
+      git:
+        repo: "{{repository}}"
+        dest: /var/www
+      register: git_finished
+
+    - name: NODE | Install npm deps
+      shell: npm i
+      register: npm_finished
+      failed_when: '"ERR!" in npm_finished.stderr'
+      when: git_finished.changed
+      args:
+        chdir: /var/www
+
+    - name: NODE | Install pm2
+      npm:
+        name: pm2
+        global: yes
+        production: yes
+        state: present
+
+    - name: NODE | Stop APP
+      shell: pm2 stop app
+      args:
+        chdir: /var/www
+      ignore_errors: yes
+
+    - name: NODE | Start APP
+      shell: pm2 start server.js --name server
+      args:
+        chdir: /var/www
+      ignore_errors: yes
+      when: npm_finished.changed

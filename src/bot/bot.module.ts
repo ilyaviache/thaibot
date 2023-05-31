@@ -9,7 +9,10 @@ import { TelegrafModule } from 'nestjs-telegraf';
 
 import { botMiddleware } from './bot.middleware';
 import { AccountsScene } from './scenes/accounts.scene';
+import { AreaScene } from './scenes/area.scene';
 import { AccountsAddScene } from './scenes/accounts-add.scene';
+import { WorksScene } from './scenes/works.scene';
+import { WorksAddScene } from './scenes/works-add.scene';
 import { WordsScene } from './scenes/words.scene';
 import { WordsAddScene } from './scenes/words-add.scene';
 import { ChannelsScene } from './scenes/channels.scene';
@@ -33,7 +36,10 @@ import { ChannelsAddScene } from './scenes/channels-add.scene';
     BotListener,
 
     AccountsScene,
+    AreaScene,
     AccountsAddScene,
+    WorksScene,
+    WorksAddScene,
     WordsScene,
     WordsAddScene,
     ChannelsScene,
@@ -42,4 +48,4 @@ import { ChannelsAddScene } from './scenes/channels-add.scene';
   controllers: [BotController],
   exports: [BotService, BotListener],
 })
-export class BotModule { }
+export class BotModule {}

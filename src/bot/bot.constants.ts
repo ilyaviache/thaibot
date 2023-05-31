@@ -1,9 +1,45 @@
 import { Markup } from 'telegraf';
 
+export const AREAS = [
+  {
+    id: 1,
+    alias: 'all',
+    name: 'Все чаты',
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
+  },
+  {
+    id: 2,
+    alias: 'phangan',
+    name: 'Панган',
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
+  },
+  {
+    id: 3,
+    alias: 'samui',
+    name: 'Самуи',
+    usernames: ['test2', 'test3'],
+  },
+];
+
 export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
+export const AREA_SCENE = 'AREA_SCENE';
 export const ACCOUNTS_ADD_SCENE = 'ACCOUNTS_ADD_SCENE';
 export const WORDS_SCENE = 'WORDS_SCENE';
 export const WORDS_ADD_SCENE = 'WORDS_ADD_SCENE';
+export const WORKS_SCENE = 'WORKS_SCENE';
+export const WORKS_ADD_SCENE = 'WORKS_ADD_SCENE';
 export const CHANNELS_SCENE = 'CHANNELS_SCENE';
 export const CHANNELS_ADD_SCENE = 'CHANNELS_ADD_SCENE';
 
@@ -16,6 +52,8 @@ export const COMMANDS = {
 
 export const MENU_BUTTONS = {
   ACCOUNTS: { text: 'Аккаунты' },
+  AREA: { text: 'Регион работы' },
+  WORKS: { text: 'Ключевые слова' },
   WORDS: { text: '➖ Минус-слова' },
   PAYMENT: { text: 'Оплата' },
   CHANNELS: { text: 'Чаты' },
@@ -23,6 +61,10 @@ export const MENU_BUTTONS = {
   ACCOUNTS_LIST: { text: '📋 Список игнорируемых аккаунтов' },
   ACCOUNTS_ADD: { text: '➕ Добавить новый' },
   ACCOUNTS_DELETE_ALL: { text: '🗑 Удалить все' },
+
+  WORKS_LIST: { text: '📋 Ключевые слова' },
+  WORKS_ADD: { text: '➕ Добавить новое' },
+  WORKS_DELETE_ALL: { text: '🗑 Удалить все' },
 
   WORDS_LIST: { text: '📋 Список моих минус-слов' },
   WORDS_ADD: { text: '➕ Добавить новое' },
@@ -47,13 +89,22 @@ export const BUTTONS = {
 
 export const TEXTS = {
   MAIN: {
-    WELCOME: 'Приветственное сообщение',
+    WELCOME: 'Приветственное сообщение. Выбранный чат + кнопка выбор чатов',
+  },
+  AREA: {
+    LIST: 'Выберите регион работы',
   },
   ACCOUNTS: {
     LIST: `Список игнорируемых аккаунтов. Вы можете удалить любой из них, нажав на кнопку "↩️"`,
     MAIN: `В данном меню вы можете управлять аккаунтами, сообщения из которых должны игнорироваться`,
     ADD: `Добавьте игнорируемые аккаунты. Отправте сообщение содержащие ID без знака @`,
     DELETE: `Вы уверены, что хотите удалить все игнорируемые аккаунты?`,
+  },
+  WORKS: {
+    LIST: `Список слов которые бот будет искать в чатах. Вы можете удалить их, нажав на кнопку "↩️"`,
+    MAIN: `В данном меню вы можете управлять ключевыми словами и фразами, которые бот будет искать в чатах`,
+    ADD: `Добавьте слова или фразы, по одному или массово (каждое с новой строки), до 25 штук`,
+    DELETE: `Вы уверены, что хотите удалить все записи?`,
   },
   WORDS: {
     LIST: `Вот список ваших минус-слов. Вы можете удалить их, нажав на кнопку "↩️"`,
@@ -72,12 +123,18 @@ export const TEXTS = {
 
 export const MENUS = {
   MAIN_MENU: [
-    [MENU_BUTTONS.CHANNELS, MENU_BUTTONS.WORDS],
-    [MENU_BUTTONS.ACCOUNTS, MENU_BUTTONS.PAYMENT],
+    [MENU_BUTTONS.AREA, MENU_BUTTONS.WORKS],
+    [MENU_BUTTONS.ACCOUNTS, MENU_BUTTONS.WORDS],
+    [MENU_BUTTONS.CHANNELS, MENU_BUTTONS.PAYMENT],
   ],
   ACCOUNTS_MENU: [
     [MENU_BUTTONS.ACCOUNTS_LIST],
     [MENU_BUTTONS.ACCOUNTS_ADD, MENU_BUTTONS.ACCOUNTS_DELETE_ALL],
+    [MENU_BUTTONS.BACK_TO_MENU],
+  ],
+  WORKS_MENU: [
+    [MENU_BUTTONS.WORKS_LIST],
+    [MENU_BUTTONS.WORKS_ADD, MENU_BUTTONS.WORKS_DELETE_ALL],
     [MENU_BUTTONS.BACK_TO_MENU],
   ],
   WORDS_MENU: [
@@ -91,3 +148,18 @@ export const MENUS = {
     [MENU_BUTTONS.BACK_TO_MENU],
   ],
 };
+
+// 'bike',
+// 'байк',
+// 'скутер',
+// 'мотоцикл',
+// 'мопед',
+// 'мот',
+// 'pcx',
+// 'nmax',
+// 'xmax',
+// 'forza',
+// 'click',
+// 'нмакс',
+// 'дрон',
+// 'drone',

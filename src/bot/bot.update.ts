@@ -6,9 +6,11 @@ import { Context } from './bot.interface';
 import { BotService } from './bot.service';
 import {
   MENU_BUTTONS,
+  WORKS_SCENE,
   WORDS_SCENE,
   CHANNELS_SCENE,
   ACCOUNTS_SCENE,
+  AREA_SCENE,
 } from './bot.constants';
 import { createWorksDtoFactory } from './bot.utils';
 
@@ -22,7 +24,9 @@ export class BotUpdate {
     private readonly bot: Telegraf<Context>,
     private readonly botService: BotService,
     private readonly worksService: WorksService
-  ) { }
+  ) {}
+
+  // TODO: сейчас если пользователь восстановил сессию и не нажал комманду start обьект work пустой. Критический баг
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
@@ -34,6 +38,18 @@ export class BotUpdate {
       console.log(e);
     }
     await this.botService.start(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.AREA.text)
+  async handleAreaMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(AREA_SCENE);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.WORKS.text)
+  async handleWorksMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(WORKS_SCENE);
     return;
   }
 

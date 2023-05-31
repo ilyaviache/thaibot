@@ -1,8 +1,8 @@
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears, Action } from 'nestjs-telegraf';
 import {
-  ACCOUNTS_SCENE,
-  ACCOUNTS_ADD_SCENE,
+  WORKS_SCENE,
+  WORKS_ADD_SCENE,
   MENUS,
   TEXTS,
   MENU_BUTTONS,
@@ -11,27 +11,26 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 
-@Scene(ACCOUNTS_SCENE)
+@Scene(WORKS_SCENE)
 @UseFilters(BotFilter)
-export class AccountsScene {
+export class WorksScene {
   constructor(private readonly worksService: WorksService) {}
-
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.ACCOUNTS_MENU,
+        keyboard: MENUS.WORKS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
     };
 
-    await ctx.reply(TEXTS.ACCOUNTS.MAIN, replyMarkup);
+    await ctx.reply(TEXTS.WORKS.MAIN, replyMarkup);
     return;
   }
 
-  @Hears(MENU_BUTTONS.ACCOUNTS_DELETE_ALL.text)
-  async handleAccountsDelete(@Ctx() ctx: Context) {
+  @Hears(MENU_BUTTONS.WORKS_DELETE_ALL.text)
+  async handleWorksDelete(@Ctx() ctx: Context) {
     const replyMarkup = {
       reply_markup: {
         keyboard: [[MENU_BUTTONS.OK, MENU_BUTTONS.CANCEL]],
@@ -40,29 +39,30 @@ export class AccountsScene {
       },
     };
 
-    await ctx.reply(TEXTS.ACCOUNTS.DELETE, replyMarkup);
+    await ctx.reply(TEXTS.WORKS.DELETE, replyMarkup);
     return;
   }
 
-  @Hears(MENU_BUTTONS.ACCOUNTS_ADD.text)
-  async handleAccountsAdd(@Ctx() ctx: Context) {
-    await ctx.scene.enter(ACCOUNTS_ADD_SCENE);
+  @Hears(MENU_BUTTONS.WORKS_ADD.text)
+  async handleWorksAdd(@Ctx() ctx: Context) {
+    await await ctx.scene.enter(WORKS_ADD_SCENE);
     return;
   }
 
-  @Hears(MENU_BUTTONS.ACCOUNTS_LIST.text)
-  async handleAccountsList(@Ctx() ctx: Context) {
-    const accounts = ctx.session.work.muteUsernames;
+  @Hears(MENU_BUTTONS.WORKS_LIST.text)
+  async handleWorksList(@Ctx() ctx: Context) {
+    const words = ctx.session.work.listenWords;
     const inlineKeyboard = [];
 
-    accounts.forEach((account, i) => {
+    words.forEach((word, i) => {
       inlineKeyboard.push([
-        { text: `↩️ ${account}`, callback_data: `delete_account_${i}` },
+        { text: `↩️ ${word}`, callback_data: `delete_work_${i}` },
       ]);
     });
 
     inlineKeyboard.push([MENU_BUTTONS.BACK]);
     try {
+      // };
       const replyMarkup = {
         reply_markup: {
           inline_keyboard: inlineKeyboard,
@@ -71,7 +71,7 @@ export class AccountsScene {
         },
       };
 
-      await ctx.reply(TEXTS.ACCOUNTS.LIST, replyMarkup);
+      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }
@@ -80,7 +80,7 @@ export class AccountsScene {
 
   @Hears(MENU_BUTTONS.OK.text)
   async handleOk(@Ctx() ctx: Context) {
-    const result = await this.worksService.removeAllMuteAccounts(
+    const result = await this.worksService.removeAllListenWords(
       ctx.session.work
     );
     ctx.session.work = result;
@@ -94,17 +94,17 @@ export class AccountsScene {
     return;
   }
 
-  @Action(/delete_account_\d+/)
-  async handleDeleteAccount(@Ctx() ctx: Context) {
+  @Action(/delete_work_\d+/)
+  async handleDeleteWord(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
-    const accountIndex = Number(callbackData.split('_')[2]);
+    const wordIndex = Number(callbackData.split('_')[2]);
 
-    const result = await this.worksService.removeMuteAccount(
+    const result = await this.worksService.removeListenWord(
       ctx.session.work,
-      accountIndex
+      wordIndex
     );
     ctx.session.work = result;
-    await this.handleAccountsList(ctx);
+    await this.handleWorksList(ctx);
   }
 
   @Action(MENU_BUTTONS.BACK.callback_data)

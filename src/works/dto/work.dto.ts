@@ -1,6 +1,7 @@
 export class WorkDTO {
   id: string;
   chatId: string;
+  selectedChatsId: number;
   listenChannelUsernames: string[];
   listenWords: string[];
   muteChannelUsernames: string[];
