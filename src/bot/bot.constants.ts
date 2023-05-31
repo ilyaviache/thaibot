@@ -11,7 +11,13 @@ export const AREAS = [
     id: 2,
     alias: 'phangan',
     name: 'Панган',
-    usernames: ['test'],
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
   },
   {
     id: 3,
@@ -136,3 +142,18 @@ export const MENUS = {
     [MENU_BUTTONS.BACK_TO_MENU],
   ],
 };
+
+// 'bike',
+// 'байк',
+// 'скутер',
+// 'мотоцикл',
+// 'мопед',
+// 'мот',
+// 'pcx',
+// 'nmax',
+// 'xmax',
+// 'forza',
+// 'click',
+// 'нмакс',
+// 'дрон',
+// 'drone',
