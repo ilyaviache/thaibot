@@ -9,7 +9,6 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
-import { nextTick } from 'process';
 
 @Scene(WORDS_ADD_SCENE)
 @UseFilters(BotFilter)
@@ -36,7 +35,6 @@ export class WordsAddScene {
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    console.log('ctx.scene.curren 0', ctx.scene.current);
     if (ctx.scene.current.id === WORDS_ADD_SCENE) {
       const word = ctx.update['message']['text'];
       if (word === MENU_BUTTONS.BACK.text || word === '/start') {

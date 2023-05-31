@@ -35,7 +35,6 @@ export class ChannelsAddScene {
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    console.log('ctx.scene.curren 1', ctx);
     if (ctx.scene.current.id === CHANNELS_ADD_SCENE) {
       const username = ctx.update['message']['text'];
       if (username === MENU_BUTTONS.BACK.text || username === '/start') {

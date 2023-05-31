@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Markup, Telegraf } from 'telegraf';
+import { Telegraf } from 'telegraf';
 import { Context } from './bot.interface';
 import { InjectBot } from 'nestjs-telegraf';
 import { MENUS, TEXTS } from './bot.constants';
 import { message } from 'telegram/client';
-import { NewMessage } from 'telegram/events';
 
 import { NewMessageDataDTO } from './dto/new-message-data.dto';
 import { WorksService } from 'src/works/works.service';
@@ -19,31 +18,31 @@ export class BotService {
 
   // entry point to a main bot logic, all messages will be handled here
   async handleListenedMessage(message: NewMessageDataDTO): Promise<any> {
-    // const text = message.text;
-    // const chatUsername = message.chatUsername;
-    // const fromUsername = message.fromUsername;
-    // const works = await this.worksService.findAll();
-    // for (const work of works) {
-    //   // Check if chatUsername is listed in work.listenChatUsernames
-    //   if (
-    //     work.listenChannelUsernames.includes(chatUsername) &&
-    //     !work.muteChannelUsernames.includes(chatUsername)
-    //   ) {
-    //     // Check if at least one word from work.listenWords exists in the text
-    //     const wordsFound = work.listenWords.some((word) =>
-    //       text.includes(word.toString())
-    //     );
-    //     // Check that none of the words from work.muteWords are included in the text
-    //     const muteWordsFound = work.muteWords.some((word) =>
-    //       text.includes(word.toString())
-    //     );
-    //     // Check if fromUsername is not present in work.muteUsernames
-    //     const isMutedUser = work.muteUsernames.includes(fromUsername);
-    //     if (wordsFound && !muteWordsFound && !isMutedUser) {
-    //       this.sendMessage(work.chatId, `Match found for work: ${work.id}`);
-    //     }
-    //   }
-    // }
+    const text = message.text;
+    const chatUsername = message.chatUsername;
+    const fromUsername = message.fromUsername;
+    const works = await this.worksService.findAll();
+    for (const work of works) {
+      // Check if chatUsername is listed in work.listenChatUsernames
+      if (
+        work.listenChannelUsernames.includes(chatUsername) &&
+        !work.muteChannelUsernames.includes(chatUsername)
+      ) {
+        // Check if at least one word from work.listenWords exists in the text
+        const wordsFound = work.listenWords.some((word) =>
+          text.includes(word.toString())
+        );
+        // Check that none of the words from work.muteWords are included in the text
+        const muteWordsFound = work.muteWords.some((word) =>
+          text.includes(word.toString())
+        );
+        // Check if fromUsername is not present in work.muteUsernames
+        const isMutedUser = work.muteUsernames.includes(fromUsername);
+        if (wordsFound && !muteWordsFound && !isMutedUser) {
+          this.sendMessage(work.chatId, `Match found for work: ${work.id}`);
+        }
+      }
+    }
   }
 
   async sendBaseMessage(message: any) {
