@@ -13,7 +13,7 @@ import { WorksService } from 'src/works/works.service';
 @Scene(WORDS_ADD_SCENE)
 @UseFilters(BotFilter)
 export class WordsAddScene {
-  constructor(private readonly worksService: WorksService) { }
+  constructor(private readonly worksService: WorksService) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {

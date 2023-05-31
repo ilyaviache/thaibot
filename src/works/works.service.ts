@@ -60,6 +60,21 @@ export class WorksService {
     }
   }
 
+  async addListenWord(work: Works, word: string): Promise<Works | null> {
+    work.listenWords.push(word);
+    return await this.update(work.id, work);
+  }
+
+  async removeListenWord(work: Works, index: number): Promise<Works | null> {
+    work.listenWords.splice(index, 1);
+    return await this.update(work.id, work);
+  }
+
+  async removeAllListenWords(work: Works): Promise<Works | null> {
+    work.listenWords = [];
+    return await this.update(work.id, work);
+  }
+
   async addMuteWord(work: Works, word: string): Promise<Works | null> {
     work.muteWords.push(word);
     return await this.update(work.id, work);

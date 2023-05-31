@@ -6,6 +6,7 @@ import { Context } from './bot.interface';
 import { BotService } from './bot.service';
 import {
   MENU_BUTTONS,
+  WORKS_SCENE,
   WORDS_SCENE,
   CHANNELS_SCENE,
   ACCOUNTS_SCENE,
@@ -34,6 +35,12 @@ export class BotUpdate {
       console.log(e);
     }
     await this.botService.start(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.WORKS.text)
+  async handleWorksMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(WORKS_SCENE);
     return;
   }
 

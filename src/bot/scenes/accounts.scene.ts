@@ -14,7 +14,7 @@ import { WorksService } from 'src/works/works.service';
 @Scene(ACCOUNTS_SCENE)
 @UseFilters(BotFilter)
 export class AccountsScene {
-  constructor(private readonly worksService: WorksService) { }
+  constructor(private readonly worksService: WorksService) {}
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
