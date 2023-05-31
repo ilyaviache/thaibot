@@ -3,24 +3,10 @@ import { Api, TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions';
 import { NewMessage } from 'telegram/events';
 import { NewMessageEvent } from 'telegram/events/NewMessage';
+import { NewMessageDataDTO } from 'src/bot/dto/new-message-data.dto';
 import { ConfigService } from '@nestjs/config';
 import input from 'input';
 import { BotService } from 'src/bot/bot.service';
-
-function checkWordsInText(text, words) {
-  const lowercaseText = text.toLowerCase();
-
-  for (const word of words) {
-    const lowercaseWord = word.toLowerCase();
-
-    // Ищем слово в тексте
-    if (lowercaseText.includes(lowercaseWord)) {
-      return true;
-    }
-  }
-
-  return false;
-}
 
 @Injectable()
 export class TelegramService {
@@ -36,12 +22,6 @@ export class TelegramService {
       configService.get<string>('TELEGRAM_SESSION_KEY')
     );
 
-    // 45007781
-    // 39731028
-
-    const chatListenedUsernames = configService.get('CHAT_LISTENED_USERNAMES');
-    console.log('chatListenedUsernames', chatListenedUsernames);
-
     (async () => {
       console.log('Loading interactive example...');
       const client = new TelegramClient(stringSession, apiId, apiHash, {
@@ -55,85 +35,41 @@ export class TelegramService {
 
       console.log('You should now be connected.');
       console.log(client.session.save()); // Save this string to avoid logging in again
-      // await this.bot.telegram.sendMessage('39731028', 'Урааа, работает!');
 
-      // const result = await client.invoke(
-      //   new Api.contacts.ResolveUsername({
-      //     username: 'ilyaviache',
-      //   })
-      // );
-      // console.log(result);
-      // const userId = result.users[0].id;
-
-      // const sendResult = await client.sendMessage(userId, {
-      //   message: 'test 123',
-      // });
-      // console.log('sendResult', sendResult);
-      async function eventPrint(event: NewMessageEvent) {
+      async function handleNewMessage(event: NewMessageEvent) {
         const message = event.message;
         const text = message.text;
 
-        if (
-          checkWordsInText(text, [
-            'bike',
-            'байк',
-            'скутер',
-            'мотоцикл',
-            'мопед',
-            'мот',
-            'pcx',
-            'nmax',
-            'xmax',
-            'forza',
-            'click',
-            'нмакс',
-            'дрон',
-            'drone',
-          ])
-        ) {
-          const chanellId = message.peerId['channelId'];
+        const chanellId = message.peerId['channelId'];
+        const senderId = message.senderId;
+        const messageId = message.id;
 
-          // sender & message data
-          const senderId = message.senderId;
-          const messageId = message.id;
+        const result = await client.invoke(
+          new Api.channels.GetFullChannel({
+            channel: chanellId,
+          })
+        );
+        const channelData = result.chats[0];
 
-          const result = await client.invoke(
-            new Api.channels.GetFullChannel({
-              channel: chanellId,
-            })
-          );
-          const channelData = result.chats[0];
+        const user = await client.invoke(
+          new Api.users.GetFullUser({
+            id: senderId,
+          })
+        );
 
-          const user = await client.invoke(
-            new Api.users.GetFullUser({
-              id: senderId,
-            })
-          );
+        const newMessage = new NewMessageDataDTO({
+          messageId,
+          text,
+          fromUsername: user.users[0]['username'],
+          channelUsername: channelData['username'],
+          channelName: channelData['title'],
+        });
 
-          const channelName = channelData['title'];
-          const channelUsername = channelData['username'];
-
-          const senderUsername = user.users[0]['username'];
-
-          const report = `
-          Username: @${senderUsername}\n
-          Channel: ${channelName} @${channelUsername}\n
-          Message: ${text}\n
-          `;
-          // TODO: check the message from channel we need to listen
-          const to = 'test_booooottaaaaaaa';
-          if (to !== `${channelUsername}`) {
-            await client.sendMessage(to, { message: report });
-            await client.forwardMessages(to, {
-              fromPeer: message.peerId,
-              messages: messageId,
-            });
-          }
-        }
+        botService.handleListenedMessage(newMessage);
       }
 
       // adds an event handler for new messages
-      client.addEventHandler(eventPrint, new NewMessage({}));
+      client.addEventHandler(handleNewMessage, new NewMessage({}));
     })();
   }
 }

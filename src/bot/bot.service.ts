@@ -19,18 +19,20 @@ export class BotService {
   // entry point to a main bot logic, all messages will be handled here
   async handleListenedMessage(message: NewMessageDataDTO): Promise<any> {
     const text = message.text;
-    const chatUsername = message.chatUsername;
+    const channelUsername = message.channelUsername;
+    const channelName = message.channelName;
     const fromUsername = message.fromUsername;
     const works = await this.worksService.findAll();
+
     for (const work of works) {
-      // Check if chatUsername is listed in work.listenChatUsernames
+      // Check if channelUsername is listed in work.listenchannelUsernames
       if (
-        work.listenChannelUsernames.includes(chatUsername) &&
-        !work.muteChannelUsernames.includes(chatUsername)
+        work.listenChannelUsernames.includes(channelUsername) &&
+        !work.muteChannelUsernames.includes(channelUsername)
       ) {
         // Check if at least one word from work.listenWords exists in the text
         const wordsFound = work.listenWords.some((word) =>
-          text.includes(word.toString())
+          text.toLowerCase().includes(word.toLowerCase().toString())
         );
         // Check that none of the words from work.muteWords are included in the text
         const muteWordsFound = work.muteWords.some((word) =>
@@ -39,7 +41,12 @@ export class BotService {
         // Check if fromUsername is not present in work.muteUsernames
         const isMutedUser = work.muteUsernames.includes(fromUsername);
         if (wordsFound && !muteWordsFound && !isMutedUser) {
-          this.sendMessage(work.chatId, `Match found for work: ${work.id}`);
+          const report = `
+            Username: @${fromUsername}\n
+            Channel: ${channelName} @${channelUsername}\n
+            Message: ${text}\n
+            `;
+          this.sendMessage(work.chatId, report);
         }
       }
     }
