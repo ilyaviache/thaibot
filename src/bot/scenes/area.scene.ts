@@ -20,7 +20,7 @@ export class AreaScene {
     const work = ctx.session.work;
 
     const renderAreaButton = (area, i) => {
-      if (work.selectedChatsId && work.selectedChatsId === area.id) {
+      if (work && work.selectedChatsId && work.selectedChatsId === area.id) {
         return { text: `✅ ${area.name}`, callback_data: `select_area_${i}` };
       } else {
         return { text: `${area.name}`, callback_data: `select_area_${i}` };

@@ -30,6 +30,7 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
+    console.log('ctx', ctx);
     try {
       const createWorksDto = createWorksDtoFactory(ctx.from);
       const result = await this.worksService.startWork(createWorksDto);
