@@ -50,6 +50,15 @@ Starter template for 😻 [NestJS](https://nestjs.com/) and [Prisma](https://www
       - [Subscriptions](#subscriptions)
       - [Authentication](#authentication)
 
+## Ansible commands 
+
+### Deploy 
+```bash
+ansible-playbook .deploy/_deploy.yml --ask-become-pass -v
+```
+
+### 1. Install Dependencies
+
 ## Prisma Setup
 
 ### 1. Install Dependencies

@@ -72,6 +72,7 @@
     "graphql-scalars": "1.20.1",
     "graphql-subscriptions": "2.0.0",
     "input": "^1.0.1",
+    "logrocket": "^4.0.3",
     "nestjs-prisma": "0.20.0",
     "nestjs-telegraf": "^2.6.3",
     "passport": "0.6.0",
