@@ -49,16 +49,18 @@ export class WorksService {
   }
 
   async startWork(input: UpsertWorksInput): Promise<Works | null> {
+    // TODO: this logic has been changed
     const work = await this.findByChatId(input.chatId.toString());
-    if (!work) {
-      return await this.prisma.works.create({
-        data: {
-          chatId: input.chatId.toString(),
-        },
-      });
-    } else {
-      return work;
-    }
+    // if (!work) {
+    //   return await this.prisma.works.create({
+    //     data: {
+    //       chatId: input.chatId.toString(),
+    //     },
+    //   });
+    // } else {
+    //   return work;
+    // }
+    return work;
   }
 
   async setArea(work: Works, areaIndex: number): Promise<Works | null> {
