@@ -4,25 +4,12 @@
 
 Table User {
   id String [pk]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-  email String [unique, not null]
-  password String [not null]
+  chatId String [unique, not null]
   firstname String
-  lastname String
-  posts Post [not null]
-  role Role [not null]
-}
-
-Table Post {
-  id String [pk]
+  username String
+  works Works [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  published Boolean [not null]
-  title String [not null]
-  content String
-  author User
-  authorId String
 }
 
 Table Works {
@@ -34,13 +21,10 @@ Table Works {
   muteChannelUsernames Json[] [not null]
   muteUsernames Json[] [not null]
   muteWords String[] [not null]
+  user User [not null]
+  userId String [not null]
   updatedAt DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]
 }
 
-Enum Role {
-  ADMIN
-  USER
-}
-
-Ref: Post.authorId > User.id
+Ref: Works.userId > User.id

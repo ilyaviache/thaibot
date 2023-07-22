@@ -30,14 +30,17 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    console.log('ctx', ctx);
-    try {
-      const createWorksDto = createWorksDtoFactory(ctx.from);
-      const result = await this.worksService.startWork(createWorksDto);
-      ctx.session.work = result;
-    } catch (e) {
-      console.log(e);
-    }
+    // console.log('ctx -->', ctx.from.username);
+    const username = ctx.from.username;
+    console.log(ctx.from);
+    console.log('username', username);
+    // try {
+    //   const createWorksDto = createWorksDtoFactory(ctx.from);
+    //   const result = await this.worksService.startWork(createWorksDto);
+    //   ctx.session.work = result;
+    // } catch (e) {
+    //   console.log(e);
+    // }
     await this.botService.start(ctx);
     return;
   }
