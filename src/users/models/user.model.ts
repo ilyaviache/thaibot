@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { IsEmail } from 'class-validator';
-import { Post } from 'src/posts/models/post.model';
+import { Works } from 'src/works/models/works.model';
 import { BaseModel } from 'src/common/models/base.model';
 
 @ObjectType()
@@ -15,6 +15,6 @@ export class User extends BaseModel {
   @Field(() => String, { nullable: true })
   username?: string;
 
-  @Field(() => [Post], { nullable: true })
-  works?: [Post] | null;
+  @Field(() => [Works], { nullable: true })
+  works?: [Works] | null;
 }
