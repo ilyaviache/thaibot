@@ -1,5 +1,5 @@
 import { UseFilters } from '@nestjs/common';
-import { InjectBot, Ctx, Start, Update, Hears } from 'nestjs-telegraf';
+import { InjectBot, Ctx, Start, Update, Hears, Action } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
@@ -11,37 +11,49 @@ import {
   CHANNELS_SCENE,
   ACCOUNTS_SCENE,
   AREA_SCENE,
+  BUTTONS,
+  TASKS_SCENE,
+  TEXTS,
 } from './bot.constants';
-import { createWorksDtoFactory } from './bot.utils';
+import { InitUserInput } from 'src/users/dto/init-user.input';
 
 import { WorksService } from 'src/works/works.service';
+import { UsersService } from 'src/users/users.service';
 
 @Update()
 @UseFilters(BotFilter)
 export class BotUpdate {
   constructor(
     @InjectBot()
-    private readonly bot: Telegraf<Context>,
     private readonly botService: BotService,
-    private readonly worksService: WorksService
+    private readonly worksService: WorksService,
+    private readonly usersService: UsersService
   ) {}
 
   // TODO: сейчас если пользователь восстановил сессию и не нажал комманду start обьект work пустой. Критический баг
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    // console.log('ctx -->', ctx.from.username);
-    const username = ctx.from.username;
-    console.log(ctx.from);
-    console.log('username', username);
-    // try {
-    //   const createWorksDto = createWorksDtoFactory(ctx.from);
-    //   const result = await this.worksService.startWork(createWorksDto);
-    //   ctx.session.work = result;
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    await this.botService.start(ctx);
+    const initUserInput = new InitUserInput({
+      chatId: ctx.from.id.toString(),
+      username: ctx.from.username,
+      firstname: ctx.from.first_name,
+    });
+    const result = await this.usersService.initUser(initUserInput);
+    ctx.session.user = result;
+
+    const inline_keyboard = [[BUTTONS.START_LISTEN]];
+
+    const replyMarkup = {
+      reply_markup: {
+        inline_keyboard,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+    // TODO: refactor use service
     return;
   }
 
@@ -78,6 +90,12 @@ export class BotUpdate {
   @Hears(MENU_BUTTONS.BACK_TO_MENU.text)
   async handleBackToMenu(@Ctx() ctx: Context) {
     await this.botService.start(ctx);
+    return;
+  }
+
+  @Action(BUTTONS.START_LISTEN.callback_data)
+  async createFirstTask(@Ctx() ctx: Context) {
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }

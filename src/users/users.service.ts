@@ -1,6 +1,7 @@
 import { PrismaService } from 'nestjs-prisma';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
+import { InitUserInput } from './dto/init-user.input';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,14 @@ export class UsersService {
       where: {
         id: userId,
       },
+    });
+  }
+
+  async initUser(initUserData: InitUserInput) {
+    return this.prisma.user.upsert({
+      create: initUserData,
+      update: initUserData,
+      where: { chatId: initUserData.chatId },
     });
   }
 }

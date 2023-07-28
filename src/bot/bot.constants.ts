@@ -33,6 +33,7 @@ export const AREAS = [
   },
 ];
 
+export const TASKS_SCENE = 'TASKS_SCENE';
 export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
 export const AREA_SCENE = 'AREA_SCENE';
 export const ACCOUNTS_ADD_SCENE = 'ACCOUNTS_ADD_SCENE';
@@ -48,6 +49,7 @@ export const COMMANDS = {
   BACK: 'BACK',
   OK: 'OK',
   CONTINUE: 'CONTINUE',
+  START_LISTEN: 'START_LISTEN',
 };
 
 export const MENU_BUTTONS = {
@@ -85,11 +87,20 @@ export const BUTTONS = {
   OK: Markup.button.callback('✅', COMMANDS.OK),
   NO: Markup.button.callback('⛔️', COMMANDS.OK),
   CONTINUE: Markup.button.callback('➡️ продолжить', COMMANDS.CONTINUE),
+  START_LISTEN: Markup.button.callback(
+    '👂 Начать cлушать чаты',
+    COMMANDS.START_LISTEN
+  ),
 };
 
 export const TEXTS = {
   MAIN: {
-    WELCOME: 'Приветственное сообщение. Выбранный чат + кнопка выбор чатов',
+    WELCOME:
+      'Приветственное сообщение. Тут показываем какую-то общую инфу, отправляем внизу кнопки меню и говорим пользователю куда жать',
+  },
+  TASKS: {
+    MAIN_ADD: `Добавьте новую задачу, введите название в сообщении, например: Ноготочки на Пангане 💅. 
+    Название задачи видно только вам и нужно, чтобы облегчить навигацию между различными услугами, которые вы предоставляете`,
   },
   AREA: {
     LIST: 'Выберите регион работы',

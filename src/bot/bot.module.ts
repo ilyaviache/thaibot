@@ -8,6 +8,8 @@ import { WorksModule } from 'src/works/works.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 
 import { botMiddleware } from './bot.middleware';
+
+import { TasksScene } from './scenes/tasks.scene';
 import { AccountsScene } from './scenes/accounts.scene';
 import { AreaScene } from './scenes/area.scene';
 import { AccountsAddScene } from './scenes/accounts-add.scene';
@@ -17,6 +19,9 @@ import { WordsScene } from './scenes/words.scene';
 import { WordsAddScene } from './scenes/words-add.scene';
 import { ChannelsScene } from './scenes/channels.scene';
 import { ChannelsAddScene } from './scenes/channels-add.scene';
+
+import { WorksService } from 'src/works/works.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
@@ -32,9 +37,12 @@ import { ChannelsAddScene } from './scenes/channels-add.scene';
   providers: [
     BotUpdate,
     BotResolver,
-    BotService,
     BotListener,
+    BotService,
+    UsersService,
+    WorksService,
 
+    TasksScene,
     AccountsScene,
     AreaScene,
     AccountsAddScene,

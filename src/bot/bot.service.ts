@@ -6,14 +6,18 @@ import { MENUS, TEXTS } from './bot.constants';
 import { message } from 'telegram/client';
 
 import { NewMessageDataDTO } from './dto/new-message-data.dto';
+import { InitUserInput } from 'src/users/dto/init-user.input';
+
 import { WorksService } from 'src/works/works.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class BotService {
   constructor(
     @InjectBot()
     private readonly bot: Telegraf<Context>,
-    private readonly worksService: WorksService
+    private readonly worksService: WorksService,
+    private readonly usersService: UsersService
   ) {}
 
   // entry point to a main bot logic, all messages will be handled here
@@ -65,6 +69,14 @@ export class BotService {
   }
 
   async start(ctx: Context): Promise<any> {
+    const initUserInput = new InitUserInput({
+      chatId: ctx.from.id.toString(),
+      username: ctx.from.username,
+      firstname: ctx.from.first_name,
+    });
+    const result = await this.usersService.initUser(initUserInput);
+    ctx.session.user = result;
+
     const replyMarkup = {
       reply_markup: {
         keyboard: MENUS.MAIN_MENU,

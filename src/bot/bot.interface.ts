@@ -1,6 +1,6 @@
 import { Scenes, Context as BaseContext } from 'telegraf';
 import { Update } from 'telegraf/typings/core/types/typegram';
-import { Works } from '@prisma/client';
+import { Works, User } from '@prisma/client';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Context extends BaseContext {
   update: Update.CallbackQueryUpdate;
@@ -12,6 +12,7 @@ export interface Context extends BaseContext {
 interface SessionData extends Scenes.SceneSession<MySceneSession> {
   messageId: number;
   work: Works;
+  user: User;
 }
 
 interface MySceneSession extends Scenes.SceneSessionData {
