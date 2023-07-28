@@ -27,7 +27,7 @@ export class TasksScene {
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     try {
-      // await this.worksService.deleteAll();
+      await this.worksService.deleteAll();
       if (!ctx.session.user) {
         await this.botService.start(ctx);
         return;
@@ -95,46 +95,7 @@ export class TasksScene {
         ctx.session.work = work;
         ctx.session.user = user;
 
-        // TODO: redirect or service
-
-        const inlineKeyboard = [];
-
-        const renderAreaButton = (area, i) => {
-          if (
-            work &&
-            work.selectedChatsId &&
-            work.selectedChatsId === area.id
-          ) {
-            return {
-              text: `✅ ${area.name}`,
-              callback_data: `wizzard_select_area_${i}`,
-            };
-          } else {
-            return {
-              text: `${area.name}`,
-              callback_data: `wizzard_select_area_${i}`,
-            };
-          }
-        };
-
-        AREAS.forEach((area, i) => {
-          inlineKeyboard.push([renderAreaButton(area, i)]);
-        });
-
-        inlineKeyboard.push([MENU_BUTTONS.BACK]);
-        try {
-          const replyMarkup = {
-            reply_markup: {
-              inline_keyboard: inlineKeyboard,
-              resize_keyboard: true,
-              one_time_keyboard: true,
-            },
-          };
-
-          await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
-        } catch (e) {
-          console.log(e);
-        }
+        this.botService.selectArea(work, ctx);
         return;
       }
     } catch (e) {
@@ -143,7 +104,7 @@ export class TasksScene {
     return;
   }
 
-  @Action(/wizzard_select_area_\d+/)
+  @Action(/select_action_\d+/)
   async handleSelectArea(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
     const areaIndex = Number(callbackData.split('_')[2]);
@@ -151,6 +112,13 @@ export class TasksScene {
     const result = await this.worksService.setArea(ctx.session.work, areaIndex);
     ctx.session.work = result;
     await ctx.scene.enter(WORKS_SCENE);
+    return;
+  }
+
+  @Action(MENU_BUTTONS.BACK.callback_data)
+  async handleBack(@Ctx() ctx: Context) {
+    console.log('handleBack');
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }

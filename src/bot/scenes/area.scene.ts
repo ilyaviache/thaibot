@@ -16,39 +16,16 @@ export class AreaScene {
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
-    const inlineKeyboard = [];
     const work = ctx.session.work;
-
-    const renderAreaButton = (area, i) => {
-      if (work && work.selectedChatsId && work.selectedChatsId === area.id) {
-        return { text: `✅ ${area.name}`, callback_data: `select_area_${i}` };
-      } else {
-        return { text: `${area.name}`, callback_data: `select_area_${i}` };
-      }
-    };
-
-    AREAS.forEach((area, i) => {
-      inlineKeyboard.push([renderAreaButton(area, i)]);
-    });
-
-    inlineKeyboard.push([MENU_BUTTONS.BACK]);
     try {
-      const replyMarkup = {
-        reply_markup: {
-          inline_keyboard: inlineKeyboard,
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
-      };
-
-      await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
-    } catch (e) {
-      console.log(e);
+      await this.botService.selectArea(work, ctx);
+    } catch (error) {
+      console.log(error);
     }
     return;
   }
 
-  @Action(/select_area_\d+/)
+  @Action(/select_action_\d+/)
   async handleSelectArea(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
     const areaIndex = Number(callbackData.split('_')[2]);
