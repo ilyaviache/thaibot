@@ -27,7 +27,7 @@ export class TasksScene {
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     try {
-      await this.worksService.deleteAll();
+      // await this.worksService.deleteAll();
       if (!ctx.session.user) {
         await this.botService.start(ctx);
         return;

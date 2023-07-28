@@ -42,6 +42,12 @@ export class BotUpdate {
     const result = await this.usersService.initUser(initUserInput);
     ctx.session.user = result;
 
+    const works = await this.worksService.findByAllByChatId(
+      ctx.session.user.chatId
+    );
+    if (works.length === 0) {
+    }
+
     const inline_keyboard = [[BUTTONS.START_LISTEN]];
 
     const replyMarkup = {
@@ -53,6 +59,7 @@ export class BotUpdate {
     };
 
     await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+    // this.botService.start(ctx);
     // TODO: refactor use service
     return;
   }
