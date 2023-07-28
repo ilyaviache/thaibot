@@ -62,7 +62,6 @@ export class WordsScene {
 
     inlineKeyboard.push([MENU_BUTTONS.BACK]);
     try {
-      // };
       const replyMarkup = {
         reply_markup: {
           inline_keyboard: inlineKeyboard,

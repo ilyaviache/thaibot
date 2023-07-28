@@ -1,6 +1,14 @@
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
-import { TASKS_SCENE, TEXTS, MENU_BUTTONS } from '../bot.constants';
+import {
+  TASKS_SCENE,
+  TEXTS,
+  MENU_BUTTONS,
+  BUTTONS,
+  COMMANDS,
+  AREAS,
+  WORKS_SCENE,
+} from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 
@@ -33,11 +41,39 @@ export class TasksScene {
         ctx.session.taskWizardOn = true;
         await ctx.reply(TEXTS.TASKS.MAIN_ADD);
       } else {
+        const inlineKeyboard = [];
+
+        works.forEach((work, i) => {
+          inlineKeyboard.push([
+            { text: `${work.name}`, callback_data: `select_work_${i}` },
+          ]);
+        });
+
+        inlineKeyboard.push([BUTTONS.ADD_TASK]);
+        try {
+          const replyMarkup = {
+            reply_markup: {
+              inline_keyboard: inlineKeyboard,
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          };
+
+          await ctx.reply(TEXTS.TASKS.LIST, replyMarkup);
+        } catch (e) {
+          console.log(e);
+        }
       }
     } catch (e) {
       console.log(e);
     }
     return;
+  }
+
+  @Action(COMMANDS.ADD_TASK)
+  async handleAddTask(@Ctx() ctx: Context) {
+    ctx.session.addMode = true;
+    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
   }
 
   @Hears(RegExp('.'))
@@ -56,33 +92,65 @@ export class TasksScene {
       if (ctx.scene.current.id === TASKS_SCENE) {
         const work = await this.worksService.initNewTaskForUser(user, word);
         ctx.session.addMode = false;
-        console.log('work', work);
-        // ctx.session.work = work;
+        ctx.session.work = work;
+        ctx.session.user = user;
+
+        // TODO: redirect or service
+
+        const inlineKeyboard = [];
+
+        const renderAreaButton = (area, i) => {
+          if (
+            work &&
+            work.selectedChatsId &&
+            work.selectedChatsId === area.id
+          ) {
+            return {
+              text: `✅ ${area.name}`,
+              callback_data: `wizzard_select_area_${i}`,
+            };
+          } else {
+            return {
+              text: `${area.name}`,
+              callback_data: `wizzard_select_area_${i}`,
+            };
+          }
+        };
+
+        AREAS.forEach((area, i) => {
+          inlineKeyboard.push([renderAreaButton(area, i)]);
+        });
+
+        inlineKeyboard.push([MENU_BUTTONS.BACK]);
+        try {
+          const replyMarkup = {
+            reply_markup: {
+              inline_keyboard: inlineKeyboard,
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          };
+
+          await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
+        } catch (e) {
+          console.log(e);
+        }
+        return;
       }
     } catch (e) {
       console.log(e);
     }
     return;
-    // if (ctx.scene.current.id === WORKS_ADD_SCENE) {
-    //   const word = ctx.update['message']['text'];
-    //   if (word === MENU_BUTTONS.BACK.text || word === '/start') {
-    //     return next();
-    //   }
-    //   try {
-    //     const result = await this.worksService.addListenWord(
-    //       ctx.session.work,
-    //       word
-    //     );
+  }
 
-    //     ctx.session.work = result;
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // } else {
-    //   return next();
-    // }
+  @Action(/wizzard_select_area_\d+/)
+  async handleSelectArea(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const areaIndex = Number(callbackData.split('_')[2]);
 
-    // await this.onSceneEnter(ctx);
-    // return;
+    const result = await this.worksService.setArea(ctx.session.work, areaIndex);
+    ctx.session.work = result;
+    await ctx.scene.enter(WORKS_SCENE);
+    return;
   }
 }

@@ -55,7 +55,7 @@ export class AreaScene {
 
     const result = await this.worksService.setArea(ctx.session.work, areaIndex);
     ctx.session.work = result;
-    await await this.onSceneEnter(ctx);
+    await this.onSceneEnter(ctx);
   }
 
   @Action(MENU_BUTTONS.BACK.callback_data)
