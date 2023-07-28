@@ -87,4 +87,6 @@ export class BotService {
 
     return ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
   }
+
+  async initNewTask(taskName: string, userId: string): Promise<any> {}
 }
