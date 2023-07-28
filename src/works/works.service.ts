@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Works } from '@prisma/client';
+import { Works, User } from '@prisma/client';
 import { UpsertWorksInput } from './dto/upsert-works.input';
 import { AREAS } from 'src/bot/bot.constants';
 
@@ -18,13 +18,19 @@ export class WorksService {
     });
   }
 
+  async findByAllByChatId(chatId: string): Promise<Works[] | null> {
+    return this.prisma.works.findMany({
+      where: { chatId },
+    });
+  }
+
   async findByChatId(chatId: string): Promise<Works | null> {
     return this.prisma.works.findFirst({
       where: { chatId },
     });
   }
 
-  async create(data: Works): Promise<Works> {
+  async create(data: any): Promise<Works> {
     return this.prisma.works.create({
       data,
     });
@@ -46,6 +52,23 @@ export class WorksService {
   async deleteAll(): Promise<number | null> {
     const { count } = await this.prisma.works.deleteMany();
     return count;
+  }
+
+  async initNewTaskForUser(user: User, name: string): Promise<Works | null> {
+    const data = {
+      chatId: user.chatId,
+      name,
+      selectedChatsId: null,
+      listenChannelUsernames: [],
+      listenWords: [],
+      muteChannelUsernames: [],
+      muteUsernames: [],
+      muteWords: [],
+      userId: user.id,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    };
+    return this.create(data);
   }
 
   async startWork(input: UpsertWorksInput): Promise<Works | null> {

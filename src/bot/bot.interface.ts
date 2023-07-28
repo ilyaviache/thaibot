@@ -11,6 +11,8 @@ export interface Context extends BaseContext {
 
 interface SessionData extends Scenes.SceneSession<MySceneSession> {
   messageId: number;
+  addMode: boolean;
+  taskWizardOn: boolean;
   work: Works;
   user: User;
 }

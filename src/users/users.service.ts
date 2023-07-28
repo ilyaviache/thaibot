@@ -2,6 +2,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { InitUserInput } from './dto/init-user.input';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,12 @@ export class UsersService {
       create: initUserData,
       update: initUserData,
       where: { chatId: initUserData.chatId },
+    });
+  }
+
+  async findByChatId(chatId: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: { chatId },
     });
   }
 }
