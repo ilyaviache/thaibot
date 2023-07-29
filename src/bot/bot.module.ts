@@ -22,6 +22,7 @@ import { ChannelsAddScene } from './scenes/channels-add.scene';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
+import { BotNavigationService } from './bot-navigation.service';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UsersService } from 'src/users/users.service';
     BotService,
     UsersService,
     WorksService,
+    BotNavigationService,
 
     TasksScene,
     AccountsScene,

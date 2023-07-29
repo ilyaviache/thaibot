@@ -5,6 +5,7 @@ import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
 import { BotService } from './bot.service';
 import {
+  MENUS,
   MENU_BUTTONS,
   WORKS_SCENE,
   WORDS_SCENE,
@@ -19,6 +20,8 @@ import { InitUserInput } from 'src/users/dto/init-user.input';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
+import { BotNavigationService } from './bot-navigation.service';
+import { run } from 'node:test';
 
 @Update()
 @UseFilters(BotFilter)
@@ -26,6 +29,7 @@ export class BotUpdate {
   constructor(
     @InjectBot()
     private readonly botService: BotService,
+    private readonly botNavigationService: BotNavigationService,
     private readonly worksService: WorksService,
     private readonly usersService: UsersService
   ) {}
@@ -34,6 +38,7 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
+    // this.worksService.deleteAll();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
@@ -46,24 +51,42 @@ export class BotUpdate {
       ctx.session.user.chatId
     );
     if (works.length === 0) {
-    }
+      await this.botNavigationService.firstTouch(ctx);
+    } else {
+      // await this.botService.showMainMenu(ctx);
+      const inlineKeyboard = [];
 
-    const inline_keyboard = [[BUTTONS.START_LISTEN]];
+      works.forEach((work, i) => {
+        inlineKeyboard.push([
+          { text: `${work.name}`, callback_data: `select_work_${work.id}` },
+        ]);
+      });
+
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard: inlineKeyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+
+      await ctx.reply(
+        'Выберите задачу, кликнув на ее название ниже чтобы открыть меню управления настройкой',
+        replyMarkup
+      );
+    }
 
     const replyMarkup = {
       reply_markup: {
-        inline_keyboard,
+        keyboard: MENUS.MAIN_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
     };
 
-    await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
-    // this.botService.start(ctx);
-    // TODO: refactor use service
+    await ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
     return;
   }
-
   @Hears(MENU_BUTTONS.AREA.text)
   async handleAreaMenu(@Ctx() ctx: Context) {
     await ctx.scene.enter(AREA_SCENE);
@@ -96,13 +119,34 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.BACK_TO_MENU.text)
   async handleBackToMenu(@Ctx() ctx: Context) {
-    await this.botService.start(ctx);
+    await this.botNavigationService.start(ctx);
     return;
   }
 
   @Action(BUTTONS.START_LISTEN.callback_data)
   async createFirstTask(@Ctx() ctx: Context) {
     await ctx.scene.enter(TASKS_SCENE);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.TASKS.text)
+  async handleMainMenu(@Ctx() ctx: Context) {
+    await this.botNavigationService.showMainMenu(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.MAIN_MENU.text)
+  async handleTasksMenu(@Ctx() ctx: Context) {
+    await ctx.scene.enter(TASKS_SCENE);
+    return;
+  }
+
+  @Action(/select_work_\w+/)
+  async handleSelectWork(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const workId = callbackData.split('_')[2];
+
+    await this.botNavigationService.selectActiveWorkById(ctx, workId);
     return;
   }
 }

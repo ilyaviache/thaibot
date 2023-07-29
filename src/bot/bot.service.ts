@@ -2,15 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { Context } from './bot.interface';
 import { InjectBot } from 'nestjs-telegraf';
-import { MENUS, TEXTS, AREAS, MENU_BUTTONS } from './bot.constants';
 import { message } from 'telegram/client';
 
 import { NewMessageDataDTO } from './dto/new-message-data.dto';
-import { InitUserInput } from 'src/users/dto/init-user.input';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
-import { Works } from '@prisma/client';
 
 @Injectable()
 export class BotService {
@@ -67,53 +64,5 @@ export class BotService {
     console.log(message);
     await this.bot.telegram.sendMessage(chatId, text);
     return;
-  }
-
-  async start(ctx: Context): Promise<any> {
-    const initUserInput = new InitUserInput({
-      chatId: ctx.from.id.toString(),
-      username: ctx.from.username,
-      firstname: ctx.from.first_name,
-    });
-    const result = await this.usersService.initUser(initUserInput);
-    ctx.session.user = result;
-
-    const replyMarkup = {
-      reply_markup: {
-        keyboard: MENUS.MAIN_MENU,
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
-
-    return ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
-  }
-
-  async selectArea(work: Works, ctx: Context): Promise<any> {
-    const inlineKeyboard = [];
-
-    const renderAreaButton = (area, i) => {
-      if (work && work.selectedChatsId && work.selectedChatsId === area.id) {
-        return { text: `✅ ${area.name}`, callback_data: `select_action_${i}` };
-      } else {
-        return { text: `${area.name}`, callback_data: `select_action_${i}` };
-      }
-    };
-
-    AREAS.forEach((area, i) => {
-      inlineKeyboard.push([renderAreaButton(area, i)]);
-    });
-
-    inlineKeyboard.push([MENU_BUTTONS.BACK]);
-
-    const replyMarkup = {
-      reply_markup: {
-        inline_keyboard: inlineKeyboard,
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
-
-    await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
   }
 }

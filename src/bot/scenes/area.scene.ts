@@ -4,21 +4,21 @@ import { AREA_SCENE, AREAS, TEXTS, MENU_BUTTONS } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
-import { BotService } from '../bot.service';
+import { BotNavigationService } from '../bot-navigation.service';
 
 @Scene(AREA_SCENE)
 @UseFilters(BotFilter)
 export class AreaScene {
   constructor(
     private readonly worksService: WorksService,
-    private readonly botService: BotService
+    private readonly botNavigationService: BotNavigationService
   ) {}
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const work = ctx.session.work;
     try {
-      await this.botService.selectArea(work, ctx);
+      await this.botNavigationService.selectArea(work, ctx);
     } catch (error) {
       console.log(error);
     }
@@ -37,7 +37,7 @@ export class AreaScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleBackButton(@Ctx() ctx: Context) {
-    await this.botService.start(ctx);
+    await this.botNavigationService.start(ctx);
     return;
   }
 }

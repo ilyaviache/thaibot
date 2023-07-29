@@ -13,7 +13,7 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 
 import { WorksService } from 'src/works/works.service';
-import { BotService } from '../bot.service';
+import { BotNavigationService } from '../bot-navigation.service';
 import { UsersService } from 'src/users/users.service';
 
 @Scene(TASKS_SCENE)
@@ -21,7 +21,7 @@ import { UsersService } from 'src/users/users.service';
 export class TasksScene {
   constructor(
     private readonly worksService: WorksService,
-    private readonly botService: BotService,
+    private readonly botNavigationService: BotNavigationService,
     private readonly usersService: UsersService
   ) {}
   @SceneEnter()
@@ -29,7 +29,7 @@ export class TasksScene {
     try {
       // await this.worksService.deleteAll();
       if (!ctx.session.user) {
-        await this.botService.start(ctx);
+        await this.botNavigationService.start(ctx);
         return;
       }
       const works = await this.worksService.findByAllByChatId(
@@ -95,7 +95,7 @@ export class TasksScene {
         ctx.session.work = work;
         ctx.session.user = user;
 
-        this.botService.selectArea(work, ctx);
+        this.botNavigationService.selectArea(work, ctx);
         return;
       }
     } catch (e) {
@@ -104,16 +104,14 @@ export class TasksScene {
     return;
   }
 
-  @Action(/select_action_\d+/)
-  async handleSelectArea(@Ctx() ctx: Context) {
-    const callbackData = ctx.callbackQuery['data'];
-    const areaIndex = Number(callbackData.split('_')[2]);
+  // @Action(/select_work_\w+/)
+  // async handleSelectArea(@Ctx() ctx: Context) {
+  //   const callbackData = ctx.callbackQuery['data'];
+  //   const index = Number(callbackData.split('_')[2]);
 
-    const result = await this.worksService.setArea(ctx.session.work, areaIndex);
-    ctx.session.work = result;
-    await ctx.scene.enter(WORKS_SCENE);
-    return;
-  }
+  //   console.log('TASKS I', index);
+  //   return;
+  // }
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleBack(@Ctx() ctx: Context) {

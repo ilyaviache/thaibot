@@ -42,19 +42,19 @@ export const replyOrEdit = async (
 export const deleteUserReplyMessage = async (ctx: Context) =>
   await ctx.tg.deleteMessage(ctx.message.from.id, ctx.message.message_id);
 
-export const commandHandler = (
-  ctx: Context,
-  text: string,
-  botService: BotService
-) => {
-  if (text === '/' + COMMANDS.START) {
-    ctx.scene.leave();
-    ctx.session.messageId = undefined;
-    botService.start(ctx);
-    return true;
-  }
-  return false;
-};
+// export const commandHandler = (
+//   ctx: Context,
+//   text: string,
+//   botService: BotService
+// ) => {
+//   if (text === '/' + COMMANDS.START) {
+//     ctx.scene.leave();
+//     ctx.session.messageId = undefined;
+//     botService.start(ctx);
+//     return true;
+//   }
+//   return false;
+// };
 
 export const addPrevScene = (ctx: Context, scene: string) => {
   const state = ctx.scene.session.state;
