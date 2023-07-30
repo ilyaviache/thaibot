@@ -25,7 +25,7 @@ export class AreaScene {
     return;
   }
 
-  @Action(/select_action_\d+/)
+  @Action(/select_area_\d+/)
   async handleSelectArea(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
     const areaIndex = Number(callbackData.split('_')[2]);

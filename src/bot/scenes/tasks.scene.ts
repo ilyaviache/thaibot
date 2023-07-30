@@ -95,7 +95,7 @@ export class TasksScene {
         ctx.session.work = work;
         ctx.session.user = user;
 
-        this.botNavigationService.selectArea(work, ctx);
+        await this.botNavigationService.selectArea(work, ctx);
         return;
       }
     } catch (e) {
@@ -104,14 +104,44 @@ export class TasksScene {
     return;
   }
 
-  // @Action(/select_work_\w+/)
-  // async handleSelectArea(@Ctx() ctx: Context) {
-  //   const callbackData = ctx.callbackQuery['data'];
-  //   const index = Number(callbackData.split('_')[2]);
+  @Action(/select_area_\d+/)
+  async handleSelectArea(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const areaIndex = Number(callbackData.split('_')[2]);
 
-  //   console.log('TASKS I', index);
-  //   return;
-  // }
+    const result = await this.worksService.setArea(ctx.session.work, areaIndex);
+    ctx.session.work = result;
+    await this.botNavigationService.selectPreset(ctx);
+    return;
+  }
+
+  @Action(/select_preset_\d+/)
+  async handleSelectPreset(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const index = Number(callbackData.split('_')[2]);
+
+    const work = await this.worksService.setPreset(ctx.session.work, index);
+    ctx.session.work = work;
+    const inlineKeyboard = [
+      [{ text: work.name, callback_data: 'open_work_scene' }],
+    ];
+
+    const replyMarkup = {
+      reply_markup: {
+        inline_keyboard: inlineKeyboard,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.TASKS.CREATED, replyMarkup);
+  }
+
+  @Action('open_work_scene')
+  async handleOpenWorkScene(@Ctx() ctx: Context) {
+    await ctx.scene.enter(WORKS_SCENE);
+    return;
+  }
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleBack(@Ctx() ctx: Context) {

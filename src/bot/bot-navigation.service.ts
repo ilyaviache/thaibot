@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Telegraf } from 'telegraf';
 import { Context } from './bot.interface';
-import { MENUS, TEXTS, AREAS, MENU_BUTTONS, BUTTONS } from './bot.constants';
+import {
+  MENUS,
+  TEXTS,
+  AREAS,
+  MENU_BUTTONS,
+  BUTTONS,
+  PRESETS,
+} from './bot.constants';
 
 import { InitUserInput } from 'src/users/dto/init-user.input';
 
@@ -89,9 +96,9 @@ export class BotNavigationService {
 
     const renderAreaButton = (area, i) => {
       if (work && work.selectedChatsId && work.selectedChatsId === area.id) {
-        return { text: `✅ ${area.name}`, callback_data: `select_action_${i}` };
+        return { text: `✅ ${area.name}`, callback_data: `select_area_${i}` };
       } else {
-        return { text: `${area.name}`, callback_data: `select_action_${i}` };
+        return { text: `${area.name}`, callback_data: `select_area_${i}` };
       }
     };
 
@@ -110,5 +117,35 @@ export class BotNavigationService {
     };
 
     await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
+  }
+
+  async selectPreset(ctx: Context): Promise<any> {
+    const inlineKeyboard = [];
+
+    PRESETS.forEach((preset, i) => {
+      inlineKeyboard.push([
+        {
+          text: `${preset.name}`,
+          callback_data: `select_preset_${preset.id}`,
+        },
+      ]);
+    });
+
+    inlineKeyboard.push([
+      {
+        text: `Без пресета`,
+        callback_data: `select_preset_0`,
+      },
+    ]);
+
+    const replyMarkup = {
+      reply_markup: {
+        inline_keyboard: inlineKeyboard,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.TASKS.PRESET_LIST, replyMarkup);
   }
 }

@@ -1,38 +1,5 @@
 import { Markup } from 'telegraf';
 
-export const AREAS = [
-  {
-    id: 1,
-    alias: 'all',
-    name: 'Все чаты',
-    usernames: [
-      'kohphangan',
-      'kophangan',
-      'phangan_koh',
-      'AvitoPhangan',
-      'wheels_phng',
-    ],
-  },
-  {
-    id: 2,
-    alias: 'phangan',
-    name: 'Панган',
-    usernames: [
-      'kohphangan',
-      'kophangan',
-      'phangan_koh',
-      'AvitoPhangan',
-      'wheels_phng',
-    ],
-  },
-  {
-    id: 3,
-    alias: 'samui',
-    name: 'Самуи',
-    usernames: ['test2', 'test3'],
-  },
-];
-
 export const TASKS_SCENE = 'TASKS_SCENE';
 export const ACCOUNTS_SCENE = 'ACCOUNTS_SCENE';
 export const AREA_SCENE = 'AREA_SCENE';
@@ -110,6 +77,8 @@ export const TEXTS = {
     LIST: `Список ваших задач. Выберите любую, нажав на кнопку "↩️"`,
     TASK_MENU: (taskName) =>
       `Вы выбрали задачу ${taskName}. Для настройки воспользуйтесь меню под клавиатурой`,
+    PRESET_LIST: `Выберете набор заготовленых ключевых слов`,
+    CREATED: `Вы создали задачу и она начала работать, для редактирования списка подготовленных слов и других действий перейдите по ссылке ниже`,
   },
   AREA: {
     LIST: 'Выберите регион работы',
@@ -172,6 +141,60 @@ export const MENUS = {
     [MENU_BUTTONS.BACK_TO_MENU],
   ],
 };
+
+export const AREAS = [
+  {
+    id: 1,
+    alias: 'all',
+    name: 'Все чаты',
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
+  },
+  {
+    id: 2,
+    alias: 'phangan',
+    name: 'Панган',
+    usernames: [
+      'kohphangan',
+      'kophangan',
+      'phangan_koh',
+      'AvitoPhangan',
+      'wheels_phng',
+    ],
+  },
+  {
+    id: 3,
+    alias: 'samui',
+    name: 'Самуи',
+    usernames: ['test2', 'test3'],
+  },
+];
+
+export const PRESETS = [
+  {
+    id: 1,
+    alias: 'preset_1',
+    name: 'Test 1',
+    words: ['test1', 'test2', 'test3'],
+  },
+  {
+    id: 2,
+    alias: 'preset_2',
+    name: 'Test 2',
+    words: ['test14', 'test24', 'test3'],
+  },
+  {
+    id: 3,
+    alias: 'preset_3',
+    name: 'Test 3',
+    words: ['tes123t1', 'test32', 'tes2t3'],
+  },
+];
 
 // 'bike',
 // 'байк',
