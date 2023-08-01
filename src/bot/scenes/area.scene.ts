@@ -1,6 +1,6 @@
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Action } from 'nestjs-telegraf';
-import { AREA_SCENE, AREAS, TEXTS, MENU_BUTTONS } from '../bot.constants';
+import { AREA_SCENE, TASKS_SCENE, MENU_BUTTONS } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
@@ -37,7 +37,7 @@ export class AreaScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleBackButton(@Ctx() ctx: Context) {
-    await this.botNavigationService.start(ctx);
+    await await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }

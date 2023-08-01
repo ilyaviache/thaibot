@@ -138,7 +138,7 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.MAIN_MENU.text)
   async handleTasksMenu(@Ctx() ctx: Context) {
-    await ctx.scene.enter(TASKS_SCENE);
+    await this.onStart(ctx);
     return;
   }
 
