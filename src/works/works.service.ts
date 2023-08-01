@@ -86,15 +86,15 @@ export class WorksService {
     return work;
   }
 
-  async setArea(work: Works, index: number): Promise<Works | null> {
-    const area = AREAS[index];
+  async setArea(work: Works, id: number): Promise<Works | null> {
+    const area = AREAS.find((area) => area.id === id);
     work.selectedChatsId = area.id;
     work.listenChannelUsernames = area.usernames;
     return await this.update(work.id, work);
   }
 
-  async setPreset(work: Works, index: number): Promise<Works | null> {
-    const preset = PRESETS[index];
+  async setPreset(work: Works, id: number): Promise<Works | null> {
+    const preset = PRESETS.find((preset) => preset.id === id);
     work.listenWords = preset.words;
     return await this.update(work.id, work);
   }

@@ -100,9 +100,9 @@ export class TasksScene {
   @Action(/select_preset_\d+/)
   async handleSelectPreset(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
-    const index = Number(callbackData.split('_')[2]);
+    const id = Number(callbackData.split('_')[2]);
 
-    const work = await this.worksService.setPreset(ctx.session.work, index);
+    const work = await this.worksService.setPreset(ctx.session.work, id);
     ctx.session.work = work;
     const inlineKeyboard = [
       [{ text: work.name, callback_data: 'open_work_scene' }],

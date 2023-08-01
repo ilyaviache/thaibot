@@ -191,6 +191,12 @@ export const PRESETS = [
     name: 'Test 3',
     words: ['tes123t1', 'test32', 'tes2t3'],
   },
+  {
+    id: 4,
+    alias: 'preset_4',
+    name: 'Без пресета',
+    words: [],
+  },
 ];
 
 // 'bike',

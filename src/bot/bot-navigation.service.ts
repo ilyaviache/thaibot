@@ -136,13 +136,6 @@ export class BotNavigationService {
       ]);
     });
 
-    inlineKeyboard.push([
-      {
-        text: `Без пресета`,
-        callback_data: `select_preset_0`,
-      },
-    ]);
-
     const replyMarkup = {
       reply_markup: {
         inline_keyboard: inlineKeyboard,
