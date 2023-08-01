@@ -38,7 +38,7 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    await this.worksService.deleteAll();
+    // await this.worksService.deleteAll();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
@@ -120,7 +120,7 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.BACK_TO_MENU.text)
   async handleBackToMenu(@Ctx() ctx: Context) {
-    await this.botNavigationService.start(ctx);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 
@@ -132,7 +132,7 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.TASKS.text)
   async handleMainMenu(@Ctx() ctx: Context) {
-    await this.botNavigationService.showMainMenu(ctx);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 

@@ -29,30 +29,7 @@ export class WorksScene {
 
     await ctx.reply(TEXTS.WORKS.MAIN, replyMarkup);
     // show words
-    const words = ctx.session.work.listenWords;
-    const inlineKeyboard = [];
-
-    words.forEach((word, i) => {
-      inlineKeyboard.push([
-        { text: `↩️ ${word}`, callback_data: `delete_work_${i}` },
-      ]);
-    });
-
-    inlineKeyboard.push([MENU_BUTTONS.BACK]);
-    try {
-      // };
-      const replyMarkup = {
-        reply_markup: {
-          inline_keyboard: inlineKeyboard,
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
-      };
-
-      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
-    } catch (e) {
-      console.log(e);
-    }
+    await this.handleWorksList(ctx);
 
     return;
   }
@@ -100,7 +77,7 @@ export class WorksScene {
         },
       };
 
-      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
+      await ctx.reply(TEXTS.WORKS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }

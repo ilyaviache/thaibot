@@ -6,6 +6,7 @@ import {
   MENUS,
   TEXTS,
   MENU_BUTTONS,
+  TASKS_SCENE,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
@@ -27,6 +28,8 @@ export class AccountsScene {
     };
 
     await ctx.reply(TEXTS.ACCOUNTS.MAIN, replyMarkup);
+
+    await this.handleAccountsList(ctx);
     return;
   }
 
@@ -109,7 +112,7 @@ export class AccountsScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleDeleteCancel(@Ctx() ctx: Context) {
-    await this.onSceneEnter(ctx);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }

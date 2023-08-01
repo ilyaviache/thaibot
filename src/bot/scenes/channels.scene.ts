@@ -6,6 +6,7 @@ import {
   MENUS,
   TEXTS,
   MENU_BUTTONS,
+  TASKS_SCENE,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
@@ -27,6 +28,8 @@ export class ChannelsScene {
     };
 
     await ctx.reply(TEXTS.CHANNELS.MAIN, replyMarkup);
+
+    await this.handleChannelsList(ctx);
     return;
   }
 
@@ -50,7 +53,7 @@ export class ChannelsScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.CHANNELS_LIST.text)
+  // @Hears(MENU_BUTTONS.CHANNELS_LIST.text)
   async handleChannelsList(@Ctx() ctx: Context) {
     const channels = ctx.session.work.muteChannelUsernames;
     const inlineKeyboard = [];
@@ -109,7 +112,7 @@ export class ChannelsScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleDeleteCancel(@Ctx() ctx: Context) {
-    await this.onSceneEnter(ctx);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }
