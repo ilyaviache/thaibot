@@ -90,7 +90,11 @@ export class BotNavigationService {
     return ctx.reply(TEXTS.TASKS.TASK_MENU(name), replyMarkup);
   }
 
-  async selectArea(work: Works, ctx: Context): Promise<any> {
+  async selectArea(
+    work: Works,
+    ctx: Context,
+    backButton = false
+  ): Promise<any> {
     const inlineKeyboard = [];
 
     const renderAreaButton = (area, i) => {
@@ -105,7 +109,9 @@ export class BotNavigationService {
       inlineKeyboard.push([renderAreaButton(area, i)]);
     });
 
-    inlineKeyboard.push([MENU_BUTTONS.BACK]);
+    if (backButton) {
+      inlineKeyboard.push([MENU_BUTTONS.BACK]);
+    }
 
     const replyMarkup = {
       reply_markup: {

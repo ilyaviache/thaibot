@@ -34,11 +34,11 @@ export class BotUpdate {
     private readonly usersService: UsersService
   ) {}
 
-  // TODO: сейчас если пользователь восстановил сессию и не нажал комманду start обьект work пустой. Критический баг
+  // TODO: протестировать edge cases работы с сессиями
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    // await this.worksService.deleteAll();
+    await this.worksService.deleteAll();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
