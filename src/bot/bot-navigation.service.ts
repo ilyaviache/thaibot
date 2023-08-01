@@ -99,9 +99,15 @@ export class BotNavigationService {
 
     const renderAreaButton = (area, i) => {
       if (work && work.selectedChatsId && work.selectedChatsId === area.id) {
-        return { text: `✅ ${area.name}`, callback_data: `select_area_${i}` };
+        return {
+          text: `✅ ${area.name}`,
+          callback_data: `select_area_${area.id}`,
+        };
       } else {
-        return { text: `${area.name}`, callback_data: `select_area_${i}` };
+        return {
+          text: `${area.name}`,
+          callback_data: `select_area_${area.id}`,
+        };
       }
     };
 

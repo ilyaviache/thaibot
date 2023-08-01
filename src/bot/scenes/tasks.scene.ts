@@ -89,9 +89,9 @@ export class TasksScene {
   @Action(/select_area_\d+/)
   async handleSelectArea(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
-    const areaIndex = Number(callbackData.split('_')[2]);
+    const id = Number(callbackData.split('_')[2]);
 
-    const result = await this.worksService.setArea(ctx.session.work, areaIndex);
+    const result = await this.worksService.setArea(ctx.session.work, id);
     ctx.session.work = result;
     await this.botNavigationService.selectPreset(ctx);
     return;
