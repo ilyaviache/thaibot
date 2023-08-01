@@ -121,7 +121,7 @@ export class TasksScene {
 
   @Action('open_work_scene')
   async handleOpenWorkScene(@Ctx() ctx: Context) {
-    await ctx.scene.enter(WORKS_SCENE);
+    await this.onSceneEnter(ctx);
     return;
   }
 
