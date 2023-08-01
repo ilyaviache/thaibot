@@ -37,7 +37,7 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    this.worksService.deleteAll();
+    // await this.worksService.deleteAll();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,

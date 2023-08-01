@@ -6,6 +6,7 @@ import {
   MENUS,
   TEXTS,
   MENU_BUTTONS,
+  TASKS_SCENE,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
@@ -17,6 +18,7 @@ export class WorksScene {
   constructor(private readonly worksService: WorksService) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
+    // say hi
     const replyMarkup = {
       reply_markup: {
         keyboard: MENUS.WORKS_MENU,
@@ -26,6 +28,32 @@ export class WorksScene {
     };
 
     await ctx.reply(TEXTS.WORKS.MAIN, replyMarkup);
+    // show words
+    const words = ctx.session.work.listenWords;
+    const inlineKeyboard = [];
+
+    words.forEach((word, i) => {
+      inlineKeyboard.push([
+        { text: `↩️ ${word}`, callback_data: `delete_work_${i}` },
+      ]);
+    });
+
+    inlineKeyboard.push([MENU_BUTTONS.BACK]);
+    try {
+      // };
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard: inlineKeyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+
+      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
+    } catch (e) {
+      console.log(e);
+    }
+
     return;
   }
 
@@ -40,6 +68,7 @@ export class WorksScene {
     };
 
     await ctx.reply(TEXTS.WORKS.DELETE, replyMarkup);
+    await this.handleWorksList(ctx);
     return;
   }
 
@@ -49,7 +78,7 @@ export class WorksScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.WORKS_LIST.text)
+  // @Hears(MENU_BUTTONS.WORKS_LIST.text)
   async handleWorksList(@Ctx() ctx: Context) {
     const words = ctx.session.work.listenWords;
     const inlineKeyboard = [];
@@ -109,7 +138,7 @@ export class WorksScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleDeleteCancel(@Ctx() ctx: Context) {
-    await this.onSceneEnter(ctx);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
   }
 }
