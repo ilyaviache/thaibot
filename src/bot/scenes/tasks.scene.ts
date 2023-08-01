@@ -4,9 +4,8 @@ import {
   TASKS_SCENE,
   TEXTS,
   MENU_BUTTONS,
-  BUTTONS,
+  MENUS,
   COMMANDS,
-  AREAS,
   WORKS_SCENE,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
@@ -27,7 +26,6 @@ export class TasksScene {
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     try {
-      // await this.worksService.deleteAll();
       if (!ctx.session.user) {
         await this.botNavigationService.start(ctx);
         return;
@@ -36,44 +34,28 @@ export class TasksScene {
         ctx.session.user.chatId
       );
       if (works.length === 0) {
-        console.log('works', works);
         ctx.session.addMode = true;
         ctx.session.taskWizardOn = true;
         await ctx.reply(TEXTS.TASKS.MAIN_ADD);
       } else {
-        const inlineKeyboard = [];
-
-        works.forEach((work, i) => {
-          inlineKeyboard.push([
-            { text: `${work.name}`, callback_data: `select_work_${i}` },
-          ]);
-        });
-
-        inlineKeyboard.push([BUTTONS.ADD_TASK]);
-        try {
-          const replyMarkup = {
-            reply_markup: {
-              inline_keyboard: inlineKeyboard,
-              resize_keyboard: true,
-              one_time_keyboard: true,
-            },
-          };
-
-          await ctx.reply(TEXTS.TASKS.LIST, replyMarkup);
-        } catch (e) {
-          console.log(e);
+        if (!ctx.session.work) {
+          ctx.session.work = works[0];
         }
+
+        const replyMarkup = {
+          reply_markup: {
+            keyboard: MENUS.TASK_MENU,
+            resize_keyboard: true,
+            one_time_keyboard: true,
+          },
+        };
+
+        await ctx.reply(TEXTS.TASKS.SHOW, replyMarkup);
       }
     } catch (e) {
       console.log(e);
     }
     return;
-  }
-
-  @Action(COMMANDS.ADD_TASK)
-  async handleAddTask(@Ctx() ctx: Context) {
-    ctx.session.addMode = true;
-    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
   }
 
   @Hears(RegExp('.'))

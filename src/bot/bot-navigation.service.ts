@@ -74,7 +74,6 @@ export class BotNavigationService {
       //
     } else {
       ctx.session.work = work;
-      await this.showTaskMenu(ctx);
     }
   }
 

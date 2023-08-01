@@ -15,6 +15,7 @@ import {
   BUTTONS,
   TASKS_SCENE,
   TEXTS,
+  COMMANDS,
 } from './bot.constants';
 import { InitUserInput } from 'src/users/dto/init-user.input';
 
@@ -68,6 +69,7 @@ export class BotUpdate {
           one_time_keyboard: true,
         },
       };
+      inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
       await ctx.reply(
         'Выберите задачу, кликнув на ее название ниже чтобы открыть меню управления настройкой',
@@ -146,6 +148,13 @@ export class BotUpdate {
     const workId = callbackData.split('_')[2];
 
     await this.botNavigationService.selectActiveWorkById(ctx, workId);
+    await ctx.scene.enter(TASKS_SCENE);
     return;
+  }
+
+  @Action(COMMANDS.ADD_TASK)
+  async handleAddTask(@Ctx() ctx: Context) {
+    // TODO: handle add task
+    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
   }
 }
