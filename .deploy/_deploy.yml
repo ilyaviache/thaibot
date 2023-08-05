@@ -7,7 +7,7 @@
       set_fact:
         release_path: "{{ project_path }}/releases/{{ lookup('pipe','date +%Y%m%d%H%M%S') }}"
         current_path: "{{ project_path }}/current"
-    
+
     - name: Retrieve current release folder
       command: readlink -f current
       register: current_release_path
@@ -16,8 +16,7 @@
         chdir: "{{ project_path }}"
 
     - name: Create new folder
-      file:
-        dest={{ release_path }}
+      file: dest={{ release_path }}
         mode=0755
         recurse=yes
         state=directory
@@ -28,15 +27,13 @@
         dest: "{{ release_path }}"
 
     - name: Update npm
-      npm:
-        path={{ release_path }}
+      npm: path={{ release_path }}
 
     - name: Run build
       command: bash -lc "cd {{ release_path }} && /usr/bin/npm run build"
 
     - name: Update symlink
-      file:
-        src={{ release_path }}
+      file: src={{ release_path }}
         dest={{ current_path }}
         state=link
 
@@ -46,7 +43,10 @@
 
     - name: Start pm2
       command: pm2 start {{ current_path }}/dist/main.js --name thaibot
-    
+
+    - name: Run migration
+      command: bash -lc "cd {{ current_path }} && /usr/bin/npm run migrate:deploy"
+
     - name: Delete old dir
       shell: rm -rf {{ current_release_path.stdout }}/
       when: current_release_path.stdout != current_path
