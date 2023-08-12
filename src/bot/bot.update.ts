@@ -38,7 +38,6 @@ export class BotUpdate {
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    // await this.worksService.deleteAll();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
@@ -138,6 +137,13 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.MAIN_MENU.text)
   async handleTasksMenu(@Ctx() ctx: Context) {
+    await this.onStart(ctx);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.SUPPORT.text)
+  async handleSupportMenu(@Ctx() ctx: Context) {
+    await this.worksService.deleteAll();
     await this.onStart(ctx);
     return;
   }
