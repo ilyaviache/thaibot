@@ -178,6 +178,24 @@ export const AREAS = [
     name: 'Самуи',
     usernames: ['test2', 'test3'],
   },
+  {
+    id: 4,
+    alias: 'phuket',
+    name: 'Пхукет',
+    usernames: ['test2', 'test3'],
+  },
+  {
+    id: 5,
+    alias: 'chiangmai',
+    name: 'Чиангмай',
+    usernames: ['test2', 'test3'],
+  },
+  {
+    id: 6,
+    alias: 'bangkok',
+    name: 'Бангкок',
+    usernames: ['test2', 'test3'],
+  },
 ];
 
 export const PRESETS = [
@@ -202,23 +220,27 @@ export const PRESETS = [
       'felano',
       'drone',
     ],
+    minus_words: [],
   },
   {
     id: 2,
     alias: 'preset_2',
     name: 'Test 2',
     words: ['test14', 'test24', 'test3'],
+    minus_words: [],
   },
   {
     id: 3,
     alias: 'preset_3',
     name: 'Test 3',
     words: ['tes123t1', 'test32', 'tes2t3'],
+    minus_words: [],
   },
   {
     id: 4,
     alias: 'preset_4',
     name: 'Без пресета',
     words: [],
+    minus_words: [],
   },
 ];
