@@ -41,15 +41,15 @@ export class TelegramService {
         const message = event.message;
         const text = message.text;
 
-        const chanellId = message?.peerId['channelId'];
+        const channelId = message?.peerId['channelId'];
         const senderId = message.senderId;
         const messageId = message.id;
 
-        if (!chanellId) return;
+        if (!channelId) return;
 
         const result = await client.invoke(
           new Api.channels.GetFullChannel({
-            channel: chanellId,
+            channel: channelId,
           })
         );
         const channelData = result.chats[0];
