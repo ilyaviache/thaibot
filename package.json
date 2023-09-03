@@ -73,15 +73,19 @@
     "graphql-subscriptions": "2.0.0",
     "input": "^1.0.1",
     "logrocket": "^4.0.3",
+    "nest-winston": "^1.9.4",
     "nestjs-prisma": "0.20.0",
     "nestjs-telegraf": "^2.6.3",
+    "newrelic": "^11.0.0",
+    "newrelic-winston": "^2.1.0",
     "passport": "0.6.0",
     "passport-jwt": "4.0.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "4.4.0",
     "rxjs": "7.8.0",
     "telegraf": "^4.12.2",
-    "telegram": "^2.16.4"
+    "telegram": "^2.16.4",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.5.0",

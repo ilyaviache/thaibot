@@ -1,0 +1,14 @@
+---
+- name: Install New Relic
+  hosts: dev
+  roles:
+    - role: newrelic.newrelic_install
+  vars:
+    targets:
+      - infrastructure
+      - logs
+      - apm-nodejs
+  environment:
+    NEW_RELIC_API_KEY: NRAK-BF340ABEICC1EJ6T9OK5O2VS67U
+    NEW_RELIC_ACCOUNT_ID: "4086985"
+    NEW_RELIC_REGION: EU

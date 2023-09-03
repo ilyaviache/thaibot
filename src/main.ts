@@ -10,9 +10,12 @@ import type {
   SwaggerConfig,
 } from 'src/common/configs/config.interface';
 import { getBotToken } from 'nestjs-telegraf';
+import { LoggerFactory } from './common/logger.factory';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: LoggerFactory('thaibot'),
+  });
   const bot = app.get(getBotToken());
 
   // Validation
