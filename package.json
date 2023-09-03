@@ -64,6 +64,7 @@
     "@nestjs/passport": "9.0.3",
     "@nestjs/platform-express": "9.3.10",
     "@nestjs/swagger": "6.2.1",
+    "@newrelic/winston-enricher": "^4.0.1",
     "@prisma/client": "^4.14.0",
     "bcrypt": "^5.1.0",
     "class-transformer": "0.5.1",

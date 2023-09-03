@@ -4,6 +4,10 @@ import {
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston';
 
+const newrelicFormatter = require('@newrelic/winston-enricher');
+const winston = require('winston');
+const newrelicWinstonFormatter = newrelicFormatter(winston);
+
 export const LoggerFactory = (appName: string) => {
   let consoleFormat;
   const DEBUG = process.env.DEBUG;
@@ -26,6 +30,16 @@ export const LoggerFactory = (appName: string) => {
   }
   return WinstonModule.createLogger({
     level: DEBUG ? 'debug' : 'info',
-    transports: [new transports.Console({ format: consoleFormat })],
+    transports: [
+      new transports.Console({ format: consoleFormat }),
+      new transports.File({
+        filename: 'combined.log',
+        format: format.combine(
+          format.timestamp(),
+          format.json(),
+          newrelicWinstonFormatter()
+        ),
+      }),
+    ],
   });
 };
