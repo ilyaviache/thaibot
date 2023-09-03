@@ -12,11 +12,18 @@ import type {
 import { getBotToken } from 'nestjs-telegraf';
 import { LoggerFactory } from './common/logger.factory';
 
+import * as Sentry from '@sentry/node';
+import { SentryFilter } from './common/sentry.filter';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: LoggerFactory('thaibot'),
   });
   const bot = app.get(getBotToken());
+
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+  });
 
   // Validation
   app.useGlobalPipes(new ValidationPipe());
@@ -28,6 +35,7 @@ async function bootstrap() {
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.useGlobalFilters(new SentryFilter(httpAdapter));
   app.use(bot.webhookCallback('/webhook'));
 
   const configService = app.get(ConfigService);

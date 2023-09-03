@@ -66,6 +66,8 @@
     "@nestjs/swagger": "6.2.1",
     "@newrelic/winston-enricher": "^4.0.1",
     "@prisma/client": "^4.14.0",
+    "@sentry/node": "^7.66.0",
+    "@sentry/tracing": "^7.66.0",
     "bcrypt": "^5.1.0",
     "class-transformer": "0.5.1",
     "class-validator": "^0.14.0",
