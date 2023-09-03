@@ -78,7 +78,6 @@
     "nestjs-prisma": "0.20.0",
     "nestjs-telegraf": "^2.6.3",
     "newrelic": "^11.0.0",
-    "newrelic-winston": "^2.1.0",
     "passport": "0.6.0",
     "passport-jwt": "4.0.1",
     "reflect-metadata": "0.1.13",

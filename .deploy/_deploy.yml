@@ -42,7 +42,7 @@
       ignore_errors: yes
 
     - name: Start pm2
-      command: pm2 start {{ current_path }}/dist/main.js --name thaibot
+      command: pm2 start {{ current_path }}/dist/main.js --name thaibot --node-args="-r newrelic"
 
     - name: Run migration
       command: bash -lc "cd {{ current_path }} && /usr/bin/npm run migrate:deploy"
