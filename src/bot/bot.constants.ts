@@ -165,6 +165,7 @@ export const AREAS = [
       'KohPhangan',
       'kophanganwithlove',
       'khopangan',
+      'test78479847983',
     ],
   },
   {
@@ -187,7 +188,7 @@ export const AREAS = [
     id: 3,
     alias: 'samui',
     name: 'Самуи',
-    usernames: ['test2', 'test3'],
+    usernames: ['test78479847983'],
   },
   {
     id: 4,
