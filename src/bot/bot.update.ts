@@ -48,7 +48,18 @@ export class BotUpdate {
       ctx.session.user.chatId
     );
     if (works.length === 0) {
-      await this.botNavigationService.firstTouch(ctx);
+      const inline_keyboard = [[BUTTONS.START_LISTEN]];
+
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+      await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+      // todo: service doesn't work
+      // await this.botNavigationService.firstTouch(ctx);
     } else {
       // await this.botService.showMainMenu(ctx);
       const inlineKeyboard = [];
