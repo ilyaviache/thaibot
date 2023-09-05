@@ -28,7 +28,7 @@ export class ChannelsAddScene {
     return;
   }
 
-  @Hears('channel_' + MENU_BUTTONS.BACK.text)
+  @Hears(MENU_BUTTONS.BACK.text)
   async handleDeleteCancel(@Ctx() ctx: Context) {
     await ctx.scene.enter(CHANNELS_SCENE);
   }

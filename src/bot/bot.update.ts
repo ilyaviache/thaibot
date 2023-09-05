@@ -163,4 +163,9 @@ export class BotUpdate {
     // TODO: handle add task
     await ctx.reply(TEXTS.TASKS.MAIN_ADD);
   }
+
+  @Hears(MENU_BUTTONS.BACK.text)
+  async handleDeleteCancel(@Ctx() ctx: Context) {
+    await this.onStart(ctx);
+  }
 }
