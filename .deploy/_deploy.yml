@@ -29,6 +29,9 @@
     - name: Update npm
       npm: path={{ release_path }}
 
+    - name: Run migration
+      command: bash -lc "cd {{ current_path }} && /usr/bin/npm run migrate:deploy"
+
     - name: Run build
       command: bash -lc "cd {{ release_path }} && /usr/bin/npm run build"
 
@@ -43,9 +46,6 @@
 
     - name: Start pm2
       command: pm2 start {{ current_path }}/dist/main.js --name thaibot --node-args="-r newrelic"
-
-    - name: Run migration
-      command: bash -lc "cd {{ current_path }} && /usr/bin/npm run migrate:deploy"
 
     - name: Delete old dir
       shell: rm -rf {{ current_release_path.stdout }}/
