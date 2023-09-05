@@ -47,6 +47,7 @@ export class BotService {
             Username: @${fromUsername}\n
             Channel: ${channelName} @${channelUsername}\n
             Message: ${text}\n
+            Message Link: https://t.me/${channelUsername}/${message.messageId}\n
             `;
           this.sendMessage(work.chatId, report);
         }
