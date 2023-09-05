@@ -9,3 +9,4 @@ prisma/migrations/dev/
 
 newrelic_agent.log
 combined.log
+.env.local
