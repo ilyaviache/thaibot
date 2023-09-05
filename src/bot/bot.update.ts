@@ -157,6 +157,17 @@ export class BotUpdate {
     return;
   }
 
+  @Action(COMMANDS.ADD_TASK)
+  async handleAddTask(@Ctx() ctx: Context) {
+    // TODO: handle add task
+    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
+  }
+
+  @Hears(MENU_BUTTONS.BACK.text)
+  async handleDeleteCancel(@Ctx() ctx: Context) {
+    await this.onStart(ctx);
+  }
+
   @Action(/select_work_\w+/)
   async handleSelectWork(@Ctx() ctx: Context) {
     const callbackData = ctx.callbackQuery['data'];
@@ -167,14 +178,35 @@ export class BotUpdate {
     return;
   }
 
-  @Action(COMMANDS.ADD_TASK)
-  async handleAddTask(@Ctx() ctx: Context) {
-    // TODO: handle add task
-    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
+  @Action(/mute_channel@\w+/)
+  async handleMuteChannel(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const params = callbackData.split('@');
+
+    if (!params || !params[1] || !params[2]) return;
+
+    const username = params[1];
+    const workId = params[2];
+
+    const work = await this.worksService.findById(workId);
+    await this.worksService.addMuteChannel(work, username);
+
+    return '✅';
   }
 
-  @Hears(MENU_BUTTONS.BACK.text)
-  async handleDeleteCancel(@Ctx() ctx: Context) {
-    await this.onStart(ctx);
+  @Action(/mute_username@\w+/)
+  async handleMuteUsername(@Ctx() ctx: Context) {
+    const callbackData = ctx.callbackQuery['data'];
+    const params = callbackData.split('@');
+
+    if (!params || !params[1] || !params[2]) return;
+
+    const username = params[1];
+    const workId = params[2];
+
+    const work = await this.worksService.findById(workId);
+    await this.worksService.addMuteAccount(work, username);
+
+    return '✅';
   }
 }

@@ -8,6 +8,7 @@ import { NewMessageDataDTO } from './dto/new-message-data.dto';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
+import { Works } from 'src/works/models/works.model';
 
 @Injectable()
 export class BotService {
@@ -49,7 +50,7 @@ export class BotService {
             Message: ${text}\n
             Message Link: https://t.me/${channelUsername}/${message.messageId}\n
             `;
-          this.sendMessage(work.chatId, report);
+          this.sendMessage(work.chatId, report, message, work.id);
         }
       }
     }
@@ -61,9 +62,31 @@ export class BotService {
     return;
   }
 
-  async sendMessage(chatId: string, text: string) {
+  async sendMessage(
+    chatId: string,
+    text: string,
+    message: NewMessageDataDTO,
+    work_id: string
+  ) {
     console.log(message);
-    await this.bot.telegram.sendMessage(chatId, text);
+    await this.bot.telegram.sendMessage(chatId, text, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: 'Замьютить канал',
+              callback_data: `mute_channel@${message.channelUsername}@${work_id}`,
+            },
+          ],
+          [
+            {
+              text: 'Замьютить пользователя',
+              callback_data: `mute_username@${message.fromUsername}@${work_id}`,
+            },
+          ],
+        ],
+      },
+    });
     return;
   }
 }

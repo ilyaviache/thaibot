@@ -101,7 +101,30 @@ export class WorksService {
   }
 
   async addListenWord(work: Works, word: string): Promise<Works | null> {
-    work.listenWords.push(word);
+    if (!work.listenWords.includes(word)) {
+      work.listenWords.push(word);
+    }
+    return await this.update(work.id, work);
+  }
+
+  async addMuteWord(work: Works, word: string): Promise<Works | null> {
+    if (!work.muteWords.includes(word)) {
+      work.muteWords.push(word);
+    }
+    return await this.update(work.id, work);
+  }
+
+  async addMuteChannel(work: Works, channel: any): Promise<Works | null> {
+    if (!work.muteChannelUsernames.includes(channel)) {
+      work.muteChannelUsernames.push(channel);
+    }
+    return await this.update(work.id, work);
+  }
+
+  async addMuteAccount(work: Works, account: any): Promise<Works | null> {
+    if (!work.muteUsernames.includes(account)) {
+      work.muteUsernames.push(account);
+    }
     return await this.update(work.id, work);
   }
 
@@ -115,11 +138,6 @@ export class WorksService {
     return await this.update(work.id, work);
   }
 
-  async addMuteWord(work: Works, word: string): Promise<Works | null> {
-    work.muteWords.push(word);
-    return await this.update(work.id, work);
-  }
-
   async removeMuteWord(work: Works, index: number): Promise<Works | null> {
     work.muteWords.splice(index, 1);
     return await this.update(work.id, work);
@@ -130,11 +148,6 @@ export class WorksService {
     return await this.update(work.id, work);
   }
 
-  async addMuteChannel(work: Works, channel: any): Promise<Works | null> {
-    work.muteChannelUsernames.push(channel);
-    return await this.update(work.id, work);
-  }
-
   async removeMuteChannel(work: Works, index: number): Promise<Works | null> {
     work.muteChannelUsernames.splice(index, 1);
     return await this.update(work.id, work);
@@ -142,11 +155,6 @@ export class WorksService {
 
   async removeAllMuteChannels(work: Works): Promise<Works | null> {
     work.muteChannelUsernames = [];
-    return await this.update(work.id, work);
-  }
-
-  async addMuteAccount(work: Works, account: any): Promise<Works | null> {
-    work.muteUsernames.push(account);
     return await this.update(work.id, work);
   }
 
