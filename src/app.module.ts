@@ -18,11 +18,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [config],
-      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
-    }),
+    // ConfigModule.forRoot({
+    //   isGlobal: true,
+    //   load: [config],
+    //   envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+    // }),
+    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
