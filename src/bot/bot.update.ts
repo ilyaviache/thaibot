@@ -1,9 +1,8 @@
 import { UseFilters } from '@nestjs/common';
 import { InjectBot, Ctx, Start, Update, Hears, Action } from 'nestjs-telegraf';
-import { Telegraf } from 'telegraf';
 import { BotFilter } from './bot.filter';
 import { Context } from './bot.interface';
-import { BotService } from './bot.service';
+
 import {
   MENUS,
   MENU_BUTTONS,
@@ -28,7 +27,6 @@ import { BotNavigationService } from './bot-navigation.service';
 export class BotUpdate {
   constructor(
     @InjectBot()
-    private readonly botService: BotService,
     private readonly botNavigationService: BotNavigationService,
     private readonly worksService: WorksService,
     private readonly usersService: UsersService
@@ -55,7 +53,7 @@ export class BotUpdate {
       // await this.botService.showMainMenu(ctx);
       const inlineKeyboard = [];
 
-      works.forEach((work, i) => {
+      works.forEach((work) => {
         inlineKeyboard.push([
           { text: `${work.name}`, callback_data: `select_work_${work.id}` },
         ]);

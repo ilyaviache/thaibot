@@ -194,19 +194,19 @@ export const AREAS = [
     id: 4,
     alias: 'phuket',
     name: 'Пхукет',
-    usernames: ['test2', 'test3'],
+    usernames: [],
   },
   {
     id: 5,
     alias: 'chiangmai',
     name: 'Чианг Май',
-    usernames: ['test2', 'test3'],
+    usernames: [],
   },
   {
     id: 6,
     alias: 'bangkok',
     name: 'Бангкок',
-    usernames: ['test2', 'test3'],
+    usernames: [],
   },
 ];
 
