@@ -19,14 +19,17 @@ import { WordsScene } from './scenes/words.scene';
 import { WordsAddScene } from './scenes/words-add.scene';
 import { ChannelsScene } from './scenes/channels.scene';
 import { ChannelsAddScene } from './scenes/channels-add.scene';
+import { MessagesModule } from 'src/messages/messages.module';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { BotNavigationService } from './bot-navigation.service';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Module({
   imports: [
     WorksModule,
+    MessagesModule,
     TelegrafModule.forRootAsync({
       useFactory: () => ({
         token: process.env.TELEGRAM_BOT_TOKEN,
@@ -42,6 +45,7 @@ import { BotNavigationService } from './bot-navigation.service';
     BotService,
     UsersService,
     WorksService,
+    MessagesService,
     BotNavigationService,
 
     TasksScene,

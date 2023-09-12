@@ -25,22 +25,35 @@ model User {
 }
 
 model Works {
-  id                     String   @id @default(cuid())
+  id                     String     @id @default(cuid())
   name                   String?
   chatId                 String
   selectedChatsId        Int?
   listenChannelUsernames String[]
   listenWords            String[]
-  muteChannelUsernames   Json[]   @db.Json
-  muteUsernames          Json[]   @db.Json
+  muteChannelUsernames   Json[]     @db.Json
+  muteUsernames          Json[]     @db.Json
   muteWords              String[]
-  user                   User     @relation(fields: [userId], references: [id])
+  user                   User       @relation(fields: [userId], references: [id])
   userId                 String
-  updatedAt              DateTime @default(now())
-  createdAt              DateTime @default(now())
+  updatedAt              DateTime   @default(now())
+  createdAt              DateTime   @default(now())
+  Messages               Messages[]
 
   @@index([chatId])
   @@index([userId])
   @@index([listenChannelUsernames])
   @@index([listenWords])
+}
+
+model Messages {
+  id              String   @id @default(cuid())
+  work            Works    @relation(fields: [workId], references: [id])
+  messageId       String
+  workId          String
+  channelUsername String
+  username        String
+  createdAt       DateTime @default(now())
+
+  @@index([workId])
 }

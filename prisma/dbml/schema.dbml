@@ -26,6 +26,19 @@ Table Works {
   userId String [not null]
   updatedAt DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]
+  Messages Messages [not null]
+}
+
+Table Messages {
+  id String [pk]
+  work Works [not null]
+  messageId String [not null]
+  workId String [not null]
+  channelUsername String [not null]
+  username String [not null]
+  createdAt DateTime [default: `now()`, not null]
 }
 
 Ref: Works.userId > User.id
+
+Ref: Messages.workId > Works.id

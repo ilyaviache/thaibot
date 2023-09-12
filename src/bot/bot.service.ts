@@ -9,6 +9,7 @@ import { NewMessageDataDTO } from './dto/new-message-data.dto';
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { Works } from 'src/works/models/works.model';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Injectable()
 export class BotService {
@@ -16,7 +17,8 @@ export class BotService {
     @InjectBot()
     private readonly bot: Telegraf<Context>,
     private readonly worksService: WorksService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly messagesService: MessagesService
   ) {}
 
   // entry point to a main bot logic, all messages will be handled here
@@ -50,7 +52,9 @@ export class BotService {
             Message: ${text}\n
             Message Link: https://t.me/${channelUsername}/${message.messageId}\n
             `;
-          this.sendMessage(work.chatId, report, message, work.id);
+
+          await this.messagesService.createMessage(work.id, message);
+          await this.sendMessage(work.chatId, report, message, work.id);
         }
       }
     }

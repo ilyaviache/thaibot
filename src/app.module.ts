@@ -10,6 +10,7 @@ import config from 'src/common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 import { BotModule } from './bot/bot.module';
+import { MessagesModule } from './messages/messages.module';
 
 import { TelegramModule } from './telegram/telegram.module';
 import { WorksModule } from './works/works.module';
@@ -43,6 +44,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     EventEmitterModule.forRoot(),
     UsersModule,
+    MessagesModule,
     BotModule,
     TelegramModule,
     WorksModule,
