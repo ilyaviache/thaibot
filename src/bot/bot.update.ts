@@ -174,7 +174,13 @@ export class BotUpdate {
     const callbackData = ctx.callbackQuery['data'];
     const workId = callbackData.split('_')[2];
 
-    await this.botNavigationService.selectActiveWorkById(ctx, workId);
+    // service doesnt work await this.botNavigationService.selectActiveWorkById(ctx, workId);
+    const work = await this.worksService.findById(workId);
+    if (!work) {
+      //
+    } else {
+      ctx.session.work = work;
+    }
     await ctx.scene.enter(TASKS_SCENE);
     return;
   }

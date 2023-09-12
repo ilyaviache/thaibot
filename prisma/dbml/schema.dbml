@@ -34,6 +34,7 @@ Table Messages {
   work Works [not null]
   messageId String [not null]
   workId String [not null]
+  channelName String [not null, default: '']
   channelUsername String [not null]
   username String [not null]
   createdAt DateTime [default: `now()`, not null]

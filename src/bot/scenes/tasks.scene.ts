@@ -46,16 +46,14 @@ export class TasksScene {
 
         const replyMarkup = {
           reply_markup: {
-            inline_keyboard: [
-              [{text: 'Подслушанные сообщения (25)', callback_data: 'show_messages_25'}]
-            ],
-            // keyboard: MENUS.TASK_MENU,
+            keyboard: MENUS.TASK_MENU,
             resize_keyboard: true,
             one_time_keyboard: true,
           },
         };
 
         await ctx.reply(TEXTS.TASKS.SHOW, replyMarkup);
+        await this.botNavigationService.showCurrentWorkStats(ctx);
       }
     } catch (e) {
       console.log(e);
@@ -124,9 +122,20 @@ export class TasksScene {
     await ctx.reply(TEXTS.TASKS.CREATED, replyMarkup);
   }
 
-  @Action('show_messages_25')
+  @Action(/show_messages_\d+/)
   async handleShowMessages(@Ctx() ctx: Context) {
-    const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, 25);
+    const callbackData = ctx.callbackQuery['data'];
+    const limit = Number(callbackData.split('_')[2]) || 10;
+
+    const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, limit);
+    // show all messages to user in reply
+    for (let message of messages) {
+      const reply = `
+        Message Link: https://t.me/${message.channelUsername}/${message.messageId}
+    `
+      await ctx.reply(reply);
+    }
+
     console.log(messages);
     return;
   }

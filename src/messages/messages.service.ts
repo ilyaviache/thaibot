@@ -16,6 +16,13 @@ export class MessagesService {
     });
   }
 
+  // count sll messages by work id
+  async countAllByWorkId(workId: string): Promise<number> {
+    return this.prisma.messages.count({
+      where: { workId },
+    });
+  }
+
   // add new message to work
   async createMessage(
     workId: string,
@@ -25,6 +32,7 @@ export class MessagesService {
       data: {
         messageId: message.messageId.toString(),
         workId,
+        channelName: message.channelName,
         username: message.fromUsername,
         channelUsername: message.channelUsername
       },

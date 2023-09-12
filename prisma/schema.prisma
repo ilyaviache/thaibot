@@ -51,6 +51,7 @@ model Messages {
   work            Works    @relation(fields: [workId], references: [id])
   messageId       String
   workId          String
+  channelName     String   @default("")
   channelUsername String
   username        String
   createdAt       DateTime @default(now())

@@ -15,12 +15,14 @@ import { InitUserInput } from 'src/users/dto/init-user.input';
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { Works } from '@prisma/client';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Injectable()
 export class BotNavigationService {
   constructor(
     private readonly worksService: WorksService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly messagesService: MessagesService
   ) {}
 
   async start(ctx: Context): Promise<any> {
@@ -88,6 +90,33 @@ export class BotNavigationService {
     };
 
     return ctx.reply(TEXTS.TASKS.TASK_MENU(name), replyMarkup);
+  }
+
+  async showCurrentWorkStats(ctx: Context): Promise<any> {
+    const workId = ctx.session.work.id;
+    const createdAt = ctx.session.work.createdAt;
+
+    const inline_keyboard = [
+      [{ text: '📋 Показать последние 10 сообщений', callback_data: `show_messages_10` }],
+      [{ text: '📋 Показать последние 25 сообщений', callback_data: `show_messages_25` }],
+      [{ text: '📋 Показать последние 100 сообщений', callback_data: `show_messages_100` }],
+    ];
+
+    const messagesCount = await this.messagesService.countAllByWorkId(workId);
+    // show how much days pass since work created
+    const daysCount = Math.floor(
+      (new Date().getTime() - createdAt.getTime()) / (1000 * 3600 * 24)
+    );
+
+    const replyMarkup = {
+      reply_markup: {
+        inline_keyboard,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    return ctx.reply(TEXTS.TASKS.STATS(daysCount, messagesCount), replyMarkup);
   }
 
   async selectArea(
