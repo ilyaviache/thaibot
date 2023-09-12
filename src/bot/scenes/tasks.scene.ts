@@ -14,6 +14,7 @@ import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from '../bot-navigation.service';
 import { UsersService } from 'src/users/users.service';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Scene(TASKS_SCENE)
 @UseFilters(BotFilter)
@@ -21,6 +22,7 @@ export class TasksScene {
   constructor(
     private readonly worksService: WorksService,
     private readonly botNavigationService: BotNavigationService,
+    private readonly messagesService: MessagesService,
     private readonly usersService: UsersService
   ) {}
   @SceneEnter()
@@ -44,7 +46,10 @@ export class TasksScene {
 
         const replyMarkup = {
           reply_markup: {
-            keyboard: MENUS.TASK_MENU,
+            inline_keyboard: [
+              [{text: 'Подслушанные сообщения (25)', callback_data: 'show_messages_25'}]
+            ],
+            // keyboard: MENUS.TASK_MENU,
             resize_keyboard: true,
             one_time_keyboard: true,
           },
@@ -117,6 +122,13 @@ export class TasksScene {
     };
 
     await ctx.reply(TEXTS.TASKS.CREATED, replyMarkup);
+  }
+
+  @Action('show_messages_25')
+  async handleShowMessages(@Ctx() ctx: Context) {
+    const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, 25);
+    console.log(messages);
+    return;
   }
 
   @Action('open_work_scene')
