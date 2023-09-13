@@ -36,25 +36,40 @@ export class WordsAddScene {
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
     if (ctx.scene.current.id === WORDS_ADD_SCENE) {
-      const word = ctx.update['message']['text'];
-      if (word === MENU_BUTTONS.BACK.text || word === '/start') {
+      const inputText = ctx.update['message']['text'];
+
+      if (inputText === MENU_BUTTONS.BACK.text || inputText === '/start') {
         return next();
       }
-      try {
-        const result = await this.worksService.addMuteWord(
-          ctx.session.work,
-          word
-        );
 
-        ctx.session.work = result;
-      } catch (e) {
-        console.log(e);
+      // Разделите строку на слова, используя запятую в качестве разделителя.
+      const words = inputText.split(',').map(word => word.trim()).filter(word => word);
+
+      for (const word of words) {
+        try {
+          const result = await this.worksService.addListenWord(
+            ctx.session.work,
+            word
+          );
+
+          ctx.session.work = result;
+        } catch (e) {
+          console.log(e);
+        }
       }
     } else {
       return next();
     }
 
-    await this.onSceneEnter(ctx);
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply('✅', replyMarkup);
     return;
   }
 }

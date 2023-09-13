@@ -54,7 +54,15 @@ export class AccountsAddScene {
       return next();
     }
 
-    await this.onSceneEnter(ctx);
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply('✅', replyMarkup);
     return;
   }
 }
