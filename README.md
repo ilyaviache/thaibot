@@ -50,7 +50,7 @@ Starter template for 😻 [NestJS](https://nestjs.com/) and [Prisma](https://www
       - [Subscriptions](#subscriptions)
       - [Authentication](#authentication)
 
-## Ansible commands 
+## Ansible commands
 
 ### Deploy 
 ```bash
