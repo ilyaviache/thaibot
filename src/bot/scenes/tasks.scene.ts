@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
@@ -130,13 +132,14 @@ export class TasksScene {
     const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, limit);
     // show all messages to user in reply
     for (let message of messages) {
+      const formattedDate = format(message.createdAt, "d MMMM 'в' HH:mm", { locale: ru });
+      const escapeChars = (str: string) => str.replace(/[-_.!*()]/g, '\\$&'); // Экранирование специальных символов
       const reply = `
-        Message Link: https://t.me/${message.channelUsername}/${message.messageId}
-    `
-      await ctx.reply(reply);
+        [Отправлено ${escapeChars(formattedDate)}](https://t\\.me/${escapeChars(message.channelUsername)}/${message.messageId})
+      `
+      await ctx.sendMessage(reply, { parse_mode: 'MarkdownV2' });
     }
 
-    console.log(messages);
     return;
   }
 
