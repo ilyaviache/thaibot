@@ -37,9 +37,9 @@ export class TasksScene {
       const works = await this.worksService.findByAllByChatId(
         ctx.session.user.chatId
       );
-      if (works.length === 0) {
+      if (works.length === 0 || ctx.session.taskWizardOn === true) {
+        ctx.session.taskWizardOn = false;
         ctx.session.addMode = true;
-        ctx.session.taskWizardOn = true;
         await ctx.reply(TEXTS.TASKS.MAIN_ADD);
       } else {
         if (!ctx.session.work) {
@@ -84,7 +84,7 @@ export class TasksScene {
   @Action('delete_task_yes')
   async handleDeleteTaskYes(@Ctx() ctx: Context) {
     await this.worksService.delete(ctx.session.work.id);
-    await ctx.scene.enter(TASKS_SCENE);
+    await this.botNavigationService.start(ctx);
     return;
   }
 
@@ -156,6 +156,10 @@ export class TasksScene {
 
     const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, limit);
     // show all messages to user in reply
+    if (messages.length === 0) {
+      await ctx.reply(TEXTS.TASKS.NO_MESSAGES);
+      return;
+    }
     for (let message of messages) {
       const formattedDate = format(message.createdAt, "d MMMM 'в' HH:mm", { locale: ru });
       const escapeChars = (str: string) => str.replace(/[-_.!*()]/g, '\\$&'); // Экранирование специальных символов

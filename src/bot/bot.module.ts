@@ -39,7 +39,6 @@ import { MessagesService } from 'src/messages/messages.service';
     }),
   ],
   providers: [
-    BotUpdate,
     BotResolver,
     BotListener,
     BotService,
@@ -47,6 +46,7 @@ import { MessagesService } from 'src/messages/messages.service';
     WorksService,
     MessagesService,
     BotNavigationService,
+    BotUpdate,
 
     TasksScene,
     AccountsScene,

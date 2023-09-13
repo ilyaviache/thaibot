@@ -34,6 +34,47 @@ export class BotNavigationService {
     const result = await this.usersService.initUser(initUserInput);
     ctx.session.user = result;
 
+    const works = await this.worksService.findByAllByChatId(
+      ctx.session.user.chatId
+    );
+    if (works.length === 0) {
+      const inline_keyboard = [[BUTTONS.START_LISTEN]];
+
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+      await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+      // todo: service doesn't work
+      // await this.botNavigationService.firstTouch(ctx);
+    } else {
+      // await this.botService.showMainMenu(ctx);
+      const inlineKeyboard = [];
+
+      works.forEach((work) => {
+        inlineKeyboard.push([
+          { text: `${work.name}`, callback_data: `select_work_${work.id}` },
+        ]);
+      });
+
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard: inlineKeyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+      inlineKeyboard.push([BUTTONS.ADD_TASK]);
+
+      await ctx.reply(
+        'Выберите задачу, кликнув на ее название ниже чтобы открыть меню управления настройкой',
+        replyMarkup
+      );
+    }
+
     const replyMarkup = {
       reply_markup: {
         keyboard: MENUS.MAIN_MENU,
@@ -42,7 +83,7 @@ export class BotNavigationService {
       },
     };
 
-    return ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+    await ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
   }
 
   async firstTouch(ctx: Context): Promise<any> {

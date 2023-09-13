@@ -95,7 +95,6 @@ export class WorksService {
     const area = AREAS.find((area) => area.id === id);
     work.selectedChatsId = area.id;
     work.listenChannelUsernames = area.usernames;
-    console.log('test -->', work, area, id, 'test <--');
     return await this.update(work.id, work);
   }
 

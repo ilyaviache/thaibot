@@ -22,6 +22,7 @@ import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { BotNavigationService } from './bot-navigation.service';
 import { log } from 'console';
+import { session } from 'telegraf';
 
 @Update()
 @UseFilters(BotFilter)
@@ -35,6 +36,8 @@ export class BotUpdate {
 
   // TODO: протестировать edge cases работы с сессиями
 
+
+  // при изменение этого кода следуте также изменить функцию start в bot-navigation.service.ts
   @Start()
   async onStart(@Ctx() ctx: Context) {
     const initUserInput = new InitUserInput({
@@ -94,6 +97,8 @@ export class BotUpdate {
       },
     };
 
+    // TODO: nsvigation service doesnt work
+    // await this.botNavigationService.start(ctx);
     await ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
     return;
   }
@@ -181,8 +186,9 @@ export class BotUpdate {
 
   @Action(COMMANDS.ADD_TASK)
   async handleAddTask(@Ctx() ctx: Context) {
-    // TODO: handle add task
-    await ctx.reply(TEXTS.TASKS.MAIN_ADD);
+    ctx.session.taskWizardOn = true;
+    await ctx.scene.enter(TASKS_SCENE);
+    return;
   }
 
   @Hears(MENU_BUTTONS.BACK.text)
