@@ -100,6 +100,7 @@ export class BotNavigationService {
       [{ text: '📋 Показать последние 10 сообщений', callback_data: `show_messages_10` }],
       [{ text: '📋 Показать последние 25 сообщений', callback_data: `show_messages_25` }],
       [{ text: '📋 Показать последние 100 сообщений', callback_data: `show_messages_100` }],
+      [{ text: '❌ Удалить задачу', callback_data: `delete_task` }],
     ];
 
     const messagesCount = await this.messagesService.countAllByWorkId(workId);

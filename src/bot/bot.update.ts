@@ -153,8 +153,29 @@ export class BotUpdate {
 
   @Hears(MENU_BUTTONS.SUPPORT.text)
   async handleSupportMenu(@Ctx() ctx: Context) {
-    await this.worksService.deleteAll();
-    await this.onStart(ctx);
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: MENUS.MAIN_MENU,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.MAIN.SUPPORT, replyMarkup);
+    return;
+  }
+
+  @Hears(MENU_BUTTONS.PAYMENT.text)
+  async handlePaymentMenu(@Ctx() ctx: Context) {
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: MENUS.MAIN_MENU,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.MAIN.PAYMENT, replyMarkup);
     return;
   }
 

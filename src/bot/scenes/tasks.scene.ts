@@ -63,6 +63,31 @@ export class TasksScene {
     return;
   }
 
+  @Action('delete_task')
+  async handleDeleteTask(@Ctx() ctx: Context) {
+    
+    const replyMarkup = {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '🗑️ Удалить задачу', callback_data: 'delete_task_yes' }],
+          [MENU_BUTTONS.BACK],
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.TASKS.REMOVE, replyMarkup);
+    return;
+  }
+
+  @Action('delete_task_yes')
+  async handleDeleteTaskYes(@Ctx() ctx: Context) {
+    await this.worksService.delete(ctx.session.work.id);
+    await ctx.scene.enter(TASKS_SCENE);
+    return;
+  }
+
   @Hears(RegExp('.'))
   async handleWorkAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
     try {
@@ -151,7 +176,6 @@ export class TasksScene {
 
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleBack(@Ctx() ctx: Context) {
-    console.log('handleBack');
     await ctx.scene.enter(TASKS_SCENE);
     return;
   }
