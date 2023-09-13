@@ -11,14 +11,20 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
+import { BotNavigationService } from 'src/bot/bot-navigation.service';
 
 @Scene(WORKS_SCENE)
 @UseFilters(BotFilter)
 export class WorksScene {
-  constructor(private readonly worksService: WorksService) {}
+  constructor(private readonly worksService: WorksService,
+    private readonly botNavigationService: BotNavigationService
+    ) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
-    // say hi
+    if (!ctx.session.user) {
+      await this.botNavigationService.start(ctx);
+      return;
+    }
     const replyMarkup = {
       reply_markup: {
         keyboard: MENUS.WORKS_MENU,

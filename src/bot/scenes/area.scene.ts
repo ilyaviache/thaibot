@@ -16,6 +16,10 @@ export class AreaScene {
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
+    if (!ctx.session.user) {
+      await this.botNavigationService.start(ctx);
+      return;
+    }
     const work = ctx.session.work;
     try {
       await this.botNavigationService.selectArea(work, ctx, true);
