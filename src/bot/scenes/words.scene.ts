@@ -6,6 +6,7 @@ import {
   MENUS,
   TEXTS,
   MENU_BUTTONS,
+  BUTTONS,
   TASKS_SCENE,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
@@ -43,7 +44,7 @@ export class WordsScene {
   async handleWordsDelete(@Ctx() ctx: Context) {
     const replyMarkup = {
       reply_markup: {
-        keyboard: [[MENU_BUTTONS.OK, MENU_BUTTONS.CANCEL]],
+        inline_keyboard: [[BUTTONS.OK, BUTTONS.CANCEL]],
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -87,7 +88,7 @@ export class WordsScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.OK.text)
+  @Action(BUTTONS.OK.callback_data)
   async handleOk(@Ctx() ctx: Context) {
     const result = await this.worksService.removeAllMuteWords(ctx.session.work);
     ctx.session.work = result;
@@ -95,7 +96,7 @@ export class WordsScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.CANCEL.text)
+  @Action(BUTTONS.CANCEL.callback_data)
   async handleCancel(@Ctx() ctx: Context) {
     await this.onSceneEnter(ctx);
     return;

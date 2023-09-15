@@ -40,16 +40,12 @@ export class ChannelsAddScene {
       if (username === MENU_BUTTONS.BACK.text || username === '/start') {
         return next();
       }
-      try {
-        const result = await this.worksService.addMuteChannel(
-          ctx.session.work,
-          username
-        );
+      const result = await this.worksService.addMuteChannel(
+        ctx.session.work,
+        username
+      );
 
-        ctx.session.work = result;
-      } catch (e) {
-        console.log(e);
-      }
+      ctx.session.work = result;
     } else {
       return next();
     }

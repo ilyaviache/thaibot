@@ -112,8 +112,8 @@ export class WorksService {
   }
 
   async addMuteWord(work: Works, word: string): Promise<Works | null> {
-    if (!work.muteWords.includes(word)) {
-      work.muteWords.push(word);
+    if (!work.muteWords.includes(word.trim())) {
+      work.muteWords.push(word.trim());
     }
     return await this.update(work.id, work);
   }

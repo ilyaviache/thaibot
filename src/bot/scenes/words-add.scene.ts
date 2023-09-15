@@ -46,16 +46,12 @@ export class WordsAddScene {
       const words = inputText.split(',').map(word => word.trim()).filter(word => word);
 
       for (const word of words) {
-        try {
-          const result = await this.worksService.addListenWord(
-            ctx.session.work,
-            word
-          );
+        const result = await this.worksService.addMuteWord(
+          ctx.session.work,
+          word
+        );
 
-          ctx.session.work = result;
-        } catch (e) {
-          console.log(e);
-        }
+        ctx.session.work = result;
       }
     } else {
       return next();

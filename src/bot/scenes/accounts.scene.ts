@@ -7,6 +7,7 @@ import {
   TEXTS,
   MENU_BUTTONS,
   TASKS_SCENE,
+  BUTTONS,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
@@ -44,7 +45,7 @@ export class AccountsScene {
   async handleAccountsDelete(@Ctx() ctx: Context) {
     const replyMarkup = {
       reply_markup: {
-        keyboard: [[MENU_BUTTONS.OK, MENU_BUTTONS.CANCEL]],
+        inline_keyboard: [[BUTTONS.OK, BUTTONS.CANCEL]],
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -88,7 +89,7 @@ export class AccountsScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.OK.text)
+  @Action(BUTTONS.OK.callback_data)
   async handleOk(@Ctx() ctx: Context) {
     const result = await this.worksService.removeAllMuteAccounts(
       ctx.session.work
@@ -98,7 +99,7 @@ export class AccountsScene {
     return;
   }
 
-  @Hears(MENU_BUTTONS.CANCEL.text)
+  @Action(BUTTONS.CANCEL.callback_data)
   async handleCancel(@Ctx() ctx: Context) {
     await this.onSceneEnter(ctx);
     return;
