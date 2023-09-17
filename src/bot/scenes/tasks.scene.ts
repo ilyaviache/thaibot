@@ -83,9 +83,10 @@ export class TasksScene {
 
   @Action('delete_task_yes')
   async handleDeleteTaskYes(@Ctx() ctx: Context) {
+    console.log('this.worksService');
     await this.worksService.delete(ctx.session.work.id);
+    ctx.session.work = null;
     await this.botNavigationService.start(ctx);
-    return;
   }
 
   @Hears(RegExp('.'))

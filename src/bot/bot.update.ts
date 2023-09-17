@@ -84,7 +84,7 @@ export class BotUpdate {
       inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
       await ctx.reply(
-        'Выберите задачу, кликнув на ее название ниже чтобы открыть меню управления настройкой',
+        TEXTS.MAIN.START,
         replyMarkup
       );
     }

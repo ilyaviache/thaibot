@@ -45,11 +45,11 @@ export class WorksService {
 
   // delete work and all related messages from table
   async delete(id: string): Promise<Works | null> {
-    const work = await this.prisma.works.delete({
-      where: { id },
-    });
     await this.prisma.messages.deleteMany({
       where: { workId: id },
+    });
+    const work = await this.prisma.works.delete({
+      where: { id },
     });
     return work;
   }
