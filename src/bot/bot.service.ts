@@ -47,10 +47,10 @@ export class BotService {
         const isMutedUser = work.muteUsernames.includes(fromUsername);
         if (wordsFound && !muteWordsFound && !isMutedUser) {
           const report = `
-            Username: @${fromUsername}\n
-            Channel: ${channelName} @${channelUsername}\n
-            Message: ${text}\n
-            Message Link: https://t.me/${channelUsername}/${message.messageId}\n
+            Message: ${text}
+            \nUsername: @${fromUsername}
+            \nChannel: ${channelName} @${channelUsername}    
+            \nMessage Link: https://t.me/${channelUsername}/${message.messageId}\n
             `;
 
           await this.messagesService.createMessage(work.id, message);
@@ -61,7 +61,6 @@ export class BotService {
   }
 
   async sendBaseMessage(message: any) {
-    console.log(message);
     await this.bot.telegram.sendMessage(message.chatId, message.text);
     return;
   }
@@ -72,19 +71,18 @@ export class BotService {
     message: NewMessageDataDTO,
     work_id: string
   ) {
-    console.log(message);
     await this.bot.telegram.sendMessage(chatId, text, {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: 'Замьютить канал',
+              text: '🚫 Замьютить канал',
               callback_data: `mute_channel@${message.channelUsername}@${work_id}`,
             },
           ],
           [
             {
-              text: 'Замьютить пользователя',
+              text: '🚫 Замьютить пользователя',
               callback_data: `mute_username@${message.fromUsername}@${work_id}`,
             },
           ],
