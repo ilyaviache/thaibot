@@ -208,6 +208,14 @@ export const AREAS = [
       'phanganvse',
       'Cozy_Rentals',
       'AfishaPattaya',
+      'https://t.me/SamuiGroup',
+      'https://t.me/SamuiAds',
+      'https://t.me/Samui_Friends',
+      'https://t.me/kosamui',
+      'https://t.me/samuipar',
+      'https://t.me/samui0',
+      'https://t.me/samui5',
+      'https://t.me/SamuiChatik',
     ],
   },
   {
@@ -237,7 +245,6 @@ export const AREAS = [
       'khopangan',
       'AfishaPanganSamui',
       'phanganvse',
-
     ],
   },
   {
@@ -252,7 +259,15 @@ export const AREAS = [
       'AvitoSamui',
       'PanganWoman',
       'NetworkPhuket',
-      'AfishaPanganSamui'
+      'AfishaPanganSamui',
+      'https://t.me/SamuiGroup',
+      'https://t.me/SamuiAds',
+      'https://t.me/Samui_Friends',
+      'https://t.me/kosamui',
+      'https://t.me/samuipar',
+      'https://t.me/samui0',
+      'https://t.me/samui5',
+      'https://t.me/SamuiChatik',
     ],
   },
   {
