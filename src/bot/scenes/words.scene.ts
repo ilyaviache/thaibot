@@ -1,5 +1,5 @@
 import { UseFilters } from '@nestjs/common';
-import { Scene, SceneEnter, Ctx, Hears, Action } from 'nestjs-telegraf';
+import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
   WORDS_SCENE,
   WORDS_ADD_SCENE,
@@ -118,6 +118,14 @@ export class WordsScene {
   @Action(MENU_BUTTONS.BACK.callback_data)
   async handleDeleteCancel(@Ctx() ctx: Context) {
     await ctx.scene.enter(TASKS_SCENE);
+    return;
+  }
+
+  @Hears(RegExp('.'))
+  async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+    console.log('1')
+    await this.botNavigationService.handleWordAdd(ctx, next);
+    await this.onSceneEnter(ctx);
     return;
   }
 }

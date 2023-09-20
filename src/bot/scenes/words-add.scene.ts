@@ -9,11 +9,13 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
+import { BotNavigationService } from '../bot-navigation.service';
 
 @Scene(WORDS_ADD_SCENE)
 @UseFilters(BotFilter)
 export class WordsAddScene {
-  constructor(private readonly worksService: WorksService) {}
+  constructor(private readonly worksService: WorksService, 
+    private readonly botNavigationService: BotNavigationService) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
@@ -35,37 +37,8 @@ export class WordsAddScene {
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    if (ctx.scene.current.id === WORDS_ADD_SCENE) {
-      const inputText = ctx.update['message']['text'];
-
-      if (inputText === MENU_BUTTONS.BACK.text || inputText === '/start') {
-        return next();
-      }
-
-      // Разделите строку на слова, используя запятую в качестве разделителя.
-      const words = inputText.split(',').map(word => word.trim()).filter(word => word);
-
-      for (const word of words) {
-        const result = await this.worksService.addMuteWord(
-          ctx.session.work,
-          word
-        );
-
-        ctx.session.work = result;
-      }
-    } else {
-      return next();
-    }
-
-    const replyMarkup = {
-      reply_markup: {
-        keyboard: [[MENU_BUTTONS.BACK]],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
-
-    await ctx.reply('✅', replyMarkup);
+    console.log('2')
+    await this.botNavigationService.handleWordAdd(ctx, next);
     return;
   }
 }
