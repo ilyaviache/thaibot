@@ -9,6 +9,12 @@ import {
   PRESETS,
   WORDS_SCENE,
   WORDS_ADD_SCENE,
+  WORKS_SCENE,
+  WORKS_ADD_SCENE,
+  CHANNELS_SCENE,
+  CHANNELS_ADD_SCENE,
+  ACCOUNTS_SCENE,
+  ACCOUNTS_ADD_SCENE,
 } from './bot.constants';
 
 import { InitUserInput } from 'src/users/dto/init-user.input';
@@ -225,7 +231,7 @@ export class BotNavigationService {
     await ctx.reply(TEXTS.TASKS.PRESET_LIST, replyMarkup);
   }
 
-  async handleWordAdd(ctx: Context,  next: () => Promise<void>): Promise<any> {
+  async handleMuteWordAdd(ctx: Context,  next: () => Promise<void>): Promise<any> {
     if (ctx.scene.current.id === WORDS_ADD_SCENE || ctx.scene.current.id === WORDS_SCENE) {
       const inputText = ctx.update['message']['text'];
 
@@ -244,6 +250,94 @@ export class BotNavigationService {
 
         ctx.session.work = result;
       }
+    } else {
+      return next();
+    }
+
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply('✅', replyMarkup);
+  }
+
+  async handleWordAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
+    if (ctx.scene.current.id === WORKS_ADD_SCENE || ctx.scene.current.id === WORKS_SCENE) {
+      const inputText = ctx.update['message']['text'];
+
+      if (inputText === MENU_BUTTONS.BACK.text || inputText === '/start') {
+        return next();
+      }
+
+      // Разделите строку на слова, используя запятую в качестве разделителя.
+      const words = inputText.split(',').map(word => word.trim()).filter(word => word);
+
+      for (const word of words) {
+        const result = await this.worksService.addListenWord(
+          ctx.session.work,
+          word
+        );
+
+        ctx.session.work = result;
+      }
+    } else {
+      return next();
+    }
+
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply('✅', replyMarkup);
+  }
+
+  async handleChannelAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
+    if (ctx.scene.current.id === CHANNELS_ADD_SCENE || ctx.scene.current.id === CHANNELS_SCENE) {
+      const username = ctx.update['message']['text'];
+      if (username === MENU_BUTTONS.BACK.text || username === '/start') {
+        return next();
+      }
+      const result = await this.worksService.addMuteChannel(
+        ctx.session.work,
+        username
+      );
+
+      ctx.session.work = result;
+    } else {
+      return next();
+    }
+
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: [[MENU_BUTTONS.BACK]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply('✅', replyMarkup);
+  }
+
+  async handleAccountAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
+    if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE || ctx.scene.current.id === ACCOUNTS_SCENE) {
+      const username = ctx.update['message']['text'];
+      if (username === MENU_BUTTONS.BACK.text || username === '/start') {
+        return next();
+      }
+      const result = await this.worksService.addMuteAccount(
+        ctx.session.work,
+        username
+      );
+
+      ctx.session.work = result;
     } else {
       return next();
     }

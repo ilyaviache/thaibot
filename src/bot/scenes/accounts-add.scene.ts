@@ -9,11 +9,13 @@ import {
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
+import { BotNavigationService } from 'src/bot/bot-navigation.service';
 
 @Scene(ACCOUNTS_ADD_SCENE)
 @UseFilters(BotFilter)
 export class AccountsAddScene {
-  constructor(private readonly worksService: WorksService) {}
+  constructor(private readonly worksService: WorksService, 
+    private readonly botNavigationService: BotNavigationService) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
@@ -34,31 +36,8 @@ export class AccountsAddScene {
   }
 
   @Hears(RegExp('.'))
-  async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE) {
-      const username = ctx.update['message']['text'];
-      if (username === MENU_BUTTONS.BACK.text || username === '/start') {
-        return next();
-      }
-      const result = await this.worksService.addMuteAccount(
-        ctx.session.work,
-        username
-      );
-
-      ctx.session.work = result;
-    } else {
-      return next();
-    }
-
-    const replyMarkup = {
-      reply_markup: {
-        keyboard: [[MENU_BUTTONS.BACK]],
-        resize_keyboard: true,
-        one_time_keyboard: true,
-      },
-    };
-
-    await ctx.reply('✅', replyMarkup);
+  async handleAccountAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+    await this.botNavigationService.handleAccountAdd(ctx, next);
     return;
   }
 }

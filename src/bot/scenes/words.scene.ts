@@ -123,8 +123,7 @@ export class WordsScene {
 
   @Hears(RegExp('.'))
   async handleWordAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
-    console.log('1')
-    await this.botNavigationService.handleWordAdd(ctx, next);
+    await this.botNavigationService.handleMuteWordAdd(ctx, next);
     await this.onSceneEnter(ctx);
     return;
   }

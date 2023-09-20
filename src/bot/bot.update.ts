@@ -243,4 +243,18 @@ export class BotUpdate {
 
     return '✅';
   }
+
+  @Hears(RegExp('.'))
+  async handleAccountAdd(@Ctx() ctx: Context) {
+    const replyMarkup = {
+      reply_markup: {
+        keyboard: MENUS.MAIN_MENU,
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
+    };
+
+    await ctx.reply(TEXTS.MAIN.ERROR, replyMarkup);
+    return;
+  }
 }
