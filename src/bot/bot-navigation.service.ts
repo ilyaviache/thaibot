@@ -235,7 +235,7 @@ export class BotNavigationService {
     if (ctx.scene.current.id === WORDS_ADD_SCENE || ctx.scene.current.id === WORDS_SCENE) {
       const inputText = ctx.update['message']['text'];
 
-      if (inputText === MENU_BUTTONS.BACK.text || inputText === '/start') {
+      if (inputText === MENU_BUTTONS.BACK.text || inputText === MENU_BUTTONS.BACK_TO_MENU.text || inputText === '/start') {
         return next();
       }
 
@@ -269,7 +269,7 @@ export class BotNavigationService {
     if (ctx.scene.current.id === WORKS_ADD_SCENE || ctx.scene.current.id === WORKS_SCENE) {
       const inputText = ctx.update['message']['text'];
 
-      if (inputText === MENU_BUTTONS.BACK.text || inputText === '/start') {
+      if (inputText === MENU_BUTTONS.BACK.text || inputText === MENU_BUTTONS.BACK_TO_MENU.text || inputText === '/start') {
         return next();
       }
 
@@ -302,7 +302,7 @@ export class BotNavigationService {
   async handleChannelAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
     if (ctx.scene.current.id === CHANNELS_ADD_SCENE || ctx.scene.current.id === CHANNELS_SCENE) {
       const username = ctx.update['message']['text'];
-      if (username === MENU_BUTTONS.BACK.text || username === '/start') {
+      if (username === MENU_BUTTONS.BACK.text || username === MENU_BUTTONS.BACK_TO_MENU.text || username === '/start') {
         return next();
       }
       const result = await this.worksService.addMuteChannel(
@@ -329,7 +329,7 @@ export class BotNavigationService {
   async handleAccountAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
     if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE || ctx.scene.current.id === ACCOUNTS_SCENE) {
       const username = ctx.update['message']['text'];
-      if (username === MENU_BUTTONS.BACK.text || username === '/start') {
+      if (username === MENU_BUTTONS.BACK.text || username === MENU_BUTTONS.BACK_TO_MENU.text || username === '/start') {
         return next();
       }
       const result = await this.worksService.addMuteAccount(
