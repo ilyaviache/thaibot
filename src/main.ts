@@ -15,7 +15,24 @@ import { LoggerFactory } from './common/logger.factory';
 import * as Sentry from '@sentry/node';
 import { SentryFilter } from './common/sentry.filter';
 
+import { createAgent } from '@forestadmin/agent';
+import { createSqlDataSource } from '@forestadmin/datasource-sql';
+
+import { Module } from '@nestjs/common';
+
 async function bootstrap() {
+
+  const agent = createAgent({
+    authSecret: process.env.FOREST_AUTH_SECRET,
+    envSecret: process.env.FOREST_ENV_SECRET,
+    isProduction: process.env.NODE_ENV === 'production',
+    typingsPath: './typings.ts',
+    typingsMaxDepth: 5,
+
+  })
+  // Create your SQL datasource
+  .addDataSource(createSqlDataSource(process.env.DATABASE_URL));
+
   const app = await NestFactory.create(AppModule, {
     logger: LoggerFactory('thaibot'),
   });
@@ -61,6 +78,8 @@ async function bootstrap() {
   if (corsConfig.enabled) {
     app.enableCors();
   }
+
+  await agent.mountOnNestJs(app).start();
 
   await app.listen(process.env.PORT || nestConfig.port || 3000);
 }
