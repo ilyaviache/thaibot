@@ -247,6 +247,19 @@ export const AREAS = [
       'the_thailand_chat',
       'chiangmai_chat',
       'samui_chatik',
+      'pet_thailand',
+      'thailand_rus',
+      'bangkok_buy_sell',
+      'bangkok_chatik',
+      'SEA_Bangkok',
+      'bangkok_tusa',
+      'bangkok_forum',
+      'Bangkok_sale',
+      'Lifein_Bangkok',
+      'thailand_rus',
+      'bankokpa',
+      'bangkokcannabisclub',
+      'officialkamm'
     ],
   },
   {
@@ -270,8 +283,7 @@ export const AREAS = [
       'sportphuket',
       'phuket_beauty_service',
       'auto_moto_thailand',
-      'phangan_chat',
-      'https://t.me/pet_thailand',
+      'thailand_rus',
     ],
   },
   {
@@ -298,6 +310,8 @@ export const AREAS = [
       'it_pattaya',
       'edapattaya',
       'pattaya_arenda',
+      'SEA_Bangkok',
+      'thailand_rus',
     ],
   },
   {
@@ -352,6 +366,7 @@ export const AREAS = [
       'samui5',
       'SamuiChatik',
       'samui_chatik',
+      'thailand_rus',
     ],
   },
   {
@@ -366,7 +381,19 @@ export const AREAS = [
     id: 6,
     alias: 'bangkok',
     name: 'Бангкок',
-    usernames: [],
+    usernames: [
+      'bangkok_buy_sell',
+      'bangkok_chatik',
+      'SEA_Bangkok',
+      'bangkok_tusa',
+      'bangkok_forum',
+      'Bangkok_sale',
+      'Lifein_Bangkok',
+      'thailand_rus',
+      'bankokpa',
+      'bangkokcannabisclub',
+      'officialkamm'
+    ],
   },
 ];
 

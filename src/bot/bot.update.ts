@@ -21,8 +21,6 @@ import { InitUserInput } from 'src/users/dto/init-user.input';
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { BotNavigationService } from './bot-navigation.service';
-import { log } from 'console';
-import { session } from 'telegraf';
 
 @Update()
 @UseFilters(BotFilter)
