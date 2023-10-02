@@ -297,6 +297,9 @@ export const AREAS = [
       'chat_pkhuket',
       'phuket_arendaa',
       'pkhuket',
+      'ads_chiangmai',
+      'chiangmay',
+      'chiangmai_chatt',
     ],
   },
   {
@@ -446,6 +449,9 @@ export const AREAS = [
     name: 'Чианг Май',
     usernames: [
       'chiangmai_chat',
+      'ads_chiangmai',
+      'chiangmay',
+      'chiangmai_chatt',
     ],
   },
   {
