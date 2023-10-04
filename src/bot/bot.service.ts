@@ -35,10 +35,28 @@ export class BotService {
         work.listenChannelUsernames.includes(channelUsername) &&
         !work.muteChannelUsernames.includes(channelUsername)
       ) {
-        // Check if at least one word from work.listenWords exists in the text
-        const wordsFound = work.listenWords.some((word) =>
-          text.toLowerCase().includes(word.toLowerCase().toString())
-        );
+        let wordsFound = false; // Флаг для отслеживания успешной проверки
+
+        for (const keys of work.listenWords) {
+          // Check if listenWord contains "+" and replace it with a space
+          const cleanedKeys = keys
+            .split(' ')
+            .map((key) => (key.includes('+') ? key.replace(/\+/g, ' ') : key));
+
+          // Check if at least one word from work.listenWords exists in the text
+          wordsFound = cleanedKeys.some((word) =>
+            text.toLowerCase().includes(word.toLowerCase().toString())
+          );
+
+          for (const cleanedListenWord of cleanedKeys) {
+            if (text.toLowerCase().includes(cleanedListenWord.toLowerCase())) {
+              wordsFound = true; // Установить флаг в true, если проверка успешна
+            } else {
+              wordsFound = false; // Сбросить флаг в false, если не найдено совпадение
+              break; // Прервать цикл, если не найдено совпадение
+            }
+          }
+        }
         // Check that none of the words from work.muteWords are included in the text
         const muteWordsFound = work.muteWords.some((word) =>
           text.includes(word.toString())
