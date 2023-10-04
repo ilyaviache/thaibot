@@ -101,6 +101,7 @@ export class WorksService {
   async setPreset(work: Works, id: number): Promise<Works | null> {
     const preset = PRESETS.find((preset) => preset.id === id);
     work.listenWords = preset.words;
+    work.muteWords = preset.minus_words;
     return await this.update(work.id, work);
   }
 

@@ -34,7 +34,6 @@ export class BotUpdate {
 
   // TODO: протестировать edge cases работы с сессиями
 
-
   // при изменение этого кода следуте также изменить функцию start в bot-navigation.service.ts
   @Start()
   async onStart(@Ctx() ctx: Context) {
@@ -81,10 +80,7 @@ export class BotUpdate {
       };
       inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
-      await ctx.reply(
-        TEXTS.MAIN.START,
-        replyMarkup
-      );
+      await ctx.reply(TEXTS.MAIN.START, replyMarkup);
     }
 
     const replyMarkup = {
