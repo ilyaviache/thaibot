@@ -42,13 +42,14 @@ export class BotService {
           const cleanedKeys = keys
             .split(' ')
             .map((key) => (key.includes('+') ? key.replace(/\+/g, ' ') : key));
+          console.log('cleanedKeys', cleanedKeys);
 
-          // Check if at least one word from work.listenWords exists in the text
-          wordsFound = cleanedKeys.some((word) =>
-            text.toLowerCase().includes(word.toLowerCase().toString())
-          );
+          // wordsFound = cleanedKeys.some((word) =>
+          //   text.toLowerCase().includes(word.toLowerCase().toString())
+          // );
 
           for (const cleanedListenWord of cleanedKeys) {
+            console.log('cleanedListenWord', cleanedListenWord, text.toLowerCase().includes(cleanedListenWord.toLowerCase()))
             if (text.toLowerCase().includes(cleanedListenWord.toLowerCase())) {
               wordsFound = true; // Установить флаг в true, если проверка успешна
             } else {
@@ -56,7 +57,12 @@ export class BotService {
               break; // Прервать цикл, если не найдено совпадение
             }
           }
+          
+          if(wordsFound){ break }
+          
         }
+
+        console.log('wordsFound', wordsFound);
         // Check that none of the words from work.muteWords are included in the text
         const muteWordsFound = work.muteWords.some((word) =>
           text.includes(word.toString())
