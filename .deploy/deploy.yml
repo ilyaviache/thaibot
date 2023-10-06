@@ -35,4 +35,4 @@
       ignore_errors: yes
 
     - name: Start pm2
-      command: pm2 start {{ current_path }}/dist/main.js --name thaibot --node-args="-r newrelic"
+      command: pm2 start {{ current_path }}/dist/src/main.js --name thaibot --node-args="-r newrelic"

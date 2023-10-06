@@ -45,7 +45,7 @@
       ignore_errors: yes
 
     - name: Start pm2
-      command: pm2 start {{ current_path }}/dist/main.js --name thaibot
+      command: pm2 start {{ current_path }}/dist/src/main.js --name thaibot
 
     - name: Delete old dir
       shell: rm -rf {{ current_release_path.stdout }}/
