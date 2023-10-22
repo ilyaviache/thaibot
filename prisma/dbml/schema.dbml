@@ -40,6 +40,36 @@ Table Messages {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table Setting {
+  id SettingKey [pk]
+  TEXTS Json [not null]
+  VALUE Json[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Presets {
+  id Int [pk, increment]
+  priority Int [default: 0]
+  alias String [unique, not null]
+  name String [not null]
+  words Json [not null]
+  minus_words Json [not null]
+}
+
+Table Areas {
+  id Int [pk, increment]
+  priority Int [default: 0]
+  alias String [unique]
+  name String
+  usernames Json [not null]
+}
+
+Enum SettingKey {
+  MAIN
+  DEVELOPMENT
+}
+
 Ref: Works.userId > User.id
 
 Ref: Messages.workId > Works.id

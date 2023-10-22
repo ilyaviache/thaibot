@@ -58,3 +58,33 @@ model Messages {
 
   @@index([workId])
 }
+
+enum SettingKey {
+  MAIN
+  DEVELOPMENT
+}
+
+model Setting {
+  id        SettingKey @id
+  TEXTS     Json
+  VALUE     Json[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Presets {
+  id          Int    @id @default(autoincrement())
+  priority    Int?   @default(0)
+  alias       String @unique
+  name        String
+  words       Json
+  minus_words Json
+}
+
+model Areas {
+  id        Int     @id @default(autoincrement())
+  priority  Int?    @default(0)
+  alias     String? @unique
+  name      String?
+  usernames Json
+}
