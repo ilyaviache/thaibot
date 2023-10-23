@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Setting" ADD COLUMN     "MENU_BUTTONS" JSONB;

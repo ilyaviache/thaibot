@@ -65,11 +65,12 @@ enum SettingKey {
 }
 
 model Setting {
-  id        SettingKey @id
-  TEXTS     Json
-  VALUE     Json[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id           SettingKey @id
+  TEXTS        Json
+  MENU_BUTTONS Json?
+  VALUE        Json[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Presets {

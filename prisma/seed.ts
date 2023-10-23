@@ -1,5 +1,11 @@
 import { PrismaClient, SettingKey } from '@prisma/client';
-import { PRESETS, AREAS, TEXTS, TEXTS_NEW } from '../src/bot/bot.constants';
+import {
+  PRESETS,
+  AREAS,
+  TEXTS,
+  TEXTS_NEW,
+  MENU_BUTTONS,
+} from '../src/bot/bot.constants';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +22,7 @@ async function seed() {
     data: {
       id: SettingKey.DEVELOPMENT,
       TEXTS: TEXTS_NEW,
+      MENU_BUTTONS: MENU_BUTTONS,
       VALUE: [],
     },
   });
