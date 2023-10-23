@@ -10,7 +10,7 @@ async function seed() {
 
   await prisma.setting.create({
     data: {
-      id: SettingKey.DEVELOPMENT,
+      id: SettingKey.MAIN,
       TEXTS: TEXTS,
       MENU_BUTTONS: MENU_BUTTONS,
       VALUE: [],

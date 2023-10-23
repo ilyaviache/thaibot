@@ -7,9 +7,9 @@ import { Markup } from 'telegraf';
 @Injectable()
 export class SettingsService implements OnModuleInit {
   private path: string[] = [];
-  private settings: Setting;
-  private areas: Areas[]; // В зависимости от вашей модели, тип может быть другим
-  private presets: Presets[]; // В зависимости от вашей модели, тип может быть другим
+  public _settings: Setting;
+  public _areas: Areas[]; // В зависимости от вашей модели, тип может быть другим
+  public _presets: Presets[]; // В зависимости от вашей модели, тип может быть другим
 
   constructor(private readonly prisma: PrismaService) {}
 
@@ -20,7 +20,7 @@ export class SettingsService implements OnModuleInit {
   }
 
   private async loadSettingsFromDb() {
-    this.settings = await this.prisma.setting.findUnique({
+    this._settings = await this.prisma.setting.findUnique({
       where: {
         id: SettingKey.MAIN,
       },
@@ -28,18 +28,28 @@ export class SettingsService implements OnModuleInit {
   }
 
   private async loadAreasFromDb() {
-    this.areas = await this.prisma.areas.findMany();
+    this._areas = await this.prisma.areas.findMany();
   }
 
   private async loadPresetsFromDb() {
-    this.presets = await this.prisma.presets.findMany();
+    this._presets = await this.prisma.presets.findMany();
   }
 
-  public TEXTS() {
+  public SETTINGS(): any {
+    return this._settings;
+  }
+
+  public TEXTS(): any {
+    // return this._settings.TEXTS;
     return this.proxyHandler(this.path);
   }
 
-  private proxyHandler(path: string[]) {
+  private proxyHandler(path: string[]): any {
+    const value = this.getFromPath(path);
+    if (value !== undefined && typeof value !== 'object') {
+      return value;
+    }
+
     return new Proxy(
       {},
       {
@@ -55,6 +65,10 @@ export class SettingsService implements OnModuleInit {
               return this.replacePlaceholders(template, ...args);
             };
           }
+          const newValue = this.getFromPath([...path, prop]);
+          if (typeof newValue === 'string' || newValue === undefined) {
+            return newValue;
+          }
           return this.proxyHandler([...path, prop]);
         },
       }
@@ -62,7 +76,7 @@ export class SettingsService implements OnModuleInit {
   }
 
   private getFromPath(path: string[]) {
-    return path.reduce((acc, part) => acc[part], this.settings);
+    return path.reduce((acc, part) => acc[part], this._settings.TEXTS);
   }
 
   private replacePlaceholders(text: string, ...args: string[]): string {
@@ -72,19 +86,19 @@ export class SettingsService implements OnModuleInit {
     );
   }
 
-  public AREAS() {
-    return this.areas;
+  public AREAS(): any {
+    return this._areas;
   }
 
-  public PRESETS() {
-    return this.presets;
+  public PRESETS(): any {
+    return this._presets;
   }
 
-  public MENU_BUTTONS() {
-    return this.settings.MENU_BUTTONS;
+  public MENU_BUTTONS(): any {
+    return this._settings.MENU_BUTTONS;
   }
 
-  public COMMANDS() {
+  public COMMANDS(): any {
     return {
       START: 'start',
       BACK: 'BACK',
@@ -97,7 +111,7 @@ export class SettingsService implements OnModuleInit {
     };
   }
 
-  public BUTTONS() {
+  public BUTTONS(): any {
     return {
       BACK: Markup.button.callback('⬅ Назад ️', this.COMMANDS().BACK),
       OK: Markup.button.callback('✅', this.COMMANDS().OK),

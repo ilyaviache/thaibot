@@ -13,7 +13,6 @@ import {
   AREA_SCENE,
   BUTTONS,
   TASKS_SCENE,
-  TEXTS,
   COMMANDS,
 } from './bot.constants';
 import { InitUserInput } from 'src/users/dto/init-user.input';
@@ -21,6 +20,7 @@ import { InitUserInput } from 'src/users/dto/init-user.input';
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { BotNavigationService } from './bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Update()
 @UseFilters(BotFilter)
@@ -28,6 +28,7 @@ export class BotUpdate {
   constructor(
     @InjectBot()
     private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService,
     private readonly worksService: WorksService,
     private readonly usersService: UsersService
   ) {}
@@ -37,51 +38,51 @@ export class BotUpdate {
   // при изменение этого кода следуте также изменить функцию start в bot-navigation.service.ts
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    const initUserInput = new InitUserInput({
-      chatId: ctx.from.id.toString(),
-      username: ctx.from.username,
-      firstname: ctx.from.first_name,
-    });
-    const result = await this.usersService.initUser(initUserInput);
-    ctx.session.user = result;
+    // const initUserInput = new InitUserInput({
+    //   chatId: ctx.from.id.toString(),
+    //   username: ctx.from.username,
+    //   firstname: ctx.from.first_name,
+    // });
+    // const result = await this.usersService.initUser(initUserInput);
+    // ctx.session.user = result;
 
-    const works = await this.worksService.findByAllByChatId(
-      ctx.session.user.chatId
-    );
-    if (works.length === 0) {
-      const inline_keyboard = [[BUTTONS.START_LISTEN]];
+    // const works = await this.worksService.findByAllByChatId(
+    //   ctx.session.user.chatId
+    // );
+    // if (works.length === 0) {
+    //   const inline_keyboard = [[BUTTONS.START_LISTEN]];
 
-      const replyMarkup = {
-        reply_markup: {
-          inline_keyboard,
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
-      };
-      await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
-      // todo: service doesn't work
-      // await this.botNavigationService.firstTouch(ctx);
-    } else {
-      // await this.botService.showMainMenu(ctx);
-      const inlineKeyboard = [];
+    //   const replyMarkup = {
+    //     reply_markup: {
+    //       inline_keyboard,
+    //       resize_keyboard: true,
+    //       one_time_keyboard: true,
+    //     },
+    //   };
+    //   await ctx.reply(this.settingsService.TEXTS().MAIN.WELCOME, replyMarkup);
+    //   // todo: service doesn't work
+    //   // await this.botNavigationService.firstTouch(ctx);
+    // } else {
+    //   // await this.botService.showMainMenu(ctx);
+    //   const inlineKeyboard = [];
 
-      works.forEach((work) => {
-        inlineKeyboard.push([
-          { text: `${work.name}`, callback_data: `select_work_${work.id}` },
-        ]);
-      });
+    //   works.forEach((work) => {
+    //     inlineKeyboard.push([
+    //       { text: `${work.name}`, callback_data: `select_work_${work.id}` },
+    //     ]);
+    //   });
 
-      const replyMarkup = {
-        reply_markup: {
-          inline_keyboard: inlineKeyboard,
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
-      };
-      inlineKeyboard.push([BUTTONS.ADD_TASK]);
+    //   const replyMarkup = {
+    //     reply_markup: {
+    //       inline_keyboard: inlineKeyboard,
+    //       resize_keyboard: true,
+    //       one_time_keyboard: true,
+    //     },
+    //   };
+    //   inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
-      await ctx.reply(TEXTS.MAIN.START, replyMarkup);
-    }
+    //   await ctx.reply(this.settingsService.TEXTS().MAIN.START, replyMarkup);
+    // }
 
     const replyMarkup = {
       reply_markup: {
@@ -93,7 +94,8 @@ export class BotUpdate {
 
     // TODO: nsvigation service doesnt work
     // await this.botNavigationService.start(ctx);
-    await ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
+    console.log('1', this.settingsService.TEXTS().MAIN.MAIN_MENU);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.MAIN_MENU, replyMarkup);
     return;
   }
   @Hears(MENU_BUTTONS.AREA.text)
@@ -160,7 +162,7 @@ export class BotUpdate {
       },
     };
 
-    await ctx.reply(TEXTS.MAIN.SUPPORT, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.SUPPORT, replyMarkup);
     return;
   }
 
@@ -174,7 +176,7 @@ export class BotUpdate {
       },
     };
 
-    await ctx.reply(TEXTS.MAIN.PAYMENT, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.PAYMENT, replyMarkup);
     return;
   }
 
@@ -248,7 +250,7 @@ export class BotUpdate {
       },
     };
 
-    await ctx.reply(TEXTS.MAIN.ERROR, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.ERROR, replyMarkup);
     return;
   }
 }

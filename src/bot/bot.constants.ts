@@ -881,8 +881,8 @@ export const PRESETS = [
     minus_words: ['я доктор', 'я врач'],
   },
   {
-    id: 0,
-    alias: 'preset_0',
+    id: 100,
+    alias: 'preset_100',
     name: 'Без пресета (настроить самостоятельно)',
     words: [],
     minus_words: [],

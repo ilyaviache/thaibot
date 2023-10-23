@@ -23,12 +23,14 @@ import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
 import { Works } from '@prisma/client';
 import { MessagesService } from 'src/messages/messages.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Injectable()
 export class BotNavigationService {
   constructor(
     private readonly worksService: WorksService,
     private readonly usersService: UsersService,
+    private readonly settingsService: SettingsService,
     private readonly messagesService: MessagesService
   ) {}
 
@@ -54,7 +56,7 @@ export class BotNavigationService {
           one_time_keyboard: true,
         },
       };
-      await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+      await ctx.reply(this.settingsService.TEXTS().MAIN.WELCOME, replyMarkup);
       // todo: service doesn't work
       // await this.botNavigationService.firstTouch(ctx);
     } else {
@@ -76,10 +78,7 @@ export class BotNavigationService {
       };
       inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
-      await ctx.reply(
-        TEXTS.MAIN.START,
-        replyMarkup
-      );
+      await ctx.reply(this.settingsService.TEXTS().MAIN.START, replyMarkup);
     }
 
     const replyMarkup = {
@@ -90,7 +89,7 @@ export class BotNavigationService {
       },
     };
 
-    await ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.MAIN_MENU, replyMarkup);
   }
 
   async firstTouch(ctx: Context): Promise<any> {
@@ -103,7 +102,7 @@ export class BotNavigationService {
         one_time_keyboard: true,
       },
     };
-    await ctx.reply(TEXTS.MAIN.WELCOME, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().MAIN.WELCOME, replyMarkup);
   }
 
   async showMainMenu(ctx: Context): Promise<any> {
@@ -115,7 +114,7 @@ export class BotNavigationService {
       },
     };
 
-    return ctx.reply(TEXTS.MAIN.MAIN_MENU, replyMarkup);
+    return ctx.reply(this.settingsService.TEXTS().MAIN.MAIN_MENU, replyMarkup);
   }
 
   async selectActiveWorkById(ctx: Context, workId: string): Promise<any> {
@@ -137,7 +136,10 @@ export class BotNavigationService {
       },
     };
 
-    return ctx.reply(TEXTS.TASKS.TASK_MENU(name), replyMarkup);
+    return ctx.reply(
+      this.settingsService.TEXTS().TASKS.TASK_MENU.replacePlaceholders(name),
+      replyMarkup
+    );
   }
 
   async showCurrentWorkStats(ctx: Context): Promise<any> {
@@ -145,9 +147,24 @@ export class BotNavigationService {
     const createdAt = ctx.session.work.createdAt;
 
     const inline_keyboard = [
-      [{ text: '📋 Показать последние 10 сообщений', callback_data: `show_messages_10` }],
-      [{ text: '📋 Показать последние 25 сообщений', callback_data: `show_messages_25` }],
-      [{ text: '📋 Показать последние 100 сообщений', callback_data: `show_messages_100` }],
+      [
+        {
+          text: '📋 Показать последние 10 сообщений',
+          callback_data: `show_messages_10`,
+        },
+      ],
+      [
+        {
+          text: '📋 Показать последние 25 сообщений',
+          callback_data: `show_messages_25`,
+        },
+      ],
+      [
+        {
+          text: '📋 Показать последние 100 сообщений',
+          callback_data: `show_messages_100`,
+        },
+      ],
       [{ text: '❌ Удалить задачу', callback_data: `delete_task` }],
     ];
 
@@ -165,7 +182,10 @@ export class BotNavigationService {
       },
     };
 
-    return ctx.reply(TEXTS.TASKS.STATS(daysCount, messagesCount), replyMarkup);
+    return ctx.reply(
+      this.settingsService.TEXTS().TASKS.STATS(daysCount, messagesCount),
+      replyMarkup
+    );
   }
 
   async selectArea(
@@ -205,7 +225,7 @@ export class BotNavigationService {
       },
     };
 
-    await ctx.reply(TEXTS.AREA.LIST, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().AREA.LIST, replyMarkup);
   }
 
   async selectPreset(ctx: Context): Promise<any> {
@@ -228,19 +248,35 @@ export class BotNavigationService {
       },
     };
 
-    await ctx.reply(TEXTS.TASKS.PRESET_LIST, replyMarkup);
+    await ctx.reply(
+      this.settingsService.TEXTS().TASKS.PRESET_LIST,
+      replyMarkup
+    );
   }
 
-  async handleMuteWordAdd(ctx: Context,  next: () => Promise<void>): Promise<any> {
-    if (ctx.scene.current.id === WORDS_ADD_SCENE || ctx.scene.current.id === WORDS_SCENE) {
+  async handleMuteWordAdd(
+    ctx: Context,
+    next: () => Promise<void>
+  ): Promise<any> {
+    if (
+      ctx.scene.current.id === WORDS_ADD_SCENE ||
+      ctx.scene.current.id === WORDS_SCENE
+    ) {
       const inputText = ctx.update['message']['text'];
 
-      if (inputText === MENU_BUTTONS.BACK.text || inputText === MENU_BUTTONS.BACK_TO_MENU.text || inputText === '/start') {
+      if (
+        inputText === MENU_BUTTONS.BACK.text ||
+        inputText === MENU_BUTTONS.BACK_TO_MENU.text ||
+        inputText === '/start'
+      ) {
         return next();
       }
 
       // Разделите строку на слова, используя запятую в качестве разделителя.
-      const words = inputText.split(',').map(word => word.trim()).filter(word => word);
+      const words = inputText
+        .split(',')
+        .map((word) => word.trim())
+        .filter((word) => word);
 
       for (const word of words) {
         const result = await this.worksService.addMuteWord(
@@ -266,15 +302,25 @@ export class BotNavigationService {
   }
 
   async handleWordAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
-    if (ctx.scene.current.id === WORKS_ADD_SCENE || ctx.scene.current.id === WORKS_SCENE) {
+    if (
+      ctx.scene.current.id === WORKS_ADD_SCENE ||
+      ctx.scene.current.id === WORKS_SCENE
+    ) {
       const inputText = ctx.update['message']['text'];
 
-      if (inputText === MENU_BUTTONS.BACK.text || inputText === MENU_BUTTONS.BACK_TO_MENU.text || inputText === '/start') {
+      if (
+        inputText === MENU_BUTTONS.BACK.text ||
+        inputText === MENU_BUTTONS.BACK_TO_MENU.text ||
+        inputText === '/start'
+      ) {
         return next();
       }
 
       // Разделите строку на слова, используя запятую в качестве разделителя.
-      const words = inputText.split(',').map(word => word.trim()).filter(word => word);
+      const words = inputText
+        .split(',')
+        .map((word) => word.trim())
+        .filter((word) => word);
 
       for (const word of words) {
         const result = await this.worksService.addListenWord(
@@ -299,10 +345,20 @@ export class BotNavigationService {
     await ctx.reply('✅', replyMarkup);
   }
 
-  async handleChannelAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
-    if (ctx.scene.current.id === CHANNELS_ADD_SCENE || ctx.scene.current.id === CHANNELS_SCENE) {
+  async handleChannelAdd(
+    ctx: Context,
+    next: () => Promise<void>
+  ): Promise<any> {
+    if (
+      ctx.scene.current.id === CHANNELS_ADD_SCENE ||
+      ctx.scene.current.id === CHANNELS_SCENE
+    ) {
       const username = ctx.update['message']['text'];
-      if (username === MENU_BUTTONS.BACK.text || username === MENU_BUTTONS.BACK_TO_MENU.text || username === '/start') {
+      if (
+        username === MENU_BUTTONS.BACK.text ||
+        username === MENU_BUTTONS.BACK_TO_MENU.text ||
+        username === '/start'
+      ) {
         return next();
       }
       const result = await this.worksService.addMuteChannel(
@@ -326,10 +382,20 @@ export class BotNavigationService {
     await ctx.reply('✅', replyMarkup);
   }
 
-  async handleAccountAdd(ctx: Context, next: () => Promise<void>): Promise<any> {
-    if (ctx.scene.current.id === ACCOUNTS_ADD_SCENE || ctx.scene.current.id === ACCOUNTS_SCENE) {
+  async handleAccountAdd(
+    ctx: Context,
+    next: () => Promise<void>
+  ): Promise<any> {
+    if (
+      ctx.scene.current.id === ACCOUNTS_ADD_SCENE ||
+      ctx.scene.current.id === ACCOUNTS_SCENE
+    ) {
       const username = ctx.update['message']['text'];
-      if (username === MENU_BUTTONS.BACK.text || username === MENU_BUTTONS.BACK_TO_MENU.text || username === '/start') {
+      if (
+        username === MENU_BUTTONS.BACK.text ||
+        username === MENU_BUTTONS.BACK_TO_MENU.text ||
+        username === '/start'
+      ) {
         return next();
       }
       const result = await this.worksService.addMuteAccount(
