@@ -3,7 +3,6 @@ import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
   WORKS_SCENE,
   WORKS_ADD_SCENE,
-  MENUS,
   TEXTS,
   MENU_BUTTONS,
   TASKS_SCENE,
@@ -12,13 +11,16 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from 'src/bot/bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(WORKS_SCENE)
 @UseFilters(BotFilter)
 export class WorksScene {
-  constructor(private readonly worksService: WorksService,
-    private readonly botNavigationService: BotNavigationService
-    ) {}
+  constructor(
+    private readonly worksService: WorksService,
+    private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService
+  ) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     if (!ctx.session.user) {
@@ -27,7 +29,7 @@ export class WorksScene {
     }
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.WORKS_MENU,
+        keyboard: this.settingsService.MENUS().WORKS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },

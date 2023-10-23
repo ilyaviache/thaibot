@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Context } from './bot.interface';
 import {
-  MENUS,
-  TEXTS,
-  AREAS,
   MENU_BUTTONS,
-  BUTTONS,
-  PRESETS,
   WORDS_SCENE,
   WORDS_ADD_SCENE,
   WORKS_SCENE,
@@ -35,7 +30,6 @@ export class BotNavigationService {
   ) {}
 
   async start(ctx: Context): Promise<any> {
-    console.log('HEREEEE');
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
@@ -48,7 +42,7 @@ export class BotNavigationService {
       ctx.session.user.chatId
     );
     if (works.length === 0) {
-      const inline_keyboard = [[BUTTONS.START_LISTEN]];
+      const inline_keyboard = [[this.settingsService.BUTTONS().START_LISTEN]];
 
       const replyMarkup = {
         reply_markup: {
@@ -77,14 +71,14 @@ export class BotNavigationService {
           one_time_keyboard: true,
         },
       };
-      inlineKeyboard.push([BUTTONS.ADD_TASK]);
+      inlineKeyboard.push([this.settingsService.BUTTONS().ADD_TASK]);
 
       await ctx.reply(this.settingsService.TEXTS().MAIN.START, replyMarkup);
     }
 
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.MAIN_MENU,
+        keyboard: this.settingsService.MENUS().MAIN_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -94,7 +88,7 @@ export class BotNavigationService {
   }
 
   async firstTouch(ctx: Context): Promise<any> {
-    const inline_keyboard = [[BUTTONS.START_LISTEN]];
+    const inline_keyboard = [[this.settingsService.BUTTONS().START_LISTEN]];
 
     const replyMarkup = {
       reply_markup: {
@@ -109,7 +103,7 @@ export class BotNavigationService {
   async showMainMenu(ctx: Context): Promise<any> {
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.MAIN_MENU,
+        keyboard: this.settingsService.MENUS().MAIN_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -131,7 +125,7 @@ export class BotNavigationService {
     const name = ctx.session.work.name;
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.TASK_MENU,
+        keyboard: this.settingsService.MENUS().TASK_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
@@ -210,7 +204,7 @@ export class BotNavigationService {
       }
     };
 
-    AREAS.forEach((area, i) => {
+    this.settingsService.AREAS().forEach((area, i) => {
       inlineKeyboard.push([renderAreaButton(area, i)]);
     });
 
@@ -232,7 +226,7 @@ export class BotNavigationService {
   async selectPreset(ctx: Context): Promise<any> {
     const inlineKeyboard = [];
 
-    PRESETS.forEach((preset, i) => {
+    this.settingsService.PRESETS().forEach((preset, i) => {
       inlineKeyboard.push([
         {
           text: `${preset.name}`,
