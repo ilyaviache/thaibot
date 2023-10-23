@@ -42,9 +42,10 @@ import { SettingsModule } from './settings/settings.module';
     EventEmitterModule.forRoot(),
     UsersModule,
     MessagesModule,
-    BotModule,
-    TelegramModule,
     WorksModule,
+    TelegramModule,
+
+    BotModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

@@ -35,6 +35,7 @@ export class BotNavigationService {
   ) {}
 
   async start(ctx: Context): Promise<any> {
+    console.log('HEREEEE');
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,

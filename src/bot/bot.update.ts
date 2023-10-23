@@ -38,51 +38,51 @@ export class BotUpdate {
   // при изменение этого кода следуте также изменить функцию start в bot-navigation.service.ts
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    // const initUserInput = new InitUserInput({
-    //   chatId: ctx.from.id.toString(),
-    //   username: ctx.from.username,
-    //   firstname: ctx.from.first_name,
-    // });
-    // const result = await this.usersService.initUser(initUserInput);
-    // ctx.session.user = result;
+    const initUserInput = new InitUserInput({
+      chatId: ctx.from.id.toString(),
+      username: ctx.from.username,
+      firstname: ctx.from.first_name,
+    });
+    const result = await this.usersService.initUser(initUserInput);
+    ctx.session.user = result;
 
-    // const works = await this.worksService.findByAllByChatId(
-    //   ctx.session.user.chatId
-    // );
-    // if (works.length === 0) {
-    //   const inline_keyboard = [[BUTTONS.START_LISTEN]];
+    const works = await this.worksService.findByAllByChatId(
+      ctx.session.user.chatId
+    );
+    if (works.length === 0) {
+      const inline_keyboard = [[BUTTONS.START_LISTEN]];
 
-    //   const replyMarkup = {
-    //     reply_markup: {
-    //       inline_keyboard,
-    //       resize_keyboard: true,
-    //       one_time_keyboard: true,
-    //     },
-    //   };
-    //   await ctx.reply(this.settingsService.TEXTS().MAIN.WELCOME, replyMarkup);
-    //   // todo: service doesn't work
-    //   // await this.botNavigationService.firstTouch(ctx);
-    // } else {
-    //   // await this.botService.showMainMenu(ctx);
-    //   const inlineKeyboard = [];
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+      await ctx.reply(this.settingsService.TEXTS().MAIN.WELCOME, replyMarkup);
+      // todo: service doesn't work
+      // await this.botNavigationService.firstTouch(ctx);
+    } else {
+      // await this.botService.showMainMenu(ctx);
+      const inlineKeyboard = [];
 
-    //   works.forEach((work) => {
-    //     inlineKeyboard.push([
-    //       { text: `${work.name}`, callback_data: `select_work_${work.id}` },
-    //     ]);
-    //   });
+      works.forEach((work) => {
+        inlineKeyboard.push([
+          { text: `${work.name}`, callback_data: `select_work_${work.id}` },
+        ]);
+      });
 
-    //   const replyMarkup = {
-    //     reply_markup: {
-    //       inline_keyboard: inlineKeyboard,
-    //       resize_keyboard: true,
-    //       one_time_keyboard: true,
-    //     },
-    //   };
-    //   inlineKeyboard.push([BUTTONS.ADD_TASK]);
+      const replyMarkup = {
+        reply_markup: {
+          inline_keyboard: inlineKeyboard,
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      };
+      inlineKeyboard.push([BUTTONS.ADD_TASK]);
 
-    //   await ctx.reply(this.settingsService.TEXTS().MAIN.START, replyMarkup);
-    // }
+      await ctx.reply(this.settingsService.TEXTS().MAIN.START, replyMarkup);
+    }
 
     const replyMarkup = {
       reply_markup: {
@@ -94,7 +94,6 @@ export class BotUpdate {
 
     // TODO: nsvigation service doesnt work
     // await this.botNavigationService.start(ctx);
-    console.log('1', this.settingsService.TEXTS().MAIN.MAIN_MENU);
     await ctx.reply(this.settingsService.TEXTS().MAIN.MAIN_MENU, replyMarkup);
     return;
   }

@@ -4,7 +4,7 @@ import { Works } from '@prisma/client';
 
 @Controller('works')
 export class WorksController {
-  constructor(private readonly worksService: WorksService) { }
+  constructor(private readonly worksService: WorksService) {}
 
   @Get()
   async findAll(): Promise<Works[]> {

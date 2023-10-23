@@ -7,4 +7,4 @@ import { WorksController } from './works.controller';
   controllers: [WorksController],
   exports: [WorksService],
 })
-export class WorksModule { }
+export class WorksModule {}

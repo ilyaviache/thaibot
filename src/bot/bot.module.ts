@@ -4,7 +4,6 @@ import { BotController } from './bot.controller';
 import { BotService } from './bot.service';
 import { BotUpdate } from './bot.update';
 import { BotListener } from './bot.listener';
-import { WorksModule } from 'src/works/works.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 
 import { botMiddleware } from './bot.middleware';
@@ -19,7 +18,6 @@ import { WordsScene } from './scenes/words.scene';
 import { WordsAddScene } from './scenes/words-add.scene';
 import { ChannelsScene } from './scenes/channels.scene';
 import { ChannelsAddScene } from './scenes/channels-add.scene';
-import { MessagesModule } from 'src/messages/messages.module';
 
 import { WorksService } from 'src/works/works.service';
 import { UsersService } from 'src/users/users.service';
@@ -28,8 +26,6 @@ import { MessagesService } from 'src/messages/messages.service';
 
 @Module({
   imports: [
-    WorksModule,
-    MessagesModule,
     TelegrafModule.forRootAsync({
       useFactory: () => ({
         token: process.env.TELEGRAM_BOT_TOKEN,
