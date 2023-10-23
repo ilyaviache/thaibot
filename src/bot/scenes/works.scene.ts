@@ -3,7 +3,6 @@ import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
   WORKS_SCENE,
   WORKS_ADD_SCENE,
-  TEXTS,
   MENU_BUTTONS,
   TASKS_SCENE,
 } from '../bot.constants';
@@ -35,7 +34,7 @@ export class WorksScene {
       },
     };
 
-    await ctx.reply(TEXTS.WORKS.MAIN, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().WORKS.MAIN, replyMarkup);
     // show words
     await this.handleWorksList(ctx);
 
@@ -52,7 +51,7 @@ export class WorksScene {
       },
     };
 
-    await ctx.reply(TEXTS.WORKS.DELETE, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().WORKS.DELETE, replyMarkup);
     await this.handleWorksList(ctx);
     return;
   }
@@ -85,7 +84,7 @@ export class WorksScene {
         },
       };
 
-      await ctx.reply(TEXTS.WORKS.LIST, replyMarkup);
+      await ctx.reply(this.settingsService.TEXTS().WORKS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }

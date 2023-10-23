@@ -54,8 +54,8 @@ Table Presets {
   priority Int [default: 0]
   alias String [unique, not null]
   name String [not null]
-  words Json [not null]
-  minus_words Json [not null]
+  words Json[] [not null]
+  minus_words Json[] [not null]
 }
 
 Table Areas {
@@ -63,7 +63,7 @@ Table Areas {
   priority Int [default: 0]
   alias String [unique]
   name String
-  usernames Json [not null]
+  usernames Json[] [not null]
 }
 
 Enum SettingKey {

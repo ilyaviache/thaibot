@@ -3,8 +3,6 @@ import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
   CHANNELS_SCENE,
   CHANNELS_ADD_SCENE,
-  MENUS,
-  TEXTS,
   MENU_BUTTONS,
   BUTTONS,
   TASKS_SCENE,
@@ -13,13 +11,16 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from 'src/bot/bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(CHANNELS_SCENE)
 @UseFilters(BotFilter)
 export class ChannelsScene {
-  constructor(private readonly worksService: WorksService,
-    private readonly botNavigationService: BotNavigationService
-    ) {}
+  constructor(
+    private readonly worksService: WorksService,
+    private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService
+  ) {}
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
@@ -29,13 +30,13 @@ export class ChannelsScene {
     }
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.CHANNELS_MENU,
+        keyboard: this.settingsService.MENUS().CHANNELS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
     };
 
-    await ctx.reply(TEXTS.CHANNELS.MAIN, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().CHANNELS.MAIN, replyMarkup);
 
     await this.handleChannelsList(ctx);
     return;
@@ -51,7 +52,7 @@ export class ChannelsScene {
       },
     };
 
-    await ctx.reply(TEXTS.CHANNELS.DELETE, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().CHANNELS.DELETE, replyMarkup);
     return;
   }
 
@@ -82,7 +83,7 @@ export class ChannelsScene {
         },
       };
 
-      await ctx.reply(TEXTS.CHANNELS.LIST, replyMarkup);
+      await ctx.reply(this.settingsService.TEXTS().CHANNELS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }
@@ -125,7 +126,10 @@ export class ChannelsScene {
   }
 
   @Hears(RegExp('.'))
-  async handleChannelAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+  async handleChannelAdd(
+    @Ctx() ctx: Context,
+    @Next() next: () => Promise<void>
+  ) {
     await this.botNavigationService.handleChannelAdd(ctx, next);
     await this.onSceneEnter(ctx);
     return;

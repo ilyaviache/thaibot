@@ -3,19 +3,20 @@ import { Scene, SceneEnter, Ctx, Hears, Next } from 'nestjs-telegraf';
 import {
   ACCOUNTS_SCENE,
   ACCOUNTS_ADD_SCENE,
-  TEXTS,
   MENU_BUTTONS,
 } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
-import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from 'src/bot/bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(ACCOUNTS_ADD_SCENE)
 @UseFilters(BotFilter)
 export class AccountsAddScene {
-  constructor(private readonly worksService: WorksService, 
-    private readonly botNavigationService: BotNavigationService) {}
+  constructor(
+    private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService
+  ) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     const replyMarkup = {
@@ -26,7 +27,7 @@ export class AccountsAddScene {
       },
     };
 
-    await ctx.reply(TEXTS.CHANNELS.ADD, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().CHANNELS.ADD, replyMarkup);
     return;
   }
 
@@ -36,7 +37,10 @@ export class AccountsAddScene {
   }
 
   @Hears(RegExp('.'))
-  async handleAccountAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+  async handleAccountAdd(
+    @Ctx() ctx: Context,
+    @Next() next: () => Promise<void>
+  ) {
     await this.botNavigationService.handleAccountAdd(ctx, next);
     return;
   }

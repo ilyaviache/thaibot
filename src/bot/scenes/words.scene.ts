@@ -13,13 +13,16 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from 'src/bot/bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(WORDS_SCENE)
 @UseFilters(BotFilter)
 export class WordsScene {
-  constructor(private readonly worksService: WorksService,
-    private readonly botNavigationService: BotNavigationService  
-    ) {}
+  constructor(
+    private readonly worksService: WorksService,
+    private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService
+  ) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
     if (!ctx.session.user) {
@@ -28,13 +31,13 @@ export class WordsScene {
     }
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.WORDS_MENU,
+        keyboard: this.settingsService.MENUS().WORDS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
     };
 
-    await ctx.reply(TEXTS.WORDS.MAIN, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().WORDS.MAIN, replyMarkup);
 
     await this.handleWordsList(ctx);
     return;
@@ -50,7 +53,7 @@ export class WordsScene {
       },
     };
 
-    await ctx.reply(TEXTS.WORDS.DELETE, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().WORDS.DELETE, replyMarkup);
     return;
   }
 
@@ -81,7 +84,7 @@ export class WordsScene {
         },
       };
 
-      await ctx.reply(TEXTS.WORDS.LIST, replyMarkup);
+      await ctx.reply(this.settingsService.TEXTS().WORDS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }

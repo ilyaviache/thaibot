@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import input from 'input';
 import { BotService } from 'src/bot/bot.service';
 import { AREAS } from 'src/bot/bot.constants';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Injectable()
 export class TelegramService {
@@ -15,7 +16,8 @@ export class TelegramService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly botService: BotService
+    private readonly botService: BotService,
+    private readonly settingsService: SettingsService
   ) {
     const apiId = +configService.get<number>('TELEGRAM_API_ID');
     const apiHash = configService.get<string>('TELEGRAM_API_HASH');
@@ -54,7 +56,12 @@ export class TelegramService {
         );
         const channelData = result.chats[0];
 
-        if (!AREAS[0].usernames.includes(channelData['username'])) return;
+        if (
+          !this.settingsService
+            .AREAS_FIND('all')
+            .usernames.includes(channelData['username'])
+        )
+          return;
 
         const user = await client.invoke(
           new Api.users.GetFullUser({

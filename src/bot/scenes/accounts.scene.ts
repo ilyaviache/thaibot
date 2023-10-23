@@ -3,8 +3,6 @@ import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
 import {
   ACCOUNTS_SCENE,
   ACCOUNTS_ADD_SCENE,
-  MENUS,
-  TEXTS,
   MENU_BUTTONS,
   TASKS_SCENE,
   BUTTONS,
@@ -13,13 +11,16 @@ import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from 'src/bot/bot-navigation.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(ACCOUNTS_SCENE)
 @UseFilters(BotFilter)
 export class AccountsScene {
-  constructor(private readonly worksService: WorksService,
-    private readonly botNavigationService: BotNavigationService
-    ) {}
+  constructor(
+    private readonly worksService: WorksService,
+    private readonly botNavigationService: BotNavigationService,
+    private readonly settingsService: SettingsService
+  ) {}
 
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
@@ -29,13 +30,13 @@ export class AccountsScene {
     }
     const replyMarkup = {
       reply_markup: {
-        keyboard: MENUS.ACCOUNTS_MENU,
+        keyboard: this.settingsService.MENUS().ACCOUNTS_MENU,
         resize_keyboard: true,
         one_time_keyboard: true,
       },
     };
 
-    await ctx.reply(TEXTS.ACCOUNTS.MAIN, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().ACCOUNTS.MAIN, replyMarkup);
 
     await this.handleAccountsList(ctx);
     return;
@@ -51,7 +52,7 @@ export class AccountsScene {
       },
     };
 
-    await ctx.reply(TEXTS.ACCOUNTS.DELETE, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().ACCOUNTS.DELETE, replyMarkup);
     return;
   }
 
@@ -82,7 +83,7 @@ export class AccountsScene {
         },
       };
 
-      await ctx.reply(TEXTS.ACCOUNTS.LIST, replyMarkup);
+      await ctx.reply(this.settingsService.TEXTS().ACCOUNTS.LIST, replyMarkup);
     } catch (e) {
       console.log(e);
     }
@@ -125,7 +126,10 @@ export class AccountsScene {
   }
 
   @Hears(RegExp('.'))
-  async handleAccountAdd(@Ctx() ctx: Context, @Next() next: () => Promise<void>) {
+  async handleAccountAdd(
+    @Ctx() ctx: Context,
+    @Next() next: () => Promise<void>
+  ) {
     await this.botNavigationService.handleAccountAdd(ctx, next);
     await this.onSceneEnter(ctx);
     return;

@@ -78,8 +78,8 @@ model Presets {
   priority    Int?   @default(0)
   alias       String @unique
   name        String
-  words       Json
-  minus_words Json
+  words       Json[]
+  minus_words Json[]
 }
 
 model Areas {
@@ -87,5 +87,5 @@ model Areas {
   priority  Int?    @default(0)
   alias     String? @unique
   name      String?
-  usernames Json
+  usernames Json[]
 }

@@ -87,8 +87,12 @@ export class SettingsService implements OnModuleInit {
     );
   }
 
-  public AREAS(): any {
+  public AREAS(): Areas[] {
     return this._areas;
+  }
+
+  public AREAS_FIND(alias: string): Areas {
+    return this._areas.find((area) => area.alias === alias);
   }
 
   public PRESETS(): any {

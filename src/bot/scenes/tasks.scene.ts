@@ -2,14 +2,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { UseFilters } from '@nestjs/common';
 import { Scene, SceneEnter, Ctx, Hears, Action, Next } from 'nestjs-telegraf';
-import {
-  TASKS_SCENE,
-  TEXTS,
-  MENU_BUTTONS,
-  MENUS,
-  COMMANDS,
-  WORKS_SCENE,
-} from '../bot.constants';
+import { TASKS_SCENE, MENU_BUTTONS } from '../bot.constants';
 import { BotFilter } from '../bot.filter';
 import { Context } from '../bot.interface';
 
@@ -17,6 +10,7 @@ import { WorksService } from 'src/works/works.service';
 import { BotNavigationService } from '../bot-navigation.service';
 import { UsersService } from 'src/users/users.service';
 import { MessagesService } from 'src/messages/messages.service';
+import { SettingsService } from 'src/settings/settings.service';
 
 @Scene(TASKS_SCENE)
 @UseFilters(BotFilter)
@@ -25,7 +19,8 @@ export class TasksScene {
     private readonly worksService: WorksService,
     private readonly botNavigationService: BotNavigationService,
     private readonly messagesService: MessagesService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly settingsService: SettingsService
   ) {}
   @SceneEnter()
   async onSceneEnter(@Ctx() ctx: Context) {
@@ -40,7 +35,7 @@ export class TasksScene {
       if (works.length === 0 || ctx.session.taskWizardOn === true) {
         ctx.session.taskWizardOn = false;
         ctx.session.addMode = true;
-        await ctx.reply(TEXTS.TASKS.MAIN_ADD);
+        await ctx.reply(this.settingsService.TEXTS().TASKS.MAIN_ADD);
       } else {
         if (!ctx.session.work) {
           ctx.session.work = works[0];
@@ -48,13 +43,13 @@ export class TasksScene {
 
         const replyMarkup = {
           reply_markup: {
-            keyboard: MENUS.TASK_MENU,
+            keyboard: this.settingsService.MENUS().TASK_MENU,
             resize_keyboard: true,
             one_time_keyboard: true,
           },
         };
 
-        await ctx.reply(TEXTS.TASKS.SHOW, replyMarkup);
+        await ctx.reply(this.settingsService.TEXTS().TASKS.SHOW, replyMarkup);
         await this.botNavigationService.showCurrentWorkStats(ctx);
       }
     } catch (e) {
@@ -65,7 +60,6 @@ export class TasksScene {
 
   @Action('delete_task')
   async handleDeleteTask(@Ctx() ctx: Context) {
-    
     const replyMarkup = {
       reply_markup: {
         inline_keyboard: [
@@ -77,7 +71,7 @@ export class TasksScene {
       },
     };
 
-    await ctx.reply(TEXTS.TASKS.REMOVE, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().TASKS.REMOVE, replyMarkup);
     return;
   }
 
@@ -147,7 +141,7 @@ export class TasksScene {
       },
     };
 
-    await ctx.reply(TEXTS.TASKS.CREATED, replyMarkup);
+    await ctx.reply(this.settingsService.TEXTS().TASKS.CREATED, replyMarkup);
   }
 
   @Action(/show_messages_\d+/)
@@ -155,18 +149,25 @@ export class TasksScene {
     const callbackData = ctx.callbackQuery['data'];
     const limit = Number(callbackData.split('_')[2]) || 10;
 
-    const messages = await this.messagesService.findAllByWorkId(ctx.session.work.id, limit);
+    const messages = await this.messagesService.findAllByWorkId(
+      ctx.session.work.id,
+      limit
+    );
     // show all messages to user in reply
     if (messages.length === 0) {
-      await ctx.reply(TEXTS.TASKS.NO_MESSAGES);
+      await ctx.reply(this.settingsService.TEXTS().TASKS.NO_MESSAGES);
       return;
     }
-    for (let message of messages) {
-      const formattedDate = format(message.createdAt, "d MMMM 'в' HH:mm", { locale: ru });
+    for (const message of messages) {
+      const formattedDate = format(message.createdAt, "d MMMM 'в' HH:mm", {
+        locale: ru,
+      });
       const escapeChars = (str: string) => str.replace(/[-_.!*()]/g, '\\$&'); // Экранирование специальных символов
       const reply = `
-        [Отправлено ${escapeChars(formattedDate)}](https://t\\.me/${escapeChars(message.channelUsername)}/${message.messageId})
-      `
+        [Отправлено ${escapeChars(formattedDate)}](https://t\\.me/${escapeChars(
+        message.channelUsername
+      )}/${message.messageId})
+      `;
       await ctx.sendMessage(reply, { parse_mode: 'MarkdownV2' });
     }
 
