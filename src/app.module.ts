@@ -16,14 +16,11 @@ import { TelegramModule } from './telegram/telegram.module';
 import { WorksModule } from './works/works.module';
 
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    //   load: [config],
-    //   envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
-    // }),
+    SettingsModule,
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     PrismaModule.forRoot({
       isGlobal: true,

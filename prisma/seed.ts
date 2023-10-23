@@ -1,17 +1,7 @@
 import { PrismaClient, SettingKey } from '@prisma/client';
-import {
-  PRESETS,
-  AREAS,
-  TEXTS,
-  TEXTS_NEW,
-  MENU_BUTTONS,
-} from '../src/bot/bot.constants';
+import { PRESETS, AREAS, TEXTS, MENU_BUTTONS } from '../src/bot/bot.constants';
 
 const prisma = new PrismaClient();
-
-const presets = PRESETS;
-const areas = AREAS;
-const texts = TEXTS;
 
 async function seed() {
   await prisma.setting.deleteMany();
@@ -21,13 +11,13 @@ async function seed() {
   await prisma.setting.create({
     data: {
       id: SettingKey.DEVELOPMENT,
-      TEXTS: TEXTS_NEW,
+      TEXTS: TEXTS,
       MENU_BUTTONS: MENU_BUTTONS,
       VALUE: [],
     },
   });
 
-  for (const preset of presets) {
+  for (const preset of PRESETS) {
     await prisma.presets.create({
       data: {
         id: preset.id,
@@ -39,7 +29,7 @@ async function seed() {
     });
   }
 
-  for (const area of areas) {
+  for (const area of AREAS) {
     await prisma.areas.create({
       data: {
         id: area.id,
