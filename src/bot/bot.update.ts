@@ -38,6 +38,7 @@ export class BotUpdate {
   // при изменение этого кода следуте также изменить функцию start в bot-navigation.service.ts
   @Start()
   async onStart(@Ctx() ctx: Context) {
+    await this.settingsService.reload();
     const initUserInput = new InitUserInput({
       chatId: ctx.from.id.toString(),
       username: ctx.from.username,
