@@ -27,17 +27,17 @@ export class TelegramService {
 
     (async () => {
       console.log('Loading interactive example...');
-      const client = new TelegramClient(stringSession, apiId, apiHash, {
+      this.client = new TelegramClient(stringSession, apiId, apiHash, {
         connectionRetries: 5,
       });
-      await client.start({
+      await this.client.start({
         phoneNumber: async () => await input.text('number ?'),
         phoneCode: async () => await input.text('Code ?'),
         onError: (err) => console.log(err),
       });
 
       console.log('You should now be connected.');
-      console.log(client.session.save()); // Save this string to avoid logging in again
+      console.log(this.client.session.save()); // Save this string to avoid logging in again
 
       async function handleNewMessage(event: NewMessageEvent) {
         const message = event.message;
@@ -49,7 +49,7 @@ export class TelegramService {
 
         if (!channelId) return;
 
-        const result = await client.invoke(
+        const result = await this.client.invoke(
           new Api.channels.GetFullChannel({
             channel: channelId,
           })
@@ -63,7 +63,7 @@ export class TelegramService {
         )
           return;
 
-        const user = await client.invoke(
+        const user = await this.client.invoke(
           new Api.users.GetFullUser({
             id: senderId,
           })
@@ -81,7 +81,30 @@ export class TelegramService {
       }
 
       // adds an event handler for new messages
-      client.addEventHandler(handleNewMessage, new NewMessage({}));
+      this.client.addEventHandler(handleNewMessage, new NewMessage({}));
+      this.logUserChats();
     })();
+  }
+
+  private async logUserChats() {
+    // Получаем список всех диалогов
+    const dialogs = await this.client.getDialogs();
+
+    // Перебираем все диалоги и выводим ID чатов в консоль
+    dialogs.forEach(async (dialog) => {
+      console.log(`Chat ID: ${dialog.id}`);
+
+      const result = await this.client.invoke(
+        new Api.channels.GetFullChannel({
+          channel: dialog.id,
+        })
+      );
+      const channelData = result.chats[0];
+      const username = channelData['username'];
+      // console.log(`Chat username: ${channelData['username']}`);
+      if (!AREAS[0].usernames.includes(username)) {
+        console.log(`Chat username: ${username}`);
+      }
+    });
   }
 }
