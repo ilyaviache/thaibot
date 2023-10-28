@@ -355,6 +355,16 @@ export const AREAS = [
       'tai_mot_car',
       'lazada_chat',
       'tds24chat',
+      'Cozy_Samui',
+      'pattaya_buysell_bg',
+      'rub2thb',
+      'activePhuket',
+      'Chiangmai_Chatt',
+      'Pangan_Chatt',
+      'ads_phangan',
+      'ads_ko_samui',
+      'offfici',
+      'VIP_NETWORKING_TAILAND',
     ],
   },
   {
@@ -428,6 +438,7 @@ export const AREAS = [
       'thairus_live',
       'auto_moto_thailand',
       'tai_mot_car',
+      'activePhuket',
     ],
   },
   {
@@ -471,6 +482,7 @@ export const AREAS = [
       'pattayads',
       'ordeet',
       'auto_moto_thailand',
+      'pattaya_buysell_bg',
     ],
   },
   {
@@ -512,6 +524,8 @@ export const AREAS = [
       'Obmen_thb_rub',
       'lazada_chat',
       'auto_moto_thailand',
+      'Pangan_Chatt',
+      'ads_phangan',
     ],
   },
   {
@@ -549,6 +563,9 @@ export const AREAS = [
       'Obmen_thb_rub',
       'lazada_chat',
       'auto_moto_thailand',
+      'Cozy_Samui',
+      'ads_ko_samui',
+      'offfici',
     ],
   },
   {
@@ -560,6 +577,7 @@ export const AREAS = [
       'ads_chiangmai',
       'chiangmay',
       'chiangmai_chatt',
+      'Chiangmai_Chatt',
     ],
   },
   {
